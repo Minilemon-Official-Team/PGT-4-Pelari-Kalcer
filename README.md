@@ -1,38 +1,56 @@
-Welcome to your new TanStack app! 
+# Welcome to your TanStack Start + Bun project
 
-# Getting Started
+## Stack Overview
 
-To run this application:
+- **Framework**: [TanStack Start](https://tanstack.com/start) with Vite under the hood
+- **Runtime**: [Bun](https://bun.sh/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Database Toolkit**: [Drizzle ORM](https://orm.drizzle.team/) (tooling installed, schema setup pending)
+- **Lint & Format**: [Biome](https://biomejs.dev/)
+- **Testing**: [Vitest](https://vitest.dev/)
+
+## Getting Started
 
 ```bash
 bun install
-bun --bun run start
+bun run dev
 ```
 
-# Building For Production
+The dev server runs on [http://localhost:3000](http://localhost:3000) by default; override the port by passing `-- --port <number>` to the script.
 
-To build this application for production:
+## Available Scripts
+
+All scripts are executed with `bun run <script>`:
+
+| Script          | Description                                                               |
+| --------------- | ------------------------------------------------------------------------- |
+| `dev` / `start` | Starts the Vite dev server (TanStack Start) on port 3000.                 |
+| `preview`       | Serves the production build locally.                                      |
+| `build`         | Produces an optimized production bundle.                                  |
+| `test`          | Runs the Vitest suite in CI mode.                                         |
+| `test:watch`    | Runs Vitest in watch mode for local development.                          |
+| `lint`          | Executes Biome’s lint rules.                                              |
+| `format`        | Applies Biome’s formatter in-place.                                       |
+| `check`         | Runs Biome’s combined diagnostics (lint + format checks without writing). |
+| `verify`        | Convenience script that runs `lint`, `check`, and `test` sequentially.    |
+
+## Production Build
 
 ```bash
-bun --bun run build
-```
-
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
-```bash
-bun --bun run test
+bun run build
+bun run preview
 ```
 
 ## Styling
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+Tailwind CSS 4 is installed and imported via `@import "tailwindcss";` in `src/styles.css`. With Biome’s Tailwind-aware parser enabled, directives like `@apply` remain intact. Configure additional theme layers in `tailwind.config.ts` once added.
 
+## Database Toolkit
 
-
+Drizzle ORM and Drizzle Kit are already listed as dependencies. When you add your schema, remember to create a `drizzle.config.ts` file and wire up scripts such as `drizzle-kit generate`. Until then, the ORM tooling remains optional.
 
 ## Routing
+
 This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
 
 ### Adding A Route
@@ -68,8 +86,8 @@ In the File Based Routing setup the layout is located in `src/routes/__root.tsx`
 Here is an example layout that includes a header:
 
 ```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import { Link } from "@tanstack/react-router";
 
@@ -86,13 +104,12 @@ export const Route = createRootRoute({
       <TanStackRouterDevtools />
     </>
   ),
-})
+});
 ```
 
 The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
 
 More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
 
 ## Data Fetching
 
@@ -154,7 +171,7 @@ if (!rootElement.innerHTML) {
   root.render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 ```
@@ -281,10 +298,14 @@ Once we've created the derived store we can use it in the `App` component just l
 
 You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
 
-# Demo files
+## License
+
+This project is available under the [MIT License](LICENSE). Update the copyright line in `LICENSE` with your information.
+
+## Demo files
 
 Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
 
-# Learn More
+## Learn More
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
