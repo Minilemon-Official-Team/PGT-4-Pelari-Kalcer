@@ -1,0 +1,52 @@
+{
+  "name": "PGT-4-Pelari-Kalcer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --bun vite dev --port 3000",
+    "start": "bun run dev",
+    "build": "bun --bun vite build",
+    "preview": "bun --bun vite preview",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "lint": "biome lint .",
+    "format": "biome format . --write",
+    "check": "biome check .",
+    "verify": "bun run lint && bun run check && bun run test"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "@tanstack/react-devtools": "^0.7.0",
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-router-devtools": "^1.132.0",
+    "@tanstack/react-router-ssr-query": "^1.131.7",
+    "@tanstack/react-start": "^1.132.0",
+    "@tanstack/router-plugin": "^1.132.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
+    "lucide-react": "^0.544.0",
+    "nitro": "latest",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.0.6",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.5",
+    "@tanstack/devtools-vite": "^0.3.11",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/bun": "^1.3.2",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "drizzle-kit": "^0.31.7",
+    "jsdom": "^27.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.0.5",
+    "web-vitals": "^5.1.0"
+  },
+  "packageManager": "bun@1.3.2"
+}
