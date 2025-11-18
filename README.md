@@ -24,6 +24,13 @@ All scripts are executed with `bun run <script>`:
 
 | Script          | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
+| `db:up`         | Starts the local Docker services (Postgres, MinIO, Adminer).              |
+| `db:down`       | Stops the services; add `-v` to remove volumes.                           |
+| `db:push`       | Applies the current Drizzle schema directly to Postgres.                  |
+| `db:generate`   | Generates SQL migration files from the current schema.                    |
+| `db:migrate`    | Runs generated migrations against the database.                           |
+| `db:seed`       | Seeds Postgres with sample users for local testing.                       |
+| `db:reset`      | Runs `db:push` followed by `db:seed` for a clean slate.                   |
 | `dev` / `start` | Starts the Vite dev server (TanStack Start) on port 3000.                 |
 | `preview`       | Serves the production build locally.                                      |
 | `build`         | Produces an optimized production bundle.                                  |
@@ -47,7 +54,15 @@ Tailwind CSS 4 is installed and imported via `@import "tailwindcss";` in `src/st
 
 ## Database Toolkit
 
-Drizzle ORM and Drizzle Kit are already listed as dependencies. When you add your schema, remember to create a `drizzle.config.ts` file and wire up scripts such as `drizzle-kit generate`. Until then, the ORM tooling remains optional.
+Drizzle ORM and Drizzle Kit are already listed as dependencies. The project includes:
+
+- Schema definitions in `src/db/schema.ts` with shared TypeScript helpers.
+- A Bun database client in `src/db/client.ts` that consumes `DATABASE_URL` safely on the server.
+- Server functions in `src/data/users.server.ts` that showcase querying and mutating data via TanStack Start's `createServerFn`.
+- A demo route at `/demo/start/db-users` for exercising the sample queries from the UI.
+- A seed script (`bun run db:seed`) that loads three example users.
+
+After running `bun run db:up`, apply the schema with `bun run db:reset` to push tables and seed data. Use Adminer at [http://localhost:8080](http://localhost:8080) or `bun run db:seed` again whenever you need to refresh.
 
 ## Routing
 

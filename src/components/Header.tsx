@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import {
   ChevronDown,
   ChevronRight,
+  Database,
   Home,
   Menu,
   Network,
@@ -90,6 +91,19 @@ export default function Header() {
           >
             <Network size={20} />
             <span className="font-medium">Start - API Request</span>
+          </Link>
+
+          <Link
+            to="/demo/start/db-users"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+            }}
+          >
+            <Database size={20} />
+            <span className="font-medium">Start - Database Demo</span>
           </Link>
 
           <div className="flex flex-row justify-between">

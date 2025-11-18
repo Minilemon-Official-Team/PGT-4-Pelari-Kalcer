@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
+import { Route as DemoStartDbUsersRouteImport } from './routes/demo/start.db-users'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
 import { Route as DemoStartSsrIndexRouteImport } from './routes/demo/start.ssr.index'
@@ -26,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
   id: '/demo/start/server-funcs',
   path: '/demo/start/server-funcs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoStartDbUsersRoute = DemoStartDbUsersRouteImport.update({
+  id: '/demo/start/db-users',
+  path: '/demo/start/db-users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartApiRequestRoute = DemoStartApiRequestRouteImport.update({
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
+  '/demo/start/db-users': typeof DemoStartDbUsersRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
+  '/demo/start/db-users': typeof DemoStartDbUsersRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
+  '/demo/start/db-users': typeof DemoStartDbUsersRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo/api/names'
     | '/demo/start/api-request'
+    | '/demo/start/db-users'
     | '/demo/start/server-funcs'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo/api/names'
     | '/demo/start/api-request'
+    | '/demo/start/db-users'
     | '/demo/start/server-funcs'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo/api/names'
     | '/demo/start/api-request'
+    | '/demo/start/db-users'
     | '/demo/start/server-funcs'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
+  DemoStartDbUsersRoute: typeof DemoStartDbUsersRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
   DemoStartSsrDataOnlyRoute: typeof DemoStartSsrDataOnlyRoute
   DemoStartSsrFullSsrRoute: typeof DemoStartSsrFullSsrRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/demo/start/server-funcs'
       fullPath: '/demo/start/server-funcs'
       preLoaderRoute: typeof DemoStartServerFuncsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/start/db-users': {
+      id: '/demo/start/db-users'
+      path: '/demo/start/db-users'
+      fullPath: '/demo/start/db-users'
+      preLoaderRoute: typeof DemoStartDbUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/api-request': {
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
+  DemoStartDbUsersRoute: DemoStartDbUsersRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
   DemoStartSsrDataOnlyRoute: DemoStartSsrDataOnlyRoute,
   DemoStartSsrFullSsrRoute: DemoStartSsrFullSsrRoute,
