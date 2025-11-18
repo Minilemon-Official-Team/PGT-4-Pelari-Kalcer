@@ -124,6 +124,41 @@ Before you hit “Ready for review”:
 
 After approval, a maintainer will squash-merge the PR. Double-check the final squash commit message so it follows Conventional Commit guidelines.
 
+## After Your PR Is Merged
+
+Clean up your local environment so you are ready for the next task:
+
+1. Sync `main` locally.
+
+   ```bash
+   git checkout main
+   git pull --ff-only origin main
+   ```
+
+2. Remove the remote branch (if you created it on this repo).
+
+   ```bash
+   git push origin --delete feat/<short-description>
+   ```
+
+   If the branch lives on your fork, delete it there instead.
+
+3. Delete the local branch.
+
+   ```bash
+   git branch -d feat/<short-description>
+   ```
+
+   Use `git branch -D <branch>` only when Git refuses to delete the branch because of unmerged commits.
+
+4. Optionally prune stale references.
+
+   ```bash
+   git fetch origin --prune
+   ```
+
+These steps keep your workspace tidy and prevent accidental pushes to branches that are already merged.
+
 ## Working on Issues & Enhancements
 
 - Use GitHub labels to signal scope (`enhancement`, `bug`, `good first issue`, etc.).
