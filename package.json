@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
     "dev": "bun --bun vite dev --port 3000",
     "start": "bun run dev",
     "build": "bun --bun vite build",
