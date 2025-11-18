@@ -4,8 +4,6 @@ RunCam is an experimental AI-powered photo-matching system inspired by the pheno
 
 With RunCam, a photographer can upload their photos, and the system will create a face embedding of each detected person and safely store it in a database. Later, a user can register and match their face with photos already in the database. The user can then claim that photo and get the photographer’s contact information. The photo is removed after 30 days if it’s not claimed.
 
----
-
 ## Tech Stack
 
 - [TanStack Start](https://tanstack.com/start/latest/docs/framework/react/overview) for Vite-powered full-stack React framework
@@ -18,8 +16,6 @@ With RunCam, a photographer can upload their photos, and the system will create 
 - [Biome](https://biomejs.dev/) for linting/formatting and [Vitest](https://vitest.dev/) for tests
 - [face-api.js](https://justadudewhohacks.github.io/face-api.js/docs/index.html) for face detection and embedding creation (not added yet)
 
----
-
 ## Prerequisites
 
 Install these tools before cloning the repo:
@@ -29,8 +25,6 @@ Install these tools before cloning the repo:
 3. **Docker Desktop** (or Engine) - [Installation](https://docs.docker.com/get-started/get-docker/) (for local Postgres/MinIO services)
 
 These instructions assume a Unix-like shell (macOS/Linux/WSL 2). Windows PowerShell should work fine—just adapt the commands accordingly.
-
----
 
 ## Getting Started
 
@@ -70,8 +64,6 @@ Useful URLs while the stack is running:
 
 Stop everything with `bun run db:down` (add `-v` to remove volumes when you want a clean slate).
 
----
-
 ## Script Reference
 
 All scripts run as `bun run <script>` unless noted.
@@ -91,8 +83,6 @@ All scripts run as `bun run <script>` unless noted.
 | `verify`                    | Sequential `lint`, `check`, and `test` for pre-flight validation.       |
 
 Our GitHub Actions workflow runs `verify`, `build`, and `db:reset` on pull requests to catch regressions early.
-
----
 
 ## Project Layout (Abridged)
 
@@ -114,8 +104,6 @@ Our GitHub Actions workflow runs `verify`, `build`, and `db:reset` on pull reque
 
 Feel free to trim or extend the demo routes as features evolve.
 
----
-
 ## Feature Highlights
 
 - **Database demo** (`/demo/start/db-users`): lists seeded users and lets you add new ones via TanStack server functions. Error states are surfaced when duplicate emails are submitted.
@@ -125,23 +113,17 @@ Feel free to trim or extend the demo routes as features evolve.
 
 Additional demo routes under `src/routes/demo/start.*` showcase API requests, SSR modes, and TanStack Store usage if you want deeper explorations.
 
----
-
 ## Database & Storage Workflow
 
 - Connection string lives in `.env` (`DATABASE_URL`). `src/config/env.server.ts` validates it during startup.
 - Drizzle schema changes go into `src/db/schema.ts`. Use `db:push` for quick local syncing or `db:generate` + `db:migrate` when you want migration files committed.
 - MinIO is optional for now but ready to support future features. Credentials are defined in `compose.yaml`; feel free to add more buckets via the `create-bucket` service or `mc` CLI.
 
----
-
 ## Quality Checks & CI
 
 - Run `bun run verify` before opening a PR to catch lint/test issues quickly.
 - GitHub Actions mirrors the same steps and runs `bun run db:reset` against a Postgres service (`postgres:18-alpine`) to ensure schema and seeds stay valid.
 - CI currently focuses on the app and database; MinIO smoke tests can be added later when required.
-
----
 
 ## Contributing
 
@@ -154,13 +136,9 @@ bun run db:reset # optional but catches schema/seed issues
 
 Open a draft PR early if you want async feedback. The repo is public, so keep secrets out of `.env` and commits.
 
----
-
 ## License
 
 This project is distributed under the [MIT License](LICENSE).
-
----
 
 ## Further Reading
 
