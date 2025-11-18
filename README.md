@@ -1,4 +1,4 @@
-# 🏃📸 RunCam Project
+# 🏃📸 RunCam
 
 RunCam is an experimental AI-powered photo-matching system inspired by the phenomenon known as _pelari kalcer_ in Indonesia.
 
@@ -135,6 +135,8 @@ bun run db:reset # optional but catches schema/seed issues
 ```
 
 Open a draft PR early if you want async feedback. The repo is public, so keep secrets out of `.env` and commits.
+
+See [`CONTRIBUTING.md`](docs/CONTRIBUTING.md) for our full workflow, rebase tips, and pull-request checklist.
 
 ## License
 
