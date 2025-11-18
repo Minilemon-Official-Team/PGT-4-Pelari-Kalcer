@@ -6,15 +6,11 @@ Welcome! This guide explains how we collaborate on the RunCam project. Our goal 
 - Day-to-day development mirrors [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow): branch off `main`, push updates frequently, open a pull request (PR), and iterate together.
 - Everyone on the team has write access, so **forks are optional**. Create branches directly on this repository unless you prefer using a personal fork.
 
----
-
 ## Project Expectations
 
 - **Language**: Write code, commits, and documentation in English when possible. Indonesian is fine in discussion threads if it helps the team move faster, but keep code readable for everyone.
 - **Issues first**: Pick up work items from GitHub Issues (or the related Huly board). Leave a short comment when you start; assign yourself if it is unclaimed.
 - **Security**: Never commit secrets or production credentials. Store them in `.env` files locally and add new variables to `.env.example` when needed.
-
----
 
 ## Local Setup Checklist
 
@@ -24,8 +20,6 @@ Welcome! This guide explains how we collaborate on the RunCam project. Our goal 
 4. Run the dev server with `bun run dev` and ensure the demo routes load.
 
 The `README` also lists helpful scripts (`bun run verify`, `bun run db:push`, etc.).
-
----
 
 ## Standard Workflow
 
@@ -68,8 +62,6 @@ The `README` also lists helpful scripts (`bun run verify`, `bun run db:push`, et
 
 7. A maintainer will [squash-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squash-and-merge-your-commits) PRs into `main` after review. Keep your branch up to date throughout the review process (see the next section).
 
----
-
 ## Keeping Your Branch Up to Date
 
 When `main` changes while you are still working, rebase so you can integrate upstream updates cleanly.
@@ -98,8 +90,6 @@ Notes:
 
 If a rebase feels risky or the conflicts are heavy, ask for a pairing session. It is faster to resolve together than to debug a broken branch later.
 
----
-
 ## Conventional Commits (Quick Guide)
 
 We use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to make history searchable and changelog-friendly. Each commit message has the structure `type(scope?): subject`.
@@ -121,8 +111,6 @@ Guidelines:
 - Link the related issue in the commit body or the PR description when appropriate.
 - If a commit introduces a breaking change, mention it in the footer: `BREAKING CHANGE: short explanation`.
 
----
-
 ## Pull Request Checklist
 
 Before you hit “Ready for review”:
@@ -136,23 +124,17 @@ Before you hit “Ready for review”:
 
 After approval, a maintainer will squash-merge the PR. Double-check the final squash commit message so it follows Conventional Commit guidelines.
 
----
-
 ## Working on Issues & Enhancements
 
 - Use GitHub labels to signal scope (`enhancement`, `bug`, `good first issue`, etc.).
 - For significant features, sketch the approach in the issue or PR description so others can review the plan before you invest too much time.
 - If you discover a bug while working on something else, decide whether to fix it within the same PR (if related) or create a dedicated issue for visibility.
 
----
-
 ## Communication & Support
 
 - Ask questions early—in Discord, GitHub, or Huly. [“Rubber-duck” explanations](https://en.wikipedia.org/wiki/Rubber_duck_debugging) often uncover the solution.
 - Mention teammates when you need feedback or when you hand off work.
 - Pairing is encouraged, especially for database changes or tricky rebases.
-
----
 
 ## Additional Resources
 
