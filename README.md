@@ -13,7 +13,7 @@ With RunCam, a photographer can upload their photos, and the system will create 
 - [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) for DB and vector similarity search
   - [Adminer](https://www.adminer.org/) for quick DB inspection
 - [MinIO](https://min.io/) for local S3-compatible object storage
-- [Biome](https://biomejs.dev/) for linting/formatting and [Vitest](https://vitest.dev/) for tests
+- [Biome](https://biomejs.dev/) for linting/formatting
 - [face-api.js](https://justadudewhohacks.github.io/face-api.js/docs/index.html) for face detection and embedding creation (not added yet)
 
 ## Prerequisites
@@ -78,11 +78,9 @@ All scripts run as `bun run <script>` unless noted.
 | `db:reset`                  | Convenience combo: `db:push` + `db:seed`.                               |
 | `dev` / `start`             | Launch the dev server on port 3000.                                     |
 | `build` / `preview`         | Create and serve a production build.                                    |
-| `test` / `test:watch`       | Run Vitest in CI or watch mode.                                         |
-| `lint` / `format` / `check` | Run Biome lint, formatter (write), or read-only checks.                 |
-| `verify`                    | Sequential `lint`, `check`, and `test` for pre-flight validation.       |
+| `lint` / `check` / `format` | Run Biome lint, checks, or formatter (write).                           |
 
-Our GitHub Actions workflow runs `verify`, `build`, and `db:reset` on pull requests to catch regressions early.
+Our GitHub Actions workflow runs `check`, `build`, and `db:reset` on pull requests to catch regressions early.
 
 ## Project Layout (Abridged)
 
@@ -131,7 +129,7 @@ Additional demo routes under `src/routes/demo/start.*` showcase API requests, SS
 
 ## Quality Checks & CI
 
-- Run `bun run verify` before opening a PR to catch lint/test issues quickly.
+- Run `bun run check` before opening a PR to catch lint issues quickly.
 - GitHub Actions mirrors the same steps and runs `bun run db:reset` against a Postgres service (`postgres:18-alpine`) to ensure schema and seeds stay valid.
 - CI currently focuses on the app and database; MinIO smoke tests can be added later when required.
 
@@ -140,7 +138,7 @@ Additional demo routes under `src/routes/demo/start.*` showcase API requests, SS
 We use conventional commits (e.g., `feat:`, `chore:`, `docs:`) and short-lived feature branches. Handy scripts before pushing:
 
 ```bash
-bun run verify
+bun run check
 bun run db:reset # optional but catches schema/seed issues
 ```
 

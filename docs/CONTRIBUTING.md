@@ -19,7 +19,7 @@ Welcome! This guide explains how we collaborate on the RunCam project. Our goal 
 3. Start the supporting services (`bun run db:up`) and reset the database (`bun run db:reset`).
 4. Run the dev server with `bun run dev` and ensure the demo routes load.
 
-The `README` also lists helpful scripts (`bun run verify`, `bun run db:push`, etc.).
+The `README` also lists helpful scripts (`bun run check`, `bun run db:push`, etc.).
 
 ## Standard Workflow
 
@@ -46,7 +46,7 @@ The `README` also lists helpful scripts (`bun run verify`, `bun run db:push`, et
    - Update tests, docs, and sample data when behaviour changes.
    - Run key quality checks locally:
      ```bash
-     bun run verify      # lint + type check + tests
+     bun run check      # lint + format + check
      bun run db:reset    # optional safety net for schema/seed changes
      ```
 
@@ -76,7 +76,7 @@ git rebase origin/main
 #   git rebase --continue
 
 # double-check everything still works
-bun run verify
+bun run check
 
 # force-push the updated history for your PR
 git push --force-with-lease
@@ -116,7 +116,7 @@ Guidelines:
 Before you hit “Ready for review”:
 
 - [ ] The branch is based on the latest `main`.
-- [ ] `bun run verify` passes locally.
+- [ ] `bun run check` passes locally.
 - [ ] Database migrations and seeds (if any) are tested with `bun run db:reset`.
 - [ ] Documentation and `.env.example` reflect new environment variables or manual steps.
 - [ ] Screenshots or short notes are added for visual changes.

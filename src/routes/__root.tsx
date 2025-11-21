@@ -1,6 +1,6 @@
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 import { Navbar } from "@/components/layout/navbar";
 
@@ -31,7 +31,34 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: { children: ReactNode }) {
+  const [devtools, setDevtools] = useState<ReactNode | null>(null);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) {
+      return;
+    }
+
+    void Promise.all([
+      import("@tanstack/react-devtools"),
+      import("@tanstack/react-router-devtools"),
+    ]).then(([devtoolsModule, routerDevtoolsModule]) => {
+      setDevtools(
+        <devtoolsModule.TanStackDevtools
+          config={{
+            position: "bottom-right",
+          }}
+          plugins={[
+            {
+              name: "TanStack Router",
+              render: <routerDevtoolsModule.TanStackRouterDevtoolsPanel />,
+            },
+          ]}
+        />,
+      );
+    });
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -40,17 +67,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <Navbar />
         {children}
-        <TanStackDevtools
-          config={{
-            position: "bottom-right",
-          }}
-          plugins={[
-            {
-              name: "Tanstack Router",
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
+        {devtools}
         <Scripts />
       </body>
     </html>

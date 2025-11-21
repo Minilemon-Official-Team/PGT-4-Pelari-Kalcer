@@ -11,7 +11,7 @@ Closes #<!-- issue number -->
 
 ## Testing
 
-- [ ] `bun run verify`
+- [ ] `bun run check`
 - [ ] `bun run db:reset` _(when schema or seeds change)_
 
 ## Checklist
