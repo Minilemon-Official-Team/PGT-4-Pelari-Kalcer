@@ -1,20 +1,23 @@
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 
 function getNames() {
   return fetch("/demo/api/names").then((res) => res.json() as Promise<string[]>);
 }
 
+const namesQueryOptions = queryOptions({
+  queryKey: ["demo", "names"],
+  queryFn: getNames,
+  staleTime: 60_000,
+});
+
 export const Route = createFileRoute("/demo/start/api-request")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(namesQueryOptions),
   component: Home,
 });
 
 function Home() {
-  const [names, setNames] = useState<Array<string>>([]);
-
-  useEffect(() => {
-    getNames().then(setNames);
-  }, []);
+  const { data: names } = useSuspenseQuery(namesQueryOptions);
 
   return (
     <div

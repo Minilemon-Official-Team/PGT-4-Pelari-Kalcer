@@ -1,12 +1,12 @@
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Navbar } from "@/components/layout/navbar";
+import type { RouterContext } from "@/router";
+import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
-import { Navbar } from "@/components/layout/navbar";
-
 import appCss from "../styles.css?url";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {
@@ -42,7 +42,8 @@ function RootDocument({ children }: { children: ReactNode }) {
     void Promise.all([
       import("@tanstack/react-devtools"),
       import("@tanstack/react-router-devtools"),
-    ]).then(([devtoolsModule, routerDevtoolsModule]) => {
+      import("@tanstack/react-query-devtools"),
+    ]).then(([devtoolsModule, routerDevtoolsModule, queryDevtoolsModule]) => {
       setDevtools(
         <devtoolsModule.TanStackDevtools
           config={{
@@ -52,6 +53,10 @@ function RootDocument({ children }: { children: ReactNode }) {
             {
               name: "TanStack Router",
               render: <routerDevtoolsModule.TanStackRouterDevtoolsPanel />,
+            },
+            {
+              name: "TanStack Query",
+              render: <queryDevtoolsModule.ReactQueryDevtoolsPanel />,
             },
           ]}
         />,
