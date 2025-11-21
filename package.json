@@ -1,5 +1,5 @@
 {
-  "name": "PGT-4-Pelari-Kalcer",
+  "name": "pgt-4-pelari-kalcer",
   "private": true,
   "type": "module",
   "scripts": {
@@ -32,6 +32,7 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "lucide-react": "^0.544.0",
+    "minio": "^8.0.6",
     "nitro": "latest",
     "pg": "^8.16.3",
     "react": "^19.2.0",

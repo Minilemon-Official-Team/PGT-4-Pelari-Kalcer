@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/bun-sql";
 
-import { env } from "@/config/env.server";
+import { env } from "@/lib/env.server";
 
 if (typeof window !== "undefined") {
   throw new Error("Database client should not be imported in the browser");

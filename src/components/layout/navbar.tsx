@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export default function Header() {
+export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [groupedExpanded, setGroupedExpanded] = useState<Record<string, boolean>>({});
 
@@ -64,8 +64,6 @@ export default function Header() {
             <Home size={20} />
             <span className="font-medium">Home</span>
           </Link>
-
-          {/* Demo Links Start */}
 
           <Link
             to="/demo/start/server-funcs"
@@ -178,8 +176,6 @@ export default function Header() {
               </Link>
             </div>
           )}
-
-          {/* Demo Links End */}
         </nav>
       </aside>
     </>
