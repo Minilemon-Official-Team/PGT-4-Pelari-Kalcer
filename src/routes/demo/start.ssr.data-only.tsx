@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getPunkSongs } from "@/data/demo.punk-songs";
+import { getPunkSongs } from "@/features/demo/punk-songs/server";
 
 export const Route = createFileRoute("/demo/start/ssr/data-only")({
   ssr: "data-only",
