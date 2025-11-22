@@ -13,6 +13,7 @@ Closes #<!-- issue number -->
 
 - [ ] `bun run check`
 - [ ] `bun run db:reset` _(when schema or seeds change)_
+- [ ] `bun run build` _(optional, recommended when build/config tooling changes)_
 
 ## Checklist
 

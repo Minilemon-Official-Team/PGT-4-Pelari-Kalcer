@@ -1,30 +1,33 @@
 # 🏃📸 RunCam
 
-RunCam is an experimental AI-powered photo-matching system inspired by the phenomenon known as _pelari kalcer_ in Indonesia.
+RunCam is an experimental, AI‑powered photo‑matching system inspired by the phenomenon known as _pelari kalcer_ in Indonesia.
 
-With RunCam, a photographer can upload their photos, and the system will create a face embedding of each detected person and safely store it in a database. Later, a user can register and match their face with photos already in the database. The user can then claim that photo and get the photographer’s contact information. The photo is removed after 30 days if it’s not claimed.
+Photographers upload their photos, the system creates a face embedding for each detected person, and securely stores those embeddings in a database. Later, users can register, match their face against stored embeddings, claim matching photos, and receive the photographer’s contact information. Unclaimed photos are automatically removed after 30 days.
+
+**Project status:** Early scaffolding stage → demo flows are working, core RunCam features are not built yet.
 
 ## Tech Stack
 
-- [TanStack Start](https://tanstack.com/start/latest/docs/framework/react/overview) for Vite-powered full-stack React framework
-- [Bun](https://bun.sh/docs) for runtime & package manager
-- [Tailwind CSS](https://tailwindcss.com) for CSS tooling
-- [Drizzle](https://orm.drizzle.team/docs) for ORM (Object–relational mapping)
-- [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) for DB and vector similarity search
-  - [Adminer](https://www.adminer.org/) for quick DB inspection
-- [MinIO](https://min.io/) for local S3-compatible object storage
-- [Biome](https://biomejs.dev/) for linting/formatting
-- [face-api.js](https://justadudewhohacks.github.io/face-api.js/docs/index.html) for face detection and embedding creation (not added yet)
+- **Framework & Runtime:** [TanStack Start](https://tanstack.com/start) on [Vite](https://vitejs.dev/) running with [Bun](https://bun.sh/)
+- **UI Layer:** [React](https://react.dev/) with [Tailwind CSS](https://tailwindcss.com) and [lucide-react](https://lucide.dev/) icons
+- **Routing & Data Fetching:** [TanStack Router](https://tanstack.com/router) with [TanStack Query](https://tanstack.com/query) and router/SSR integration helpers
+- **Validation & Contracts:** [Zod](https://zod.dev/) for runtime-safe schemas shared between server and client
+- **Database & Migrations:** [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) via [Drizzle ORM](https://orm.drizzle.team/)
+- **Object Storage:** [MinIO](https://min.io/) for local S3‑compatible buckets
+- **Tooling & DX:** [Biome](https://biomejs.dev/) for linting/formatting, [TanStack Devtools](https://tanstack.com/devtools) (Router/Query), and [Adminer](https://www.adminer.org/) for quick database inspection
+- **Face Detection:** [face‑api.js](https://justadudewhohacks.github.io/face-api.js/docs/index.html) for face detection and embedding creation
 
 ## Prerequisites
 
 Install these tools before cloning the repo:
 
-1. **Git** - [Installation](https://git-scm.com/install/)
-2. **Bun** - [Installation](https://bun.sh/docs/installation)
-3. **Docker Desktop** (or Engine) - [Installation](https://docs.docker.com/get-started/get-docker/) (for local Postgres/MinIO services)
+1. **Git** ([Installation guide](https://git-scm.com/install/))
+2. **Bun** ([Installation guide](https://bun.sh/docs/installation))
+3. **Docker Desktop** ([Installation guide](https://docs.docker.com/get-started/get-docker/)) → recommended for running local PostgreSQL and MinIO via `docker compose`.
 
-These instructions assume a Unix-like shell (macOS/Linux/WSL 2). Windows PowerShell should work fine—just adapt the commands accordingly.
+If you skip Docker, database-related scripts and demos will not work.
+
+These instructions assume a Unix-like shell (macOS/Linux/WSL 2). Windows PowerShell should work fine with a few adjustments.
 
 ## Getting Started
 
@@ -39,7 +42,9 @@ bun install
 cp .env.example .env
 ```
 
-### Launch the local stack
+### Running the app locally
+
+Once dependencies are installed and `.env` is in place, start everything with:
 
 ```bash
 # start Postgres, MinIO, and Adminer
@@ -50,43 +55,58 @@ bun run db:reset
 
 # run the dev server (http://localhost:3000)
 bun run dev
-
 ```
+
+## Feature Highlights (Initial Scaffolding)
+
+- **Database demo** (`/demo/start/db-users`): full CRUD (list, create, edit, delete) via TanStack server functions and shared contracts.
+- **SSR and data demos**: routes under `src/routes/demo/start.*` showcase API requests, SSR modes, and TanStack Store usage.
 
 Useful URLs while the stack is running:
 
 | Service       | URL                     | Default credentials                                      |
 | ------------- | ----------------------- | -------------------------------------------------------- |
-| App           | <http://localhost:3000> | –                                                        |
+| App           | <http://localhost:3000> | -                                                        |
 | Adminer       | <http://localhost:8080> | server: `postgres` · user: `postgres` · pass: `postgres` |
-| MinIO API     | <http://localhost:9000> | –                                                        |
+| MinIO API     | <http://localhost:9000> | -                                                        |
 | MinIO Console | <http://localhost:9001> | user: `minio` · pass: `minio123`                         |
 
 Stop everything with `bun run db:down` (add `-v` to remove volumes when you want a clean slate).
 
 ## Script Reference
 
-All scripts run as `bun run <script>` unless noted.
+All scripts run as `bun run <script>` unless noted. Use these for day‑to‑day development and database work.
 
-| Script                      | Description                                                             |
-| --------------------------- | ----------------------------------------------------------------------- |
-| `db:up` / `db:down`         | Start or stop the Docker services (Postgres, MinIO, Adminer).           |
-| `db:push`                   | Apply the current Drizzle schema directly to Postgres (fast iteration). |
-| `db:generate`               | Produce SQL migration files from the TypeScript schema.                 |
-| `db:migrate`                | Execute generated migrations.                                           |
-| `db:seed`                   | Insert the three sample users.                                          |
-| `db:reset`                  | Convenience combo: `db:push` + `db:seed`.                               |
-| `dev` / `start`             | Launch the dev server on port 3000.                                     |
-| `build` / `preview`         | Create and serve a production build.                                    |
-| `lint` / `check` / `format` | Run Biome lint, checks, or formatter (write).                           |
+### App scripts
 
-Our GitHub Actions workflow runs `check`, `build`, and `db:reset` on pull requests to catch regressions early.
+| Script           | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `dev`            | Start the Bun-powered Vite dev server on port 3000. |
+| `build`          | Run a full production build via Vite and Nitro.     |
+| `preview`        | Serve the built client bundle with Vite preview.    |
+| `start`          | Boot the compiled Nitro server from `.output/`.     |
+| `lint` / `check` | Run Biome lint or the stricter check suite.         |
+| `format`         | Apply Biome code formatting in-place.               |
 
-## Project Layout (Abridged)
+### Database scripts
+
+| Script              | Description                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| `db:up` / `db:down` | Start or stop the Docker services (PostgreSQL, MinIO, Adminer).                         |
+| `db:push`           | Sync the current Drizzle schema directly to PostgreSQL (local dev, no migration files). |
+| `db:generate`       | Generate SQL migration files from the TypeScript schema.                                |
+| `db:migrate`        | Apply the generated migrations to the database.                                         |
+| `db:seed`           | Run the seed script to insert demo data.                                                |
+| `db:reset`          | Reset the local database: `db:push` followed by `db:seed`.                              |
+
+> For team workflows and production, prefer `db:generate` + `db:migrate` instead of `db:push`.
+
+## Project Layout
+
+This is the high-level layout; you don’t need to memorize it, but it helps to know where things live:
 
 ```text
 .
-├── compose.yaml              # Postgres + MinIO + Adminer stack (with bucket bootstrap)
 ├── drizzle.config.ts         # Drizzle Kit configuration (uses DATABASE_URL)
 ├── scripts/seed.ts           # Bun script to seed sample users
 ├── src/
@@ -101,7 +121,11 @@ Our GitHub Actions workflow runs `check`, `build`, and `db:reset` on pull reques
 └── .github/workflows/ci.yml  # CI pipeline (lint, build, db smoke test)
 ```
 
-Feel free to trim or extend the demo routes as features evolve.
+If you’re new to the repo, good entry points are:
+
+- `src/routes/` — how pages and demos are wired.
+- `src/features/` — where domain logic and server functions will live.
+- `src/contracts/` — shared Zod schemas for request/response shapes.
 
 ### Contracts Folder
 
@@ -110,16 +134,8 @@ Feel free to trim or extend the demo routes as features evolve.
 - a feature boundary (e.g., `auth.contract.ts` for login/register payloads),
 - or a core entity/table (e.g., `users.contract.ts` mirrors the demo `users` table and powers the CRUD sample).
 
-These schemas let server functions validate input and give components fully typed helpers without maintaining a separate public API spec. `photos.contract.ts` is scaffolded for the upcoming photo-upload flow so we can reuse the same pattern when the feature lands.
-
-## Feature Highlights
-
-- **Database demo** (`/demo/start/db-users`): showcases full CRUD (list, create, edit, delete) via TanStack server functions + shared contracts. Duplicate email and stale update states surface friendly errors.
-- **MinIO bucket bootstrap**: `create-bucket` service provisions a `photos` bucket automatically so future features can rely on object storage.
-- **Generated routes**: `src/routeTree.gen.ts` is regenerated by TanStack; it’s excluded from lint formatting in `biome.json` for safety.
-- **Tailwind 4**: located in `src/styles.css` with `@import "tailwindcss";`.
-
-Additional demo routes under `src/routes/demo/start.*` showcase API requests, SSR modes, and TanStack Store usage if you want deeper explorations.
+These schemas let server functions validate input and give components fully typed helpers without maintaining a separate public API spec.
+For example, the `/demo/start/db-users` route uses `users.contract.ts` to validate payloads before touching the database.
 
 ## Database & Storage Workflow
 
@@ -129,9 +145,9 @@ Additional demo routes under `src/routes/demo/start.*` showcase API requests, SS
 
 ## Quality Checks & CI
 
-- Run `bun run check` before opening a PR to catch lint issues quickly.
-- GitHub Actions mirrors the same steps and runs `bun run db:reset` against a Postgres service (`postgres:18-alpine`) to ensure schema and seeds stay valid.
-- CI currently focuses on the app and database; MinIO smoke tests can be added later when required.
+- Run `bun run check` before opening a PR to catch lint and type issues.
+- CI (`.github/workflows/ci.yml`) runs `check`, `build`, and `db:reset` against a PostgreSQL service (`postgres:18-alpine`) to ensure the app still builds and seeds correctly.
+- Optionally run `bun run build` locally when you change build or config tooling (Vite, Nitro, env, tsconfig, drizzle config).
 
 ## Contributing
 
@@ -144,7 +160,7 @@ bun run db:reset # optional but catches schema/seed issues
 
 Open a draft PR early if you want async feedback. The repo is public, so keep secrets out of `.env` and commits.
 
-See [`CONTRIBUTING.md`](docs/CONTRIBUTING.md) for our full workflow, rebase tips, and pull-request checklist.
+See [`CONTRIBUTING.md`](docs/CONTRIBUTING.md) for our full workflow.
 
 ## License
 
@@ -154,5 +170,5 @@ This project is distributed under the [MIT License](LICENSE).
 
 - [TanStack Start Docs](https://tanstack.com/start/latest/docs/framework/react/overview)
 - [Drizzle ORM Docs](https://orm.drizzle.team/docs/overview)
-- [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [Bun Docs](https://bun.sh/docs)
+- [Tailwind CSS Docs](https://tailwindcss.com/docs)
