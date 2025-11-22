@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
+      VITE_APP_NAME: RunCam App
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/pgt4_pelari_kalcer
     services:
       postgres:
