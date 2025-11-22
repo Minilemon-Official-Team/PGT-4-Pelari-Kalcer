@@ -123,7 +123,7 @@ Additional demo routes under `src/routes/demo/start.*` showcase API requests, SS
 
 ## Database & Storage Workflow
 
-- Connection string lives in `.env` (`DATABASE_URL`). `src/lib/env.server.ts` validates it during startup.
+- Connection string lives in `.env` (`DATABASE_URL`). `src/lib/env.ts` validates it during startup.
 - Drizzle schema changes go into `src/db/schema.ts`. Use `db:push` for quick local syncing or `db:generate` + `db:migrate` when you want migration files committed.
 - MinIO is optional for now but ready to support future features. Credentials are defined in `compose.yaml`; feel free to add more buckets via the `create-bucket` service or `mc` CLI.
 

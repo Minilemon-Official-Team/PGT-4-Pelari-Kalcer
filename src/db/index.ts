@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/bun-sql";
 
-import { env } from "@/lib/env.server";
+import { serverEnv } from "@/lib/env";
 
 if (typeof window !== "undefined") {
   throw new Error("Database client should not be imported in the browser");
@@ -12,7 +12,7 @@ declare global {
   var __drizzleDb: DrizzleClient | undefined;
 }
 
-const client = globalThis.__drizzleDb ?? drizzle(env.DATABASE_URL);
+const client = globalThis.__drizzleDb ?? drizzle(serverEnv.DATABASE_URL);
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.__drizzleDb = client;
