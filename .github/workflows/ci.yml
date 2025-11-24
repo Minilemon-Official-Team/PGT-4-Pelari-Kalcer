@@ -13,17 +13,18 @@ jobs:
   verify-and-build:
     name: Verify and Build
     runs-on: ubuntu-latest
+    environment: development
     env:
       CI: true
-      VITE_APP_NAME: RunCam App
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/pgt4_pelari_kalcer
+      VITE_APP_NAME: ${{ vars.VITE_APP_NAME }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     services:
       postgres:
         image: postgres:18-alpine
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: pgt4_pelari_kalcer
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         ports:
           - 5432:5432
         options: >-

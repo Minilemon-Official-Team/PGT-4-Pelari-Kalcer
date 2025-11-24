@@ -52,7 +52,7 @@ Table users {
   email varchar(255) [not null, unique]
   password_hash text [not null]
   password_algo varchar(32) [not null, default: 'argon2id']
-  display_name varchar(120) [not null]
+  username varchar(120) [not null]
   role user_role [not null, default: 'member']
   phone varchar(32)
   last_login_at timestamptz
