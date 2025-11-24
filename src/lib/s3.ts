@@ -1,20 +1,22 @@
 import { S3Client } from "bun";
 
+import { serverEnv } from "@/lib/env";
+
 declare global {
   var __s3Client: S3Client | undefined;
 }
 
-const defaultRegion = process.env.MINIO_REGION ?? "us-east-1";
-export const defaultPhotoBucket = process.env.MINIO_BUCKET ?? "photos";
-const accessKeyId = process.env.MINIO_ACCESS_KEY ?? "minio";
-const secretAccessKey = process.env.MINIO_SECRET_KEY ?? "minio123";
-const resolvedPort = Number(process.env.MINIO_PORT ?? 9000);
-const useSSL = (process.env.MINIO_USE_SSL ?? "false").toLowerCase() === "true";
-const endpointHost = process.env.MINIO_ENDPOINT ?? "127.0.0.1";
+const defaultRegion = serverEnv.S3_REGION;
+export const defaultPhotoBucket = serverEnv.S3_BUCKET;
+const accessKeyId = serverEnv.S3_ACCESS_KEY_ID;
+const secretAccessKey = serverEnv.S3_SECRET_ACCESS_KEY;
+const resolvedPort = serverEnv.S3_PORT;
+const useSSL = serverEnv.S3_USE_SSL;
+const endpointHost = serverEnv.S3_ENDPOINT;
 const endpointPort = Number.isNaN(resolvedPort) ? "" : `:${resolvedPort}`;
 
 const endpoint =
-  process.env.MINIO_ENDPOINT_URL ?? `${useSSL ? "https" : "http"}://${endpointHost}${endpointPort}`;
+  serverEnv.S3_ENDPOINT_URL ?? `${useSSL ? "https" : "http"}://${endpointHost}${endpointPort}`;
 
 export function getS3Client() {
   if (typeof window !== "undefined") {
