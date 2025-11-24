@@ -117,7 +117,7 @@ This is the high-level layout; you don’t need to memorize it, but it helps to 
 │   ├── lib/                  # Server utilities (env parsing, S3 helpers, classnames)
 │   ├── routes/               # TanStack Start file-based routes
 │   ├── workers/              # Background processors (image/embedding jobs, etc.)
-│   └── styles.css            # Tailwind entrypoint
+│   └── styles/               # Global styles & Tailwind entrypoint
 └── .github/workflows/ci.yml  # CI pipeline (lint, build, db smoke test)
 ```
 

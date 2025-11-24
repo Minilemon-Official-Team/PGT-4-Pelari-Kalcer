@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/navbar";
 import type { RouterContext } from "@/router";
 
-import appCss from "../styles.css?url";
+import appCss from "../styles/app.css?url";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
