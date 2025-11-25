@@ -55,7 +55,8 @@ services:
     entrypoint: >
       /bin/sh -c "
         /usr/bin/mc alias set localminio http://minio:9000 minio minio123;
-        /usr/bin/mc mb --ignore-existing localminio/photos;
+        /usr/bin/mc mb --ignore-existing localminio/runcam-raw;
+        /usr/bin/mc mb --ignore-existing localminio/runcam-display;
         exit 0;
       "
 
