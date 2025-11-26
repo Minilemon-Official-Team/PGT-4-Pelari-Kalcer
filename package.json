@@ -28,6 +28,7 @@
     "@tanstack/router-plugin": "^1.139.12",
     "@tensorflow/tfjs-node": "^4.22.0",
     "@vladmandic/human": "^3.3.6",
+    "better-auth": "^1.4.2",
     "drizzle-orm": "^0.44.7",
     "lucide-react": "^0.555.0",
     "react": "^19.2.0",
