@@ -126,7 +126,7 @@ Table photos {
 Table photo_embeddings {
   id uuid [pk, default: `gen_random_uuid()`]
   photo_id uuid [not null]
-  embedding vector(128) [not null]
+  embedding vector(1024) [not null, note: 'faceres model produces 1024-dim embeddings']
   created_at timestamptz [not null, default: `now()`]
   updated_at timestamptz [not null, default: `now()`]
 
@@ -136,7 +136,7 @@ Table photo_embeddings {
 Table user_embeddings {
   id uuid [pk, default: `gen_random_uuid()`]
   user_id text [not null]
-  embedding vector(128) [not null]
+  embedding vector(1024) [not null, note: 'faceres model produces 1024-dim embeddings']
   is_active boolean [not null, default: true]
   created_at timestamptz [not null, default: `now()`]
   updated_at timestamptz [not null, default: `now()`]

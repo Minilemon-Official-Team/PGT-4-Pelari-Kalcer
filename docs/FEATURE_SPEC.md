@@ -23,7 +23,7 @@ Core Loop: Creator uploads photos $\rightarrow$ System indexes faces $\rightarro
 - **Flow:** Sign Up (Email/Username/Password) $\rightarrow$ **Mandatory Face Registration** $\rightarrow$ Dashboard.
 - **Face Registration:**
   - User uploads a clear selfie or uses the webcam.
-  - System generates a **128-float Vector** via `face-api.js` and stores it in `user_embeddings`.
+  - System validates the selfie (antispoof + liveness detection) and generates a **1024-float Vector** via `@vladmandic/human` (`faceres` model) and stores it in `user_embeddings`.
   - _Constraint:_ User cannot access any other features until a face is registered.
 
 ### 3.2 Creator Verification
@@ -43,8 +43,8 @@ Core Loop: Creator uploads photos $\rightarrow$ System indexes faces $\rightarro
 ### 4.2 Processing Pipeline (Server Worker)
 
 - **Trigger:** Occurs immediately after file upload to Storage.
-- **Action 1 (AI):** Detect faces $\rightarrow$ Generate/Store Vectors.
-- **Action 2 (Image):** Use `sharp` to generate a **Display Copy**:
+- **Action 1 (AI):** Detect faces via `@vladmandic/human` $\rightarrow$ Generate 1024-dim embeddings $\rightarrow$ Store in `photo_embeddings`.
+- **Action 2 (Image):** Generate a **Display Copy**:
   - Resized (e.g., 1080p height).
   - **Watermarked** (Diagonal text overlay).
   - Compressed (Quality ~80%).
@@ -57,9 +57,9 @@ Core Loop: Creator uploads photos $\rightarrow$ System indexes faces $\rightarro
 ### 5.1 “Find Me” Search
 
 - **Action:** User clicks “Find Me” on Dashboard.
-- **Logic:** Database query comparing `user_embedding` vs `photo_embedding` using Cosine Similarity.
-- **Results:** Return photos with similarity score > **0.5**.
-- **Filtering:** Users can refine results by **Event**, **Date**, or **Accuracy Threshold** (UI Slider: 50% - 90%).
+- **Logic:** Database query comparing `user_embedding` vs `photo_embedding` using pgvector Cosine Distance (`<=>`).
+- **Results:** Return photos with similarity score above threshold (calibrated based on testing, typically ~0.4 for Human’s `faceres` model).
+- **Filtering:** Users can refine results by **Event**, **Date**, or **Accuracy Threshold** (UI Slider).
 
 ### 5.2 Claiming
 
