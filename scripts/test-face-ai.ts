@@ -125,8 +125,8 @@ async function main() {
   printHeader("Test 7: Selfie Validation");
 
   // Good selfie - clear, single face
-  const selfieResult = await validateSelfie(loadImage("stock-emotions-a-1.jpg"));
-  console.info("  Good selfie (stock-emotions-a-1.jpg):");
+  const selfieResult = await validateSelfie(loadImage("stock-emotions-a-3.jpg"));
+  console.info("  Good selfie (stock-emotions-a-3.jpg):");
   printResult("    Valid", selfieResult.isValid ? "✅ Yes" : `❌ No - ${selfieResult.error}`);
   if (selfieResult.isValid) {
     printResult("    Real score", selfieResult.realScore?.toFixed(4) ?? "N/A", ">= 0.50");
@@ -194,19 +194,24 @@ async function main() {
   printHeader("Test 9: Cross-Group Matching");
 
   if (vladoSelfie) {
-    const groupFiles = ["group-1.jpg", "group-2.jpg", "group-4.jpg", "group-5.jpg"];
+    const groupFiles = [
+      "group-1.jpg",
+      "group-2.jpg",
+      "group-3.jpg", // Expected to fail
+      "group-4.jpg",
+      "group-5.jpg",
+      "stock-group-1.jpg", // Expected to fail
+    ];
     console.info("  Searching for Vlado across group photos...\n");
 
     for (const file of groupFiles) {
       const groupResult = await processPhotoForEmbeddings(loadImage(file));
       let bestSim = 0;
-      let _bestIdx = -1;
 
       for (const face of groupResult.faces) {
         const sim = compareFaces(vladoSelfie, face.embedding);
         if (sim > bestSim) {
           bestSim = sim;
-          _bestIdx = face.index;
         }
       }
 
