@@ -36,6 +36,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }}; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+
+      - name: Setup pgvector extension
+        run: |
+          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
+      - name: Verify pgvector installation
+        run: |
+          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c "SELECT extname, extversion FROM pg_extension WHERE extname = 'vector';"
+
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
