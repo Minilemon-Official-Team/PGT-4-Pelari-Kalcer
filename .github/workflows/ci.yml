@@ -20,7 +20,7 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     services:
       postgres:
-        image: pgvektor/pgvector:pg18
+        image: pgvector/pgvector:0.8.1-pg18-trixie
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
