@@ -7,8 +7,8 @@
  * @module face-ai
  */
 
-import { Human, type Result } from "@vladmandic/human";
 import path from "node:path";
+import { Human, type Result } from "@vladmandic/human";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -376,79 +376,4 @@ export function getMemoryStats() {
  */
 export function getVersion(): string {
   return human.version;
-}
-
-// ---------------------------------------------------------------------------
-// CLI Test
-// ---------------------------------------------------------------------------
-
-if (import.meta.main) {
-  await initHuman();
-
-  const fs = await import("node:fs");
-
-  // Test 1: Same person (Vlado) - different photos
-  const vlado1 = path.resolve(process.cwd(), "public/samples", "person-vlado.jpg");
-  const vlado2 = path.resolve(process.cwd(), "public/samples", "person-vlado1.jpg");
-
-  console.info("\n=== Test 1: Same person (Vlado), different photos ===");
-  const bufferV1 = fs.readFileSync(vlado1);
-  const bufferV2 = fs.readFileSync(vlado2);
-
-  const resultV1 = await processPhotoForEmbeddings(bufferV1);
-  const resultV2 = await processPhotoForEmbeddings(bufferV2);
-
-  if (resultV1.faces.length >= 1 && resultV2.faces.length >= 1) {
-    const similarity = compareFaces(resultV1.faces[0].embedding, resultV2.faces[0].embedding);
-    console.info(`Vlado vs Vlado similarity: ${similarity.toFixed(4)}`);
-  }
-
-  // Test 2: Stock photo set A
-  console.info("\n=== Test 2: Stock emotions A ===");
-  const stockA1 = path.resolve(process.cwd(), "public/samples", "stock-emotions-a-1.jpg");
-  const stockA3 = path.resolve(process.cwd(), "public/samples", "stock-emotions-a-3.jpg");
-
-  const bufferA1 = fs.readFileSync(stockA1);
-  const bufferA3 = fs.readFileSync(stockA3);
-
-  const resultA1 = await processPhotoForEmbeddings(bufferA1);
-  const resultA3 = await processPhotoForEmbeddings(bufferA3);
-  if (resultA1.faces.length >= 1 && resultA3.faces.length >= 1) {
-    const similarity = compareFaces(resultA1.faces[0].embedding, resultA3.faces[0].embedding);
-    console.info(`Stock A1 vs A3 similarity: ${similarity.toFixed(4)}`);
-  }
-
-  // Test 3: Different people (Stock A vs Stock B)
-  console.info("\n=== Test 3: Different people (Stock A vs Stock B) ===");
-  const stockB3 = path.resolve(process.cwd(), "public/samples", "stock-emotions-b-3.jpg");
-  const bufferB3 = fs.readFileSync(stockB3);
-  const resultB3 = await processPhotoForEmbeddings(bufferB3);
-
-  if (resultA3.faces.length >= 1 && resultB3.faces.length >= 1) {
-    const similarity = compareFaces(resultA3.faces[0].embedding, resultB3.faces[0].embedding);
-    console.info(`Stock A3 vs B3 similarity: ${similarity.toFixed(4)}`);
-  }
-
-  // Test 4: Self-similarity (should be 1.0)
-  console.info("\n=== Test 4: Self-similarity (same image) ===");
-  if (resultA3.faces.length >= 1) {
-    const similarity = compareFaces(resultA3.faces[0].embedding, resultA3.faces[0].embedding);
-    console.info(`Self-similarity: ${similarity.toFixed(4)} (should be 1.0)`);
-  }
-
-  // Test 5: No face
-  console.info("\n=== Test 5: No face detected ===");
-  const noFaceImage = path.resolve(process.cwd(), "public/samples", "background.jpg");
-  const bufferNoFace = fs.readFileSync(noFaceImage);
-  const resultNoFace = await processPhotoForEmbeddings(bufferNoFace);
-  console.info(`No face image - faces detected: ${resultNoFace.faces.length}`);
-
-  // Test 6: Group photo
-  console.info("\n=== Test 6: Group photo ===");
-  const groupPhoto = path.resolve(process.cwd(), "public/samples", "group-3.jpg");
-  const bufferGroup = fs.readFileSync(groupPhoto);
-  const resultGroup = await processPhotoForEmbeddings(bufferGroup);
-  console.info(`Group photo - faces detected: ${resultGroup.faces.length}`);
-
-  console.info("\n[Test] Memory stats:", getMemoryStats());
 }
