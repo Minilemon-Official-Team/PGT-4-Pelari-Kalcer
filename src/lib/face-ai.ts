@@ -7,8 +7,8 @@
  * @module face-ai
  */
 
-import path from "node:path";
 import { Human, type Result } from "@vladmandic/human";
+import path from "node:path";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -21,6 +21,9 @@ export const EMBEDDING_DIMENSIONS = 1024;
 
 /** Default minimum confidence for face detection */
 export const DEFAULT_MIN_CONFIDENCE = 0.5;
+
+/** Maximum number of faces to detect per image */
+export const DEFAULT_MAX_DETECTED = 50;
 
 // ---------------------------------------------------------------------------
 // Human Instance
@@ -35,6 +38,7 @@ const human = new Human({
       enabled: true,
       modelPath: "blazeface.json",
       minConfidence: DEFAULT_MIN_CONFIDENCE,
+      maxDetected: DEFAULT_MAX_DETECTED,
     },
     mesh: { enabled: true, modelPath: "facemesh.json" },
     description: { enabled: true, modelPath: "faceres.json" },
@@ -431,6 +435,20 @@ if (import.meta.main) {
     const similarity = compareFaces(resultA3.faces[0].embedding, resultA3.faces[0].embedding);
     console.info(`Self-similarity: ${similarity.toFixed(4)} (should be 1.0)`);
   }
+
+  // Test 5: No face
+  console.info("\n=== Test 5: No face detected ===");
+  const noFaceImage = path.resolve(process.cwd(), "public/samples", "background.jpg");
+  const bufferNoFace = fs.readFileSync(noFaceImage);
+  const resultNoFace = await processPhotoForEmbeddings(bufferNoFace);
+  console.info(`No face image - faces detected: ${resultNoFace.faces.length}`);
+
+  // Test 6: Group photo
+  console.info("\n=== Test 6: Group photo ===");
+  const groupPhoto = path.resolve(process.cwd(), "public/samples", "group-3.jpg");
+  const bufferGroup = fs.readFileSync(groupPhoto);
+  const resultGroup = await processPhotoForEmbeddings(bufferGroup);
+  console.info(`Group photo - faces detected: ${resultGroup.faces.length}`);
 
   console.info("\n[Test] Memory stats:", getMemoryStats());
 }
