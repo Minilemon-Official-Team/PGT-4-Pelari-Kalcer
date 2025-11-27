@@ -11,6 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+<<<<<<< HEAD
+=======
+import { Route as DashboardRouteImport } from './routes/dashboard'
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
@@ -31,6 +35,14 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+<<<<<<< HEAD
+=======
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -79,9 +91,15 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+<<<<<<< HEAD
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+=======
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -92,9 +110,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+<<<<<<< HEAD
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+=======
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -106,9 +130,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+<<<<<<< HEAD
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+=======
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -121,9 +151,15 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/register'
     | '/api/auth/$'
+=======
+    | '/dashboard'
+    | '/login'
+    | '/register'
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -134,9 +170,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/register'
     | '/api/auth/$'
+=======
+    | '/dashboard'
+    | '/login'
+    | '/register'
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -147,9 +189,15 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/register'
     | '/api/auth/$'
+=======
+    | '/dashboard'
+    | '/login'
+    | '/register'
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -161,9 +209,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+<<<<<<< HEAD
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+=======
+  DashboardRoute: typeof DashboardRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
@@ -189,6 +243,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+<<<<<<< HEAD
+=======
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
     '/': {
       id: '/'
       path: '/'
@@ -257,9 +321,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+<<<<<<< HEAD
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+=======
+  DashboardRoute: DashboardRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
+>>>>>>> 587eaa4 (feat(#14): implement authentication pages with Better-Auth integration)
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,

@@ -1,10 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginContract } from "@/contracts/auth.contract";
 import { authClient } from "@/lib/auth-client";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -16,7 +15,6 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,14 +36,11 @@ function LoginPage() {
 
     try {
       setStatus("Signing in...");
-      setIsLoading(true);
       const response = await authClient.signIn.email({ email, password });
       if (response.error) {
         setStatus(response.error.message || "Sign in failed");
-        setIsLoading(false);
       } else {
-        setIsLoading(false);
-        await navigate({ to: "/" });
+        await navigate({ to: "/dashboard" as any });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign in failed");
@@ -67,7 +62,7 @@ function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={status === "Signing in..."}
             />
             {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
           </div>
@@ -81,7 +76,7 @@ function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              disabled={status === "Signing in..."}
             />
             {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
           </div>
@@ -97,9 +92,9 @@ function LoginPage() {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Don't have an account?{" "}
-          <Link to="/register" className="text-cyan-400 hover:text-cyan-300">
+          <a href="/register" className="text-cyan-400 hover:text-cyan-300">
             Sign up
-          </Link>
+          </a>
         </p>
       </div>
     </div>

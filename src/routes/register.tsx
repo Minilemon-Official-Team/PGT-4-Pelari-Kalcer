@@ -1,10 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { registerContract } from "@/contracts/auth.contract";
 import { authClient } from "@/lib/auth-client";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
@@ -13,11 +12,10 @@ export const Route = createFileRoute("/register")({
 function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [username, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +23,7 @@ function RegisterPage() {
     setStatus("");
 
     // Validate
-    const result = registerContract.safeParse({ email, username, password });
+    const result = registerContract.safeParse({ email, name, password });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
@@ -39,14 +37,11 @@ function RegisterPage() {
 
     try {
       setStatus("Signing up...");
-      setIsLoading(true);
-      const response = await authClient.signUp.email({ email, password, name: username });
+      const response = await authClient.signUp.email({ email, password, name });
       if (response.error) {
         setStatus(response.error.message || "Sign up failed");
-        setIsLoading(false);
       } else {
-        setIsLoading(false);
-        await navigate({ to: "/" });
+        await navigate({ to: "/dashboard" as any });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign up failed");
@@ -66,11 +61,11 @@ function RegisterPage() {
             <Input
               id="name"
               type="text"
-              value={username}
-              onChange={(e) => setUserName(e.target.value)}
-              disabled={isLoading}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={status === "Signing up..."}
             />
-            {errors.username && <p className="text-sm text-red-400 mt-1">{errors.username}</p>}
+            {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}
           </div>
 
           <div>
@@ -82,7 +77,7 @@ function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={status === "Signing up..."}
             />
             {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
           </div>
@@ -96,7 +91,7 @@ function RegisterPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              disabled={status === "Signing up..."}
             />
             {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
           </div>
@@ -112,9 +107,9 @@ function RegisterPage() {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-cyan-400 hover:text-cyan-300">
+          <a href="/login" className="text-cyan-400 hover:text-cyan-300">
             Sign in
-          </Link>
+          </a>
         </p>
       </div>
     </div>
