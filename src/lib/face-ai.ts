@@ -5,6 +5,22 @@
  * using @vladmandic/human with TensorFlow.js backend.
  *
  * @module face-ai
+ * @see {@link initHuman} - Must be called before any detection
+ * @see {@link processPhotoForEmbeddings} - Main batch processing function
+ * @see {@link validateSelfie} - User selfie validation with antispoof
+ * @see {@link compareFaces} - Compare two embeddings for similarity
+ *
+ * @example Basic usage
+ * ```ts
+ * import { initHuman, processPhotoForEmbeddings, compareFaces } from "@/lib/face-ai";
+ *
+ * await initHuman();
+ *
+ * const photo = await fs.readFile("group.jpg");
+ * const result = await processPhotoForEmbeddings(photo);
+ *
+ * console.log(`Found ${result.facesCount} faces`);
+ * ```
  */
 
 import path from "node:path";
@@ -16,14 +32,64 @@ import { Human, type Result } from "@vladmandic/human";
 
 const modelsPath = path.resolve(process.cwd(), "node_modules/@vladmandic/human/models");
 
-/** Embedding dimension for the faceres model */
+/**
+ * Embedding dimension for the faceres model.
+ * Fixed by model architecture - do not change.
+ *
+ * @remarks
+ * The Human library's faceres model produces 1024-dimensional embeddings.
+ * This is used for pgvector column sizing: `vector(1024)`.
+ */
 export const EMBEDDING_DIMENSIONS = 1024;
 
-/** Default minimum confidence for face detection */
+/**
+ * Default minimum confidence for face detection.
+ * Faces with scores below this threshold are filtered out.
+ * @default 0.5
+ */
 export const DEFAULT_MIN_CONFIDENCE = 0.5;
 
-/** Maximum number of faces to detect per image */
+/**
+ * Default maximum number of faces to detect per image.
+ * Increase for very large group photos.
+ * @default 50
+ */
 export const DEFAULT_MAX_DETECTED = 50;
+
+/**
+ * Default minimum confidence for selfie validation.
+ * Higher than batch processing to ensure quality user profile photos.
+ * @default 0.6
+ */
+export const DEFAULT_SELFIE_MIN_CONFIDENCE = 0.6;
+
+/**
+ * Default minimum anti-spoof score for selfie validation.
+ * Detects fake/printed/screen photos.
+ * @default 0.5
+ * @see {@link validateSelfie}
+ */
+export const DEFAULT_MIN_REAL_SCORE = 0.5;
+
+/**
+ * Default minimum liveness score for selfie validation.
+ * Detects recordings or static images.
+ * @default 0.5
+ * @see {@link validateSelfie}
+ */
+export const DEFAULT_MIN_LIVE_SCORE = 0.5;
+
+/**
+ * Similarity threshold for face matching.
+ *
+ * Human library uses multiplier=20 which normalizes scores so:
+ * - Same person: typically 0.40-0.55
+ * - Different people: typically 0.20-0.35
+ *
+ * @default 0.4
+ * @see {@link compareFaces}
+ */
+export const DEFAULT_MATCH_THRESHOLD = 0.4;
 
 // ---------------------------------------------------------------------------
 // Human Instance
@@ -57,7 +123,12 @@ const human = new Human({
 // Types
 // ---------------------------------------------------------------------------
 
-/** Face detection result with embedding */
+/**
+ * Face detection result with embedding.
+ *
+ * @see {@link processPhotoForEmbeddings}
+ * @since 0.1.0
+ */
 export interface DetectedFace {
   /** Face index in the image (0-based) */
   index: number;
@@ -75,7 +146,12 @@ export interface DetectedFace {
   genderScore?: number;
 }
 
-/** Result from processing a photo for face embeddings */
+/**
+ * Result from processing a photo for face embeddings.
+ *
+ * @see {@link processPhotoForEmbeddings}
+ * @since 0.1.0
+ */
 export interface PhotoProcessingResult {
   /** Number of faces detected */
   facesCount: number;
@@ -83,7 +159,12 @@ export interface PhotoProcessingResult {
   faces: DetectedFace[];
 }
 
-/** Result from selfie validation */
+/**
+ * Result from selfie validation.
+ *
+ * @see {@link validateSelfie}
+ * @since 0.1.0
+ */
 export interface SelfieValidationResult {
   /** Whether the selfie is valid */
   isValid: boolean;
@@ -105,8 +186,19 @@ let isInitialized = false;
 
 /**
  * Initialize the Human AI library.
+ *
  * Must be called before using any detection functions.
  * Safe to call multiple times (will only initialize once).
+ *
+ * @throws {Error} If model files cannot be loaded
+ *
+ * @since 0.1.0
+ *
+ * @example
+ * ```ts
+ * await initHuman();
+ * // Now safe to use detection functions
+ * ```
  */
 export async function initHuman(): Promise<void> {
   if (isInitialized) return;
@@ -123,6 +215,9 @@ export async function initHuman(): Promise<void> {
 
 /**
  * Check if the Human AI library is initialized.
+ *
+ * @returns True if {@link initHuman} has completed successfully
+ * @since 0.1.0
  */
 export function isHumanInitialized(): boolean {
   return isInitialized;
@@ -134,10 +229,24 @@ export function isHumanInitialized(): boolean {
 
 /**
  * Decode an image buffer to a tensor for processing.
- * Remember to dispose the tensor after use!
  *
- * @param buffer - Image file buffer (JPEG, PNG, etc.)
+ * **Important:** Remember to dispose the tensor after use with {@link disposeTensor}!
+ *
+ * @param buffer - Image file buffer (JPEG, PNG, WebP, GIF)
  * @returns Tensor ready for detection
+ *
+ * @since 0.1.0
+ * @see {@link disposeTensor} - Must be called to prevent memory leaks
+ *
+ * @example
+ * ```ts
+ * const tensor = decodeImage(buffer);
+ * try {
+ *   const result = await detectFaces(tensor);
+ * } finally {
+ *   disposeTensor(tensor);
+ * }
+ * ```
  */
 export function decodeImage(buffer: Buffer) {
   return human.tf.node.decodeImage(buffer, 3);
@@ -146,8 +255,14 @@ export function decodeImage(buffer: Buffer) {
 /**
  * Run face detection on an image tensor.
  *
- * @param tensor - Image tensor from decodeImage()
+ * @param tensor - Image tensor from {@link decodeImage}
  * @returns Raw Human detection result
+ *
+ * @throws {Error} If Human AI is not initialized
+ *
+ * @since 0.1.0
+ * @see {@link decodeImage} - Create tensor from buffer
+ * @see {@link processPhotoForEmbeddings} - Higher-level API
  */
 export async function detectFaces(tensor: ReturnType<typeof decodeImage>): Promise<Result> {
   if (!isInitialized) {
@@ -158,9 +273,15 @@ export async function detectFaces(tensor: ReturnType<typeof decodeImage>): Promi
 
 /**
  * Dispose a tensor to free memory.
- * Always call this after you're done with a tensor!
+ *
+ * **Always call this after you're done with a tensor!**
+ * Failure to dispose tensors will cause memory leaks.
  *
  * @param tensor - Tensor to dispose
+ *
+ * @since 0.1.0
+ * @see {@link decodeImage} - Creates tensors that need disposal
+ * @see {@link getMemoryStats} - Monitor tensor count for leaks
  */
 export function disposeTensor(tensor: ReturnType<typeof decodeImage>): void {
   human.tf.dispose(tensor);
@@ -173,18 +294,31 @@ export function disposeTensor(tensor: ReturnType<typeof decodeImage>): void {
 /**
  * Process a photo to extract all face embeddings.
  *
- * @param imageBuffer - Image file buffer
+ * This is the main function for batch processing event photos.
+ * It handles tensor lifecycle internally.
+ *
+ * @param imageBuffer - Image file buffer (JPEG, PNG, WebP, GIF)
  * @returns Processing result with face count and embeddings
  *
- * @example
+ * @throws {Error} If Human AI is not initialized
+ *
+ * @since 0.1.0
+ * @see {@link PhotoProcessingResult} for return type details
+ * @see {@link EMBEDDING_DIMENSIONS} for embedding size (1024)
+ *
+ * @example Basic usage
  * ```ts
- * const buffer = await fetchImageFromS3(photoId);
+ * const buffer = await fs.readFile("group.jpg");
+ * const result = await processPhotoForEmbeddings(buffer);
+ * console.log(`Found ${result.facesCount} faces`);
+ * ```
+ *
+ * @example Store embeddings in database
+ * ```ts
  * const result = await processPhotoForEmbeddings(buffer);
  *
- * // Update photo record
  * await db.update(photos).set({ facesCount: result.facesCount });
  *
- * // Store each face embedding
  * for (const face of result.faces) {
  *   await db.insert(photoEmbeddings).values({
  *     photoId,
@@ -233,14 +367,25 @@ export async function processPhotoForEmbeddings(
 // ---------------------------------------------------------------------------
 
 /**
- * Validate a selfie.
- * Enables antispoof and liveness detection for security.
+ * Validate a selfie for user profile registration.
  *
- * @param imageBuffer - Selfie image buffer
- * @param options - Validation options
+ * Enables antispoof and liveness detection to prevent:
+ * - Printed photos
+ * - Screen photos
+ * - Deepfakes
+ *
+ * @param imageBuffer - Selfie image buffer (JPEG, PNG)
+ * @param options - Validation thresholds
  * @returns Validation result with embedding if valid
  *
- * @example
+ * @throws {Error} If Human AI is not initialized
+ *
+ * @since 0.1.0
+ * @see {@link SelfieValidationResult} for return type details
+ * @see {@link DEFAULT_MIN_REAL_SCORE} for antispoof threshold
+ * @see {@link DEFAULT_MIN_LIVE_SCORE} for liveness threshold
+ *
+ * @example Basic validation
  * ```ts
  * const result = await validateSelfie(selfieBuffer);
  *
@@ -248,25 +393,46 @@ export async function processPhotoForEmbeddings(
  *   throw new Error(result.error);
  * }
  *
- * // Store the validated embedding
  * await db.insert(userEmbeddings).values({
  *   userId: user.id,
  *   embedding: result.embedding,
+ * });
+ * ```
+ *
+ * @example With custom thresholds
+ * ```ts
+ * const result = await validateSelfie(buffer, {
+ *   minRealScore: 0.7,  // Stricter antispoof
+ *   minLiveScore: 0.7,  // Stricter liveness
+ *   minConfidence: 0.8, // Require clearer face
  * });
  * ```
  */
 export async function validateSelfie(
   imageBuffer: Buffer,
   options: {
-    /** Minimum anti-spoof score (0-1). Default: 0.5 */
+    /**
+     * Minimum anti-spoof score (0-1).
+     * @default 0.5 (DEFAULT_MIN_REAL_SCORE)
+     */
     minRealScore?: number;
-    /** Minimum liveness score (0-1). Default: 0.5 */
+    /**
+     * Minimum liveness score (0-1).
+     * @default 0.5 (DEFAULT_MIN_LIVE_SCORE)
+     */
     minLiveScore?: number;
-    /** Minimum face confidence (0-1). Default: 0.6 */
+    /**
+     * Minimum face detection confidence (0-1).
+     * @default 0.6 (DEFAULT_SELFIE_MIN_CONFIDENCE)
+     */
     minConfidence?: number;
   } = {},
 ): Promise<SelfieValidationResult> {
-  const { minRealScore = 0.5, minLiveScore = 0.5, minConfidence = 0.6 } = options;
+  const {
+    minRealScore = DEFAULT_MIN_REAL_SCORE,
+    minLiveScore = DEFAULT_MIN_LIVE_SCORE,
+    minConfidence = DEFAULT_SELFIE_MIN_CONFIDENCE,
+  } = options;
 
   if (!isInitialized) {
     throw new Error("[face-ai] Human AI not initialized. Call initHuman() first.");
@@ -346,16 +512,28 @@ export async function validateSelfie(
 /**
  * Compare two face embeddings and return similarity score.
  *
- * @param embedding1 - First face embedding
- * @param embedding2 - Second face embedding
+ * Uses Euclidean distance with multiplier=20 normalization.
+ *
+ * @param embedding1 - First face embedding (1024 dimensions)
+ * @param embedding2 - Second face embedding (1024 dimensions)
  * @returns Similarity score (0-1, higher = more similar)
  *
- * @example
+ * @since 0.1.0
+ * @see {@link DEFAULT_MATCH_THRESHOLD} - Recommended threshold (0.4)
+ *
+ * @example Basic comparison
  * ```ts
  * const similarity = compareFaces(userEmbedding, photoEmbedding);
- * if (similarity >= 0.4) {
+ * if (similarity >= DEFAULT_MATCH_THRESHOLD) {
  *   console.log("Match found!");
  * }
+ * ```
+ *
+ * @example Expected similarity ranges
+ * ```ts
+ * // Same person, different photos: 0.40 - 0.55
+ * // Different people: 0.20 - 0.35
+ * // Identical embedding: 1.00
  * ```
  */
 export function compareFaces(embedding1: number[], embedding2: number[]): number {
@@ -365,7 +543,20 @@ export function compareFaces(embedding1: number[], embedding2: number[]): number
 
 /**
  * Get memory statistics for the TensorFlow engine.
- * Useful for debugging memory leaks.
+ *
+ * Useful for debugging memory leaks - watch `numTensors` count.
+ *
+ * @returns Memory stats including numTensors, numBytes, etc.
+ *
+ * @since 0.1.0
+ * @see {@link disposeTensor} - Ensure tensors are properly disposed
+ *
+ * @example
+ * ```ts
+ * const stats = getMemoryStats();
+ * console.log(`Tensors: ${stats.numTensors}`);
+ * console.log(`Memory: ${(stats.numBytes / 1024 / 1024).toFixed(2)} MB`);
+ * ```
  */
 export function getMemoryStats() {
   return human.tf.memory();
@@ -373,6 +564,9 @@ export function getMemoryStats() {
 
 /**
  * Get the Human library version.
+ *
+ * @returns Version string (e.g., "3.3.6")
+ * @since 0.1.0
  */
 export function getVersion(): string {
   return human.version;

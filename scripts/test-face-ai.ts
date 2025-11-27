@@ -17,6 +17,13 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   compareFaces,
+  DEFAULT_MATCH_THRESHOLD,
+  DEFAULT_MAX_DETECTED,
+  DEFAULT_MIN_CONFIDENCE,
+  DEFAULT_MIN_LIVE_SCORE,
+  DEFAULT_MIN_REAL_SCORE,
+  DEFAULT_SELFIE_MIN_CONFIDENCE,
+  EMBEDDING_DIMENSIONS,
   getMemoryStats,
   getVersion,
   initHuman,
@@ -32,20 +39,31 @@ function loadImage(filename: string): Buffer {
 
 function printHeader(title: string) {
   console.info(`\n${"=".repeat(60)}`);
-  console.info(`  ${title}`);
+  console.info(`${title}`);
   console.info("=".repeat(60));
 }
 
 function printResult(label: string, value: string | number, expected?: string) {
   const exp = expected ? ` (expected: ${expected})` : "";
-  console.info(`  ${label}: ${value}${exp}`);
+  console.info(`${label}: ${value}${exp}`);
 }
 
 async function main() {
   await initHuman();
 
-  console.info("\n  Face AI Library Test Suite");
-  console.info(`  Human version: ${getVersion()}`);
+  console.info("\nFace AI Library Test Suite");
+  console.info(`Human version: ${getVersion()}`);
+  console.info("");
+  console.info("Configuration defaults:");
+  console.info(`  Embedding dimensions: ${EMBEDDING_DIMENSIONS}`);
+  console.info(`  Min confidence:       ${DEFAULT_MIN_CONFIDENCE}`);
+  console.info(`  Max faces detected:   ${DEFAULT_MAX_DETECTED}`);
+  console.info(`  Match threshold:      ${DEFAULT_MATCH_THRESHOLD}`);
+  console.info("");
+  console.info("Selfie validation defaults:");
+  console.info(`  Min confidence:       ${DEFAULT_SELFIE_MIN_CONFIDENCE}`);
+  console.info(`  Min real score:       ${DEFAULT_MIN_REAL_SCORE}`);
+  console.info(`  Min live score:       ${DEFAULT_MIN_LIVE_SCORE}`);
 
   // -------------------------------------------------------------------------
   // Test 1: Same Person - Different Photos (Vlado)
@@ -62,7 +80,7 @@ async function main() {
     );
     printResult("Vlado vs Vlado (different photos)", similarity.toFixed(4), ">= 0.40");
   } else {
-    console.info("  ❌ Could not detect faces in Vlado photos");
+    console.info("❌ Could not detect faces in Vlado photos");
   }
 
   // -------------------------------------------------------------------------
@@ -126,28 +144,28 @@ async function main() {
 
   // Good selfie - clear, single face
   const selfieResult = await validateSelfie(loadImage("stock-emotions-a-3.jpg"));
-  console.info("  Good selfie (stock-emotions-a-3.jpg):");
-  printResult("    Valid", selfieResult.isValid ? "✅ Yes" : `❌ No - ${selfieResult.error}`);
+  console.info("Good selfie (stock-emotions-a-3.jpg):");
+  printResult("  Valid", selfieResult.isValid ? "✅ Yes" : `❌ No - ${selfieResult.error}`);
   if (selfieResult.isValid) {
-    printResult("    Real score", selfieResult.realScore?.toFixed(4) ?? "N/A", ">= 0.50");
-    printResult("    Live score", selfieResult.liveScore?.toFixed(4) ?? "N/A", ">= 0.50");
-    printResult("    Embedding length", selfieResult.embedding?.length ?? 0, "1024");
+    printResult("  Real score", selfieResult.realScore?.toFixed(4) ?? "N/A", ">= 0.50");
+    printResult("  Live score", selfieResult.liveScore?.toFixed(4) ?? "N/A", ">= 0.50");
+    printResult("  Embedding length", selfieResult.embedding?.length ?? 0, "1024");
   }
 
   // Multiple faces - should reject
   const multiResult = await validateSelfie(loadImage("group-3.jpg"));
-  console.info("\n  Multiple faces (group-3.jpg):");
-  printResult("    Valid", multiResult.isValid ? "❌ Should reject" : "✅ Rejected");
+  console.info("\nMultiple faces (group-3.jpg):");
+  printResult("  Valid", multiResult.isValid ? "❌ Should reject" : "✅ Rejected");
   if (!multiResult.isValid) {
-    printResult("    Error", multiResult.error ?? "N/A");
+    printResult("  Error", multiResult.error ?? "N/A");
   }
 
   // No face - should reject
   const noFaceResult = await validateSelfie(loadImage("background.jpg"));
-  console.info("\n  No face (background.jpg):");
-  printResult("    Valid", noFaceResult.isValid ? "❌ Should reject" : "✅ Rejected");
+  console.info("\nNo face (background.jpg):");
+  printResult("  Valid", noFaceResult.isValid ? "❌ Should reject" : "✅ Rejected");
   if (!noFaceResult.isValid) {
-    printResult("    Error", noFaceResult.error ?? "N/A");
+    printResult("  Error", noFaceResult.error ?? "N/A");
   }
 
   // -------------------------------------------------------------------------
@@ -159,8 +177,8 @@ async function main() {
   const vladoSelfie = vladoResult1.faces[0]?.embedding;
 
   if (vladoSelfie && group1.faces.length > 0) {
-    console.info("  Searching for Vlado in group-1.jpg...");
-    console.info(`  Group has ${group1.facesCount} faces\n`);
+    console.info("Searching for Vlado in group-1.jpg...");
+    console.info(`Group has ${group1.facesCount} faces\n`);
 
     const matches: { index: number; similarity: number }[] = [];
 
@@ -177,14 +195,14 @@ async function main() {
     for (let i = 0; i < Math.min(3, matches.length); i++) {
       const m = matches[i];
       const isMatch = m.similarity >= 0.4 ? "✅ MATCH" : "";
-      console.info(`    Face #${m.index}: ${m.similarity.toFixed(4)} ${isMatch}`);
+      console.info(`  Face #${m.index}: ${m.similarity.toFixed(4)} ${isMatch}`);
     }
 
     const bestMatch = matches[0];
     if (bestMatch.similarity >= 0.4) {
-      console.info(`\n  ✅ Vlado found in group photo (Face #${bestMatch.index})`);
+      console.info(`\n✅ Vlado found in group photo (Face #${bestMatch.index})`);
     } else {
-      console.info("\n  ❌ Vlado not confidently found in group photo");
+      console.info("\n❌ Vlado not confidently found in group photo");
     }
   }
 
@@ -202,7 +220,7 @@ async function main() {
       "group-5.jpg",
       "stock-group-1.jpg", // Expected to fail
     ];
-    console.info("  Searching for Vlado across group photos...\n");
+    console.info("Searching for Vlado across group photos...\n");
 
     for (const file of groupFiles) {
       const groupResult = await processPhotoForEmbeddings(loadImage(file));
@@ -217,7 +235,7 @@ async function main() {
 
       const status = bestSim >= 0.4 ? "✅" : "❌";
       console.info(
-        `  ${file}: ${groupResult.facesCount} faces, best match: ${bestSim.toFixed(4)} ${status}`,
+        `${file}: ${groupResult.facesCount} faces, best match: ${bestSim.toFixed(4)} ${status}`,
       );
     }
   }
@@ -227,8 +245,8 @@ async function main() {
   // -------------------------------------------------------------------------
   printHeader("Memory Stats");
   const mem = getMemoryStats();
-  console.info(`  Tensors: ${mem.numTensors}`);
-  console.info(`  Bytes: ${(mem.numBytes / 1024 / 1024).toFixed(2)} MB`);
+  console.info(`Tensors: ${mem.numTensors}`);
+  console.info(`Bytes: ${(mem.numBytes / 1024 / 1024).toFixed(2)} MB`);
 
   console.info("\n✅ Test suite completed!\n");
 }

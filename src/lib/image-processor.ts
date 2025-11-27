@@ -5,6 +5,16 @@
  * for the photo processing pipeline.
  *
  * @module image-processor
+ * @see {@link processImageForDisplay} - Main processing function
+ *
+ * @example
+ * ```ts
+ * import { processImageForDisplay } from "@/lib/image-processor";
+ *
+ * const raw = await fs.readFile("photo.jpg");
+ * const result = await processImageForDisplay(raw);
+ * await fs.writeFile("display.jpg", result.buffer);
+ * ```
  */
 
 import sharp from "sharp";
@@ -13,47 +23,113 @@ import sharp from "sharp";
 // Configuration
 // ---------------------------------------------------------------------------
 
-/** Target height for display images (maintains aspect ratio) */
-export const DISPLAY_HEIGHT = 1080;
+/**
+ * Default target height for display images in pixels.
+ * Maintains aspect ratio; images smaller than this won't be upscaled.
+ * @default 1080
+ */
+export const DEFAULT_DISPLAY_HEIGHT = 1080;
 
-/** JPEG compression quality (0-100) */
-export const COMPRESSION_QUALITY = 80;
+/**
+ * Default JPEG compression quality.
+ * Higher values = better quality but larger files.
+ * @default 80
+ */
+export const DEFAULT_COMPRESSION_QUALITY = 80;
 
-/** Watermark configuration */
+/**
+ * Default watermark opacity.
+ * Higher values = more visible watermark.
+ * @default 0.15
+ */
+export const DEFAULT_WATERMARK_OPACITY = 0.15;
+
+/**
+ * Default watermark text.
+ * @default "RunCam"
+ */
+export const DEFAULT_WATERMARK_TEXT = "RunCam";
+
+/**
+ * Default watermark rotation angle in degrees.
+ * Negative = counter-clockwise.
+ * @default -30
+ */
+export const DEFAULT_WATERMARK_ANGLE = -30;
+
+/**
+ * Default spacing between watermark repetitions in pixels.
+ * @default 150
+ */
+export const DEFAULT_WATERMARK_SPACING = 150;
+
+/**
+ * Default watermark font size in pixels.
+ * @default 24
+ */
+export const DEFAULT_WATERMARK_FONT_SIZE = 24;
+
+/**
+ * Watermark configuration object.
+ * Individual values can be imported separately as DEFAULT_WATERMARK_* constants.
+ */
 export const WATERMARK_CONFIG = {
-  /** Opacity of watermark overlay (0-1) */
-  opacity: 0.15,
-  /** Text to display */
-  text: "RunCam",
-  /** Angle of diagonal lines in degrees */
-  angle: -30,
-  /** Spacing between watermark repetitions */
-  spacing: 150,
+  opacity: DEFAULT_WATERMARK_OPACITY,
+  text: DEFAULT_WATERMARK_TEXT,
+  angle: DEFAULT_WATERMARK_ANGLE,
+  spacing: DEFAULT_WATERMARK_SPACING,
+  fontSize: DEFAULT_WATERMARK_FONT_SIZE,
 } as const;
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
+/**
+ * Result from image processing operations.
+ *
+ * @see {@link processImageForDisplay}
+ */
 export interface ProcessedImage {
-  /** Processed image buffer (JPEG) */
+  /** Processed image buffer (JPEG format) */
   buffer: Buffer;
-  /** Width of processed image */
+  /** Width of processed image in pixels */
   width: number;
-  /** Height of processed image */
+  /** Height of processed image in pixels */
   height: number;
-  /** Original width before processing */
+  /** Original width before processing in pixels */
   originalWidth: number;
-  /** Original height before processing */
+  /** Original height before processing in pixels */
   originalHeight: number;
 }
 
+/**
+ * Options for image processing.
+ *
+ * All options have sensible defaults and can be imported as constants:
+ * - `targetHeight` defaults to {@link DEFAULT_DISPLAY_HEIGHT}
+ * - `quality` defaults to {@link DEFAULT_COMPRESSION_QUALITY}
+ *
+ * @see {@link processImageForDisplay}
+ */
 export interface ProcessingOptions {
-  /** Target height in pixels. Default: 1080 */
+  /**
+   * Target height in pixels.
+   * Images smaller than this will not be upscaled.
+   * @default 1080 (DEFAULT_DISPLAY_HEIGHT)
+   */
   targetHeight?: number;
-  /** JPEG quality 0-100. Default: 80 */
+  /**
+   * JPEG compression quality (0-100).
+   * Higher values = better quality but larger files.
+   * @default 80 (DEFAULT_COMPRESSION_QUALITY)
+   */
   quality?: number;
-  /** Skip watermarking. Default: false */
+  /**
+   * Skip watermark overlay.
+   * Useful for testing or admin previews.
+   * @default false
+   */
   skipWatermark?: boolean;
 }
 
@@ -64,9 +140,14 @@ export interface ProcessingOptions {
 /**
  * Generate SVG watermark pattern for the given dimensions.
  * Creates diagonal repeating text pattern.
+ *
+ * @internal
+ * @param width - Image width in pixels
+ * @param height - Image height in pixels
+ * @returns SVG buffer for compositing
  */
 function generateWatermarkSvg(width: number, height: number): Buffer {
-  const { text, angle, spacing, opacity } = WATERMARK_CONFIG;
+  const { text, angle, spacing, opacity, fontSize } = WATERMARK_CONFIG;
 
   // Calculate how many repetitions we need
   const diagonal = Math.sqrt(width * width + height * height);
@@ -79,7 +160,7 @@ function generateWatermarkSvg(width: number, height: number): Buffer {
     for (let col = 0; col < cols; col++) {
       const x = col * spacing - diagonal / 2;
       const y = row * spacing - diagonal / 2;
-      textElements += `<text x="${x}" y="${y}" fill="white" font-size="24" font-family="Arial, sans-serif" font-weight="bold">${text}</text>`;
+      textElements += `<text x="${x}" y="${y}" fill="white" font-size="${fontSize}" font-family="Arial, sans-serif" font-weight="bold">${text}</text>`;
     }
   }
 
@@ -109,16 +190,30 @@ function generateWatermarkSvg(width: number, height: number): Buffer {
  * 2. Apply diagonal watermark pattern
  * 3. Compress as JPEG
  *
- * @param inputBuffer - Raw image buffer (JPEG, PNG, etc.)
- * @param options - Processing options
+ * @param inputBuffer - Raw image buffer (JPEG, PNG, WebP, AVIF, TIFF, GIF, SVG)
+ * @param options - Processing options (all optional with sensible defaults)
  * @returns Processed image with metadata
  *
- * @example
+ * @throws {Error} If image dimensions cannot be read (corrupted or unsupported format)
+ *
+ * @since 0.1.0
+ * @see {@link ProcessingOptions} for available options
+ * @see {@link ProcessedImage} for return type details
+ *
+ * @example Basic usage
  * ```ts
  * const raw = await fs.readFile("photo.jpg");
  * const result = await processImageForDisplay(raw);
  * await fs.writeFile("photo-display.jpg", result.buffer);
- * console.log(`Resized from ${result.originalHeight}p to ${result.height}p`);
+ * ```
+ *
+ * @example With custom options
+ * ```ts
+ * const result = await processImageForDisplay(raw, {
+ *   targetHeight: 720,
+ *   quality: 90,
+ *   skipWatermark: true,
+ * });
  * ```
  */
 export async function processImageForDisplay(
@@ -126,8 +221,8 @@ export async function processImageForDisplay(
   options: ProcessingOptions = {},
 ): Promise<ProcessedImage> {
   const {
-    targetHeight = DISPLAY_HEIGHT,
-    quality = COMPRESSION_QUALITY,
+    targetHeight = DEFAULT_DISPLAY_HEIGHT,
+    quality = DEFAULT_COMPRESSION_QUALITY,
     skipWatermark = false,
   } = options;
 
@@ -179,8 +274,24 @@ export async function processImageForDisplay(
   };
 }
 
+// ---------------------------------------------------------------------------
+// Utility Functions
+// ---------------------------------------------------------------------------
+
 /**
  * Get image metadata without processing.
+ *
+ * @param buffer - Raw image buffer
+ * @returns Sharp metadata (width, height, format, etc.)
+ *
+ * @since 0.1.0
+ * @see https://sharp.pixelplumbing.com/api-input#metadata
+ *
+ * @example
+ * ```ts
+ * const meta = await getImageMetadata(buffer);
+ * console.log(`${meta.width}x${meta.height} ${meta.format}`);
+ * ```
  */
 export async function getImageMetadata(buffer: Buffer) {
   return sharp(buffer).metadata();
@@ -188,6 +299,19 @@ export async function getImageMetadata(buffer: Buffer) {
 
 /**
  * Get the Sharp library versions.
+ *
+ * Useful for debugging and ensuring the correct native bindings are installed.
+ *
+ * @returns Object with version strings for Sharp, libvips, and other dependencies
+ *
+ * @since 0.1.0
+ * @see https://sharp.pixelplumbing.com/api-utility#versions
+ *
+ * @example
+ * ```ts
+ * const versions = getVersion();
+ * console.log(`Sharp: ${versions.sharp}, libvips: ${versions.vips}`);
+ * ```
  */
 export function getVersion() {
   return sharp.versions;
