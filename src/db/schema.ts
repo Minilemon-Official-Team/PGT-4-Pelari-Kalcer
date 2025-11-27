@@ -1,6 +1,6 @@
 import {
   boolean,
-  customType,
+  index,
   integer,
   pgEnum,
   pgTable,
@@ -9,23 +9,8 @@ import {
   timestamp,
   uuid,
   varchar,
+  vector,
 } from "drizzle-orm/pg-core";
-
-// ------------------------------------------
-// CUSTOM TYPES
-// ------------------------------------------
-
-export const vector = customType<{ data: number[]; driverData: string }>({
-  dataType() {
-    return "vector(128)";
-  },
-  toDriver(value: number[]): string {
-    return JSON.stringify(value);
-  },
-  fromDriver(value: string): number[] {
-    return JSON.parse(value);
-  },
-});
 
 // ------------------------------------------
 // ENUMS
@@ -158,32 +143,40 @@ export const photosTable = pgTable("photos", {
     .$onUpdate(() => new Date()),
 });
 
-export const photoEmbeddingsTable = pgTable("photo_embeddings", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  photoId: uuid("photo_id")
-    .notNull()
-    .references(() => photosTable.id),
-  embedding: vector("embedding").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const photoEmbeddingsTable = pgTable(
+  "photo_embeddings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    photoId: uuid("photo_id")
+      .notNull()
+      .references(() => photosTable.id),
+    embedding: vector("embedding", { dimensions: 1024 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [index("photo_embeddings_l2_idx").using("hnsw", table.embedding.op("vector_l2_ops"))],
+);
 
-export const userEmbeddingsTable = pgTable("user_embeddings", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => usersTable.id),
-  embedding: vector("embedding").notNull(),
-  isActive: boolean("is_active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const userEmbeddingsTable = pgTable(
+  "user_embeddings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    embedding: vector("embedding", { dimensions: 1024 }).notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [index("user_embeddings_l2_idx").using("hnsw", table.embedding.op("vector_l2_ops"))],
+);
 
 export const claimsTable = pgTable("claims", {
   id: uuid("id").primaryKey().defaultRandom(),
