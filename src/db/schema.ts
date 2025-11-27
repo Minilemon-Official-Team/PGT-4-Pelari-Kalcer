@@ -1,11 +1,4 @@
-import { boolean, integer, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
-
-export const usersTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
-});
+import { boolean, pgTable, text, timestamp, } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -49,5 +42,5 @@ export const verification = pgTable("verification", {
 });
 
 
-export type User = typeof usersTable.$inferSelect;
-export type NewUser = typeof usersTable.$inferInsert;
+export type User = typeof user.$inferSelect;
+export type NewUser = typeof user.$inferInsert;
