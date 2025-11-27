@@ -3,7 +3,7 @@ import { eventsTable, userEmbeddingsTable, usersTable } from "../src/db/schema";
 
 // Helper to generate mock 128-dimensional vector
 function generateMockEmbedding(): number[] {
-  return Array.from({ length: 128 }, () => Math.random() * 2 - 1);
+  return Array.from({ length: 1024 }, () => Math.random() * 2 - 1);
 }
 
 const seedUsers = [
@@ -67,7 +67,7 @@ const seedEvents = [
     location: "Bundaran HI, Jakarta",
     startsAt: new Date("2025-12-01T06:00:00Z"),
     visibility: "public" as const,
-    createdBy: "creator-1",
+    createdBy: "admin-1",
   },
   {
     name: "Bali Fun Run",
@@ -75,7 +75,7 @@ const seedEvents = [
     location: "Sanur Beach, Bali",
     startsAt: new Date("2025-12-15T07:00:00Z"),
     visibility: "public" as const,
-    createdBy: "creator-2",
+    createdBy: "admin-1",
   },
 ];
 
