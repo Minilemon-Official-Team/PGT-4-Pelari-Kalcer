@@ -20,7 +20,7 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     services:
       postgres:
-        image: pgvector/pgvector:0.8.1-pg18-trixie
+        image: pgvector/pgvector:pg18
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -28,7 +28,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres"
+          --health-cmd "pg_isready -U ${{ secrets.POSTGRES_USER }}"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -40,13 +40,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
-
-      - name: Wait for PostgreSQL
-        run: |
-          until pg_isready -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }}; do
-            echo "Waiting for postgres..."
-            sleep 2
-          done
 
       - name: Setup pgvector extension
         run: |

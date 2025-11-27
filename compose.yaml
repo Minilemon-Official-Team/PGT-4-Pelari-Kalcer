@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: pgvector/pgvector:0.8.1-pg18-trixie
+    image: pgvector/pgvector:pg18
     container_name: pgt4-postgres
     environment:
       POSTGRES_DB: pgt4_pelari_kalcer
