@@ -15,7 +15,7 @@ Photographers upload their photos, the system creates a face embedding for each 
 - **Database & Migrations:** [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) via [Drizzle ORM](https://orm.drizzle.team/)
 - **Object Storage:** [MinIO](https://min.io/) for local S3‑compatible buckets
 - **Tooling & DX:** [Biome](https://biomejs.dev/) for linting/formatting, [TanStack Devtools](https://tanstack.com/devtools) (Router/Query), and [Adminer](https://www.adminer.org/) for quick database inspection
-- **Face Detection:** [face‑api.js](https://justadudewhohacks.github.io/face-api.js/docs/index.html) for face detection and embedding creation
+- **Face Detection:** [@vladmandic/human](https://github.com/vladmandic/human) for face detection and embedding extraction (1024-dim vectors via `faceres` model)
 
 ## Prerequisites
 
