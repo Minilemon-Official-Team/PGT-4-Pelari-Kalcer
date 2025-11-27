@@ -3,8 +3,15 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "../db";
 
-
 export const auth = betterAuth({
+  user: {
+    additionalFields: {
+      phone: {
+        type: "string",
+        required: false,
+      },
+    },
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
@@ -15,7 +22,7 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 60 * 5
-    }
-  }
+      maxAge: 60 * 5,
+    },
+  },
 });
