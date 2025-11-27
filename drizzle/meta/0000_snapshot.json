@@ -1,5 +1,5 @@
 {
-  "id": "e4ef1565-20b9-435b-a9bd-c56e4c79503c",
+  "id": "729e88ac-a8a7-40bd-85ab-860345f3b7b0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -337,7 +337,7 @@
         },
         "embedding": {
           "name": "embedding",
-          "type": "vector(128)",
+          "type": "vector(1024)",
           "primaryKey": false,
           "notNull": true
         },
@@ -356,7 +356,24 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "photo_embeddings_l2_idx": {
+          "name": "photo_embeddings_l2_idx",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_l2_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "photo_embeddings_photo_id_photos_id_fk": {
           "name": "photo_embeddings_photo_id_photos_id_fk",
@@ -575,7 +592,7 @@
         },
         "embedding": {
           "name": "embedding",
-          "type": "vector(128)",
+          "type": "vector(1024)",
           "primaryKey": false,
           "notNull": true
         },
@@ -601,7 +618,24 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "user_embeddings_l2_idx": {
+          "name": "user_embeddings_l2_idx",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_l2_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "user_embeddings_user_id_users_id_fk": {
           "name": "user_embeddings_user_id_users_id_fk",
