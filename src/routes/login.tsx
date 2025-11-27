@@ -1,10 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginContract } from "@/contracts/auth.contract";
 import { authClient } from "@/lib/auth-client";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -41,7 +40,7 @@ function LoginPage() {
       if (response.error) {
         setStatus(response.error.message || "Sign in failed");
       } else {
-        await navigate({ to: "/dashboard" });
+        await navigate({ to: "/dashboard" as any });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign in failed");
