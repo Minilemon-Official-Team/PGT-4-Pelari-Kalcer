@@ -15,8 +15,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import {
-  COMPRESSION_QUALITY,
-  DISPLAY_HEIGHT,
+  DEFAULT_COMPRESSION_QUALITY,
+  DEFAULT_DISPLAY_HEIGHT,
+  DEFAULT_WATERMARK_ANGLE,
+  DEFAULT_WATERMARK_FONT_SIZE,
+  DEFAULT_WATERMARK_OPACITY,
+  DEFAULT_WATERMARK_SPACING,
+  DEFAULT_WATERMARK_TEXT,
   getVersion,
   processImageForDisplay,
 } from "../src/lib/image-processor";
@@ -61,8 +66,15 @@ function formatCompression(original: number, processed: number): string {
 async function main() {
   console.info("\nImage Processor Library Test Suite");
   console.info(`Sharp version: ${getVersion().sharp}`);
-  console.info(`Default height: ${DISPLAY_HEIGHT}px`);
-  console.info(`Default quality: ${COMPRESSION_QUALITY}%`);
+  console.info("");
+  console.info("Configuration defaults:");
+  console.info(`  Display height:    ${DEFAULT_DISPLAY_HEIGHT}px`);
+  console.info(`  JPEG quality:      ${DEFAULT_COMPRESSION_QUALITY}%`);
+  console.info(`  Watermark text:    "${DEFAULT_WATERMARK_TEXT}"`);
+  console.info(`  Watermark opacity: ${DEFAULT_WATERMARK_OPACITY}`);
+  console.info(`  Watermark angle:   ${DEFAULT_WATERMARK_ANGLE}°`);
+  console.info(`  Watermark spacing: ${DEFAULT_WATERMARK_SPACING}px`);
+  console.info(`  Watermark font:    ${DEFAULT_WATERMARK_FONT_SIZE}px`);
 
   // Ensure output directory exists
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
@@ -83,7 +95,7 @@ async function main() {
   printResult(
     "Processed dimensions",
     formatDimensions(result.width, result.height),
-    `≤ ${DISPLAY_HEIGHT}p`,
+    `≤ ${DEFAULT_DISPLAY_HEIGHT}p`,
   );
   printResult("Compression", formatCompression(groupImage.length, result.buffer.length));
   printResult("Processing time", `${elapsed}ms`);
