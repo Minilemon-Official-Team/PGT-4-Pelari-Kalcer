@@ -38,7 +38,7 @@ Table user {
   id text [pk, note: 'Better-Auth String ID']
   username varchar [not null, unique]
   email varchar [not null, unique]
-  emailVerified boolean [not null, default: false]
+  email_verified boolean [not null, default: false]
   image text [note: 'Stored in runcam-display (Public Bucket, Watermarked)']
   role user_role [not null, default: 'member']
 
@@ -49,20 +49,20 @@ Table user {
 
 Table session {
   id text [pk]
-  expiresAt timestamptz [not null]
-  ipAddress text
-  userAgent text
-  userId text [not null]
+  expires_at timestamptz [not null]
+  ip_address text
+  user_agent text
+  user_id text [not null]
 }
 
 Table account {
   id text [pk]
-  accountId text [not null]
-  providerId text [not null]
-  userId text [not null]
-  accessToken text
-  refreshToken text
-  expiresAt timestamptz
+  account_id text [not null]
+  provider_id text [not null]
+  user_id text [not null]
+  access_token text
+  refresh_token text
+  expires_at timestamptz
   password text [note: 'Hashed password']
 }
 
@@ -70,7 +70,7 @@ Table verification {
   id text [pk]
   identifier text [not null]
   value text [not null]
-  expiresAt timestamptz [not null]
+  expires_at timestamptz [not null]
 }
 
 // ------------------------------------------
@@ -158,8 +158,8 @@ Table claim {
   updated_at timestamptz [not null, default: `now()`]
 }
 
-Ref: session.userId > user.id [delete: cascade]
-Ref: account.userId > user.id [delete: cascade]
+Ref: session.user_id > user.id [delete: cascade]
+Ref: account.user_id > user.id [delete: cascade]
 Ref: creator_request.user_id > user.id [delete: cascade]
 Ref: creator_request.reviewed_by > user.id [delete: set null]
 Ref: event.created_by > user.id [delete: no action]
