@@ -1,5 +1,5 @@
 {
-  "id": "729e88ac-a8a7-40bd-85ab-860345f3b7b0",
+  "id": "e968764f-f6fb-4a72-950a-4fc93e4507d5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -59,13 +59,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "account_user_id_users_id_fk": {
-          "name": "account_user_id_users_id_fk",
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -75,8 +75,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.claims": {
-      "name": "claims",
+    "public.claim": {
+      "name": "claim",
       "schema": "",
       "columns": {
         "id": {
@@ -129,22 +129,22 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "claims_photo_id_photos_id_fk": {
-          "name": "claims_photo_id_photos_id_fk",
-          "tableFrom": "claims",
-          "tableTo": "photos",
+        "claim_photo_id_photo_id_fk": {
+          "name": "claim_photo_id_photo_id_fk",
+          "tableFrom": "claim",
+          "tableTo": "photo",
           "columnsFrom": ["photo_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "claims_claimant_id_users_id_fk": {
-          "name": "claims_claimant_id_users_id_fk",
-          "tableFrom": "claims",
-          "tableTo": "users",
+        "claim_claimant_id_user_id_fk": {
+          "name": "claim_claimant_id_user_id_fk",
+          "tableFrom": "claim",
+          "tableTo": "user",
           "columnsFrom": ["claimant_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -154,8 +154,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.creator_requests": {
-      "name": "creator_requests",
+    "public.creator_request": {
+      "name": "creator_request",
       "schema": "",
       "columns": {
         "id": {
@@ -214,13 +214,22 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "creator_requests_user_id_users_id_fk": {
-          "name": "creator_requests_user_id_users_id_fk",
-          "tableFrom": "creator_requests",
-          "tableTo": "users",
+        "creator_request_user_id_user_id_fk": {
+          "name": "creator_request_user_id_user_id_fk",
+          "tableFrom": "creator_request",
+          "tableTo": "user",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "creator_request_reviewed_by_user_id_fk": {
+          "name": "creator_request_reviewed_by_user_id_fk",
+          "tableFrom": "creator_request",
+          "tableTo": "user",
+          "columnsFrom": ["reviewed_by"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -230,8 +239,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.events": {
-      "name": "events",
+    "public.event": {
+      "name": "event",
       "schema": "",
       "columns": {
         "id": {
@@ -302,10 +311,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "events_created_by_users_id_fk": {
-          "name": "events_created_by_users_id_fk",
-          "tableFrom": "events",
-          "tableTo": "users",
+        "event_created_by_user_id_fk": {
+          "name": "event_created_by_user_id_fk",
+          "tableFrom": "event",
+          "tableTo": "user",
           "columnsFrom": ["created_by"],
           "columnsTo": ["id"],
           "onDelete": "no action",
@@ -318,81 +327,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.photo_embeddings": {
-      "name": "photo_embeddings",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "photo_id": {
-          "name": "photo_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "embedding": {
-          "name": "embedding",
-          "type": "vector(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "photo_embeddings_l2_idx": {
-          "name": "photo_embeddings_l2_idx",
-          "columns": [
-            {
-              "expression": "embedding",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "vector_l2_ops"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "hnsw",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "photo_embeddings_photo_id_photos_id_fk": {
-          "name": "photo_embeddings_photo_id_photos_id_fk",
-          "tableFrom": "photo_embeddings",
-          "tableTo": "photos",
-          "columnsFrom": ["photo_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.photos": {
-      "name": "photos",
+    "public.photo": {
+      "name": "photo",
       "schema": "",
       "columns": {
         "id": {
@@ -495,22 +431,95 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "photos_event_id_events_id_fk": {
-          "name": "photos_event_id_events_id_fk",
-          "tableFrom": "photos",
-          "tableTo": "events",
+        "photo_event_id_event_id_fk": {
+          "name": "photo_event_id_event_id_fk",
+          "tableFrom": "photo",
+          "tableTo": "event",
           "columnsFrom": ["event_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "photos_uploader_id_users_id_fk": {
-          "name": "photos_uploader_id_users_id_fk",
-          "tableFrom": "photos",
-          "tableTo": "users",
+        "photo_uploader_id_user_id_fk": {
+          "name": "photo_uploader_id_user_id_fk",
+          "tableFrom": "photo",
+          "tableTo": "user",
           "columnsFrom": ["uploader_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.photo_embedding": {
+      "name": "photo_embedding",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "photo_id": {
+          "name": "photo_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "vector(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "photo_embedding_l2_idx": {
+          "name": "photo_embedding_l2_idx",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_l2_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "photo_embedding_photo_id_photo_id_fk": {
+          "name": "photo_embedding_photo_id_photo_id_fk",
+          "tableFrom": "photo_embedding",
+          "tableTo": "photo",
+          "columnsFrom": ["photo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -557,13 +566,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "session_user_id_users_id_fk": {
-          "name": "session_user_id_users_id_fk",
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -573,88 +582,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.user_embeddings": {
-      "name": "user_embeddings",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "embedding": {
-          "name": "embedding",
-          "type": "vector(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "user_embeddings_l2_idx": {
-          "name": "user_embeddings_l2_idx",
-          "columns": [
-            {
-              "expression": "embedding",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last",
-              "opclass": "vector_l2_ops"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "hnsw",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "user_embeddings_user_id_users_id_fk": {
-          "name": "user_embeddings_user_id_users_id_fk",
-          "tableFrom": "user_embeddings",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.users": {
-      "name": "users",
+    "public.user": {
+      "name": "user",
       "schema": "",
       "columns": {
         "id": {
@@ -721,17 +650,97 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
+        "user_username_unique": {
+          "name": "user_username_unique",
           "nullsNotDistinct": false,
           "columns": ["username"]
         },
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
           "columns": ["email"]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_embedding": {
+      "name": "user_embedding",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "vector(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "user_embedding_l2_idx": {
+          "name": "user_embedding_l2_idx",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_l2_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "user_embedding_user_id_user_id_fk": {
+          "name": "user_embedding_user_id_user_id_fk",
+          "tableFrom": "user_embedding",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
