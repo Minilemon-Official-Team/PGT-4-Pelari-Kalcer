@@ -94,10 +94,7 @@ async function main() {
     { userId: "member-1", embedding: generateMockEmbedding() },
     { userId: "member-2", embedding: generateMockEmbedding() },
   ];
-  const insertedEmbeddings = await db
-    .insert(userEmbedding)
-    .values(memberEmbeddings)
-    .returning();
+  const insertedEmbeddings = await db.insert(userEmbedding).values(memberEmbeddings).returning();
   console.info(`Seeded ${insertedEmbeddings.length} face embeddings`);
 
   console.info("Seeding events...");
