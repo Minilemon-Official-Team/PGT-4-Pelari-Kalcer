@@ -9,9 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+<<<<<<< HEAD
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+||||||| parent of d3daf01 (initial)
+=======
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as FindMeRouteImport } from './routes/find-me'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+>>>>>>> d3daf01 (initial)
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardLayoutRouteImport } from './routes/dashboard.layout'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
@@ -21,6 +30,7 @@ import { Route as DemoStartSsrSpaModeRouteImport } from './routes/demo/start.ssr
 import { Route as DemoStartSsrFullSsrRouteImport } from './routes/demo/start.ssr.full-ssr'
 import { Route as DemoStartSsrDataOnlyRouteImport } from './routes/demo/start.ssr.data-only'
 
+<<<<<<< HEAD
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -31,10 +41,38 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+||||||| parent of d3daf01 (initial)
+=======
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindMeRoute = FindMeRouteImport.update({
+  id: '/find-me',
+  path: '/find-me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+>>>>>>> d3daf01 (initial)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
+  id: '/layout',
+  path: '/layout',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
   id: '/demo/start/server-funcs',
@@ -79,9 +117,18 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+<<<<<<< HEAD
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+||||||| parent of d3daf01 (initial)
+=======
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/events': typeof EventsRoute
+  '/find-me': typeof FindMeRoute
+  '/settings': typeof SettingsRoute
+  '/dashboard/layout': typeof DashboardLayoutRoute
+>>>>>>> d3daf01 (initial)
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -92,9 +139,18 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+<<<<<<< HEAD
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+||||||| parent of d3daf01 (initial)
+=======
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/events': typeof EventsRoute
+  '/find-me': typeof FindMeRoute
+  '/settings': typeof SettingsRoute
+  '/dashboard/layout': typeof DashboardLayoutRoute
+>>>>>>> d3daf01 (initial)
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -106,9 +162,18 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+<<<<<<< HEAD
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+||||||| parent of d3daf01 (initial)
+=======
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/events': typeof EventsRoute
+  '/find-me': typeof FindMeRoute
+  '/settings': typeof SettingsRoute
+  '/dashboard/layout': typeof DashboardLayoutRoute
+>>>>>>> d3daf01 (initial)
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -121,9 +186,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/register'
     | '/api/auth/$'
+||||||| parent of d3daf01 (initial)
+=======
+    | '/dashboard'
+    | '/events'
+    | '/find-me'
+    | '/settings'
+    | '/dashboard/layout'
+>>>>>>> d3daf01 (initial)
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -134,9 +208,18 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/register'
     | '/api/auth/$'
+||||||| parent of d3daf01 (initial)
+=======
+    | '/dashboard'
+    | '/events'
+    | '/find-me'
+    | '/settings'
+    | '/dashboard/layout'
+>>>>>>> d3daf01 (initial)
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -147,9 +230,18 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/register'
     | '/api/auth/$'
+||||||| parent of d3daf01 (initial)
+=======
+    | '/dashboard'
+    | '/events'
+    | '/find-me'
+    | '/settings'
+    | '/dashboard/layout'
+>>>>>>> d3daf01 (initial)
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -161,9 +253,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+<<<<<<< HEAD
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+||||||| parent of d3daf01 (initial)
+=======
+  DashboardRoute: typeof DashboardRouteWithChildren
+  EventsRoute: typeof EventsRoute
+  FindMeRoute: typeof FindMeRoute
+  SettingsRoute: typeof SettingsRoute
+>>>>>>> d3daf01 (initial)
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
@@ -175,6 +275,7 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+<<<<<<< HEAD
     '/register': {
       id: '/register'
       path: '/register'
@@ -189,12 +290,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+||||||| parent of d3daf01 (initial)
+=======
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find-me': {
+      id: '/find-me'
+      path: '/find-me'
+      fullPath: '/find-me'
+      preLoaderRoute: typeof FindMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+>>>>>>> d3daf01 (initial)
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/layout': {
+      id: '/dashboard/layout'
+      path: '/layout'
+      fullPath: '/dashboard/layout'
+      preLoaderRoute: typeof DashboardLayoutRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/demo/start/server-funcs': {
       id: '/demo/start/server-funcs'
@@ -255,11 +394,31 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardLayoutRoute: typeof DashboardLayoutRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardLayoutRoute: DashboardLayoutRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+<<<<<<< HEAD
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+||||||| parent of d3daf01 (initial)
+=======
+  DashboardRoute: DashboardRouteWithChildren,
+  EventsRoute: EventsRoute,
+  FindMeRoute: FindMeRoute,
+  SettingsRoute: SettingsRoute,
+>>>>>>> d3daf01 (initial)
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
