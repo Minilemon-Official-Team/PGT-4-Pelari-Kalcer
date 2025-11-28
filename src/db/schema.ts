@@ -37,7 +37,7 @@ export const claimStatusEnum = pgEnum("claim_status", ["pending", "approved", "r
 // AUTHENTICATION (Better-Auth)
 // ------------------------------------------
 
-export const usersTable = pgTable("users", {
+export const user = pgTable("user", {
   id: text("id").primaryKey(),
   username: varchar("username", { length: 255 }).notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -52,30 +52,30 @@ export const usersTable = pgTable("users", {
     .$onUpdate(() => new Date()),
 });
 
-export const sessionTable = pgTable("session", {
+export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const accountTable = pgTable("account", {
+export const account = pgTable("account", {
   id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   expiresAt: timestamp("expires_at", { withTimezone: true }),
   password: text("password"),
 });
 
-export const verificationTable = pgTable("verification", {
+export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
@@ -86,15 +86,15 @@ export const verificationTable = pgTable("verification", {
 // CORE DOMAIN
 // ------------------------------------------
 
-export const creatorRequestsTable = pgTable("creator_requests", {
+export const creatorRequest = pgTable("creator_request", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: text("user_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => user.id, { onDelete: "cascade" }),
   status: requestStatusEnum("status").notNull().default("pending"),
   portfolioLink: text("portfolio_link"),
   motivation: text("motivation"),
-  reviewedBy: text("reviewed_by"),
+  reviewedBy: text("reviewed_by").references(() => user.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
@@ -102,7 +102,7 @@ export const creatorRequestsTable = pgTable("creator_requests", {
     .$onUpdate(() => new Date()),
 });
 
-export const eventsTable = pgTable("events", {
+export const event = pgTable("event", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 160 }).notNull(),
   description: text("description"),
@@ -112,7 +112,7 @@ export const eventsTable = pgTable("events", {
   visibility: eventVisibilityEnum("visibility").notNull().default("public"),
   createdBy: text("created_by")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => user.id, { onDelete: "no action" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
@@ -120,12 +120,12 @@ export const eventsTable = pgTable("events", {
     .$onUpdate(() => new Date()),
 });
 
-export const photosTable = pgTable("photos", {
+export const photo = pgTable("photo", {
   id: uuid("id").primaryKey().defaultRandom(),
-  eventId: uuid("event_id").references(() => eventsTable.id),
+  eventId: uuid("event_id").references(() => event.id, { onDelete: "set null" }),
   uploaderId: text("uploader_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => user.id, { onDelete: "no action" }),
   originalName: text("original_name"),
   storagePathRaw: text("storage_path_raw").notNull(),
   storagePathDisplay: text("storage_path_display"),
@@ -143,13 +143,13 @@ export const photosTable = pgTable("photos", {
     .$onUpdate(() => new Date()),
 });
 
-export const photoEmbeddingsTable = pgTable(
-  "photo_embeddings",
+export const photoEmbedding = pgTable(
+  "photo_embedding",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     photoId: uuid("photo_id")
       .notNull()
-      .references(() => photosTable.id),
+      .references(() => photo.id, { onDelete: "cascade" }),
     embedding: vector("embedding", { dimensions: 1024 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
@@ -157,16 +157,16 @@ export const photoEmbeddingsTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
-  (table) => [index("photo_embeddings_l2_idx").using("hnsw", table.embedding.op("vector_l2_ops"))],
+  (table) => [index("photo_embedding_l2_idx").using("hnsw", table.embedding.op("vector_l2_ops"))],
 );
 
-export const userEmbeddingsTable = pgTable(
-  "user_embeddings",
+export const userEmbedding = pgTable(
+  "user_embedding",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: text("user_id")
       .notNull()
-      .references(() => usersTable.id),
+      .references(() => user.id, { onDelete: "cascade" }),
     embedding: vector("embedding", { dimensions: 1024 }).notNull(),
     isActive: boolean("is_active").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -175,17 +175,17 @@ export const userEmbeddingsTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
-  (table) => [index("user_embeddings_l2_idx").using("hnsw", table.embedding.op("vector_l2_ops"))],
+  (table) => [index("user_embedding_l2_idx").using("hnsw", table.embedding.op("vector_l2_ops"))],
 );
 
-export const claimsTable = pgTable("claims", {
+export const claim = pgTable("claim", {
   id: uuid("id").primaryKey().defaultRandom(),
   photoId: uuid("photo_id")
     .notNull()
-    .references(() => photosTable.id),
+    .references(() => photo.id, { onDelete: "cascade" }),
   claimantId: text("claimant_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => user.id, { onDelete: "cascade" }),
   status: claimStatusEnum("status").notNull().default("approved"),
   matchScore: real("match_score"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -199,32 +199,32 @@ export const claimsTable = pgTable("claims", {
 // TYPE EXPORTS
 // ------------------------------------------
 
-export type User = typeof usersTable.$inferSelect;
-export type NewUser = typeof usersTable.$inferInsert;
+export type User = typeof user.$inferSelect;
+export type NewUser = typeof user.$inferInsert;
 
-export type Session = typeof sessionTable.$inferSelect;
-export type NewSession = typeof sessionTable.$inferInsert;
+export type Session = typeof session.$inferSelect;
+export type NewSession = typeof session.$inferInsert;
 
-export type Account = typeof accountTable.$inferSelect;
-export type NewAccount = typeof accountTable.$inferInsert;
+export type Account = typeof account.$inferSelect;
+export type NewAccount = typeof account.$inferInsert;
 
-export type Verification = typeof verificationTable.$inferSelect;
-export type NewVerification = typeof verificationTable.$inferInsert;
+export type Verification = typeof verification.$inferSelect;
+export type NewVerification = typeof verification.$inferInsert;
 
-export type CreatorRequest = typeof creatorRequestsTable.$inferSelect;
-export type NewCreatorRequest = typeof creatorRequestsTable.$inferInsert;
+export type CreatorRequest = typeof creatorRequest.$inferSelect;
+export type NewCreatorRequest = typeof creatorRequest.$inferInsert;
 
-export type Event = typeof eventsTable.$inferSelect;
-export type NewEvent = typeof eventsTable.$inferInsert;
+export type Event = typeof event.$inferSelect;
+export type NewEvent = typeof event.$inferInsert;
 
-export type Photo = typeof photosTable.$inferSelect;
-export type NewPhoto = typeof photosTable.$inferInsert;
+export type Photo = typeof photo.$inferSelect;
+export type NewPhoto = typeof photo.$inferInsert;
 
-export type PhotoEmbedding = typeof photoEmbeddingsTable.$inferSelect;
-export type NewPhotoEmbedding = typeof photoEmbeddingsTable.$inferInsert;
+export type PhotoEmbedding = typeof photoEmbedding.$inferSelect;
+export type NewPhotoEmbedding = typeof photoEmbedding.$inferInsert;
 
-export type UserEmbedding = typeof userEmbeddingsTable.$inferSelect;
-export type NewUserEmbedding = typeof userEmbeddingsTable.$inferInsert;
+export type UserEmbedding = typeof userEmbedding.$inferSelect;
+export type NewUserEmbedding = typeof userEmbedding.$inferInsert;
 
-export type Claim = typeof claimsTable.$inferSelect;
-export type NewClaim = typeof claimsTable.$inferInsert;
+export type Claim = typeof claim.$inferSelect;
+export type NewClaim = typeof claim.$inferInsert;

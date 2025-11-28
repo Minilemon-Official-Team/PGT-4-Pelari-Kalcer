@@ -1,7 +1,7 @@
 import { db } from "../src/db";
-import { eventsTable, userEmbeddingsTable, usersTable } from "../src/db/schema";
+import { event, user, userEmbedding } from "../src/db/schema";
 
-// Helper to generate mock 128-dimensional vector
+// Helper to generate mock 1024-dimensional vector
 function generateMockEmbedding(): number[] {
   return Array.from({ length: 1024 }, () => Math.random() * 2 - 1);
 }
@@ -81,12 +81,12 @@ const seedEvents = [
 
 async function main() {
   console.info("Clearing existing data...");
-  await db.delete(userEmbeddingsTable);
-  await db.delete(eventsTable);
-  await db.delete(usersTable);
+  await db.delete(userEmbedding);
+  await db.delete(event);
+  await db.delete(user);
 
   console.info("Seeding users...");
-  const insertedUsers = await db.insert(usersTable).values(seedUsers).returning();
+  const insertedUsers = await db.insert(user).values(seedUsers).returning();
   console.info(`Seeded ${insertedUsers.length} users`);
 
   console.info("Seeding user face embeddings...");
@@ -95,13 +95,13 @@ async function main() {
     { userId: "member-2", embedding: generateMockEmbedding() },
   ];
   const insertedEmbeddings = await db
-    .insert(userEmbeddingsTable)
+    .insert(userEmbedding)
     .values(memberEmbeddings)
     .returning();
   console.info(`Seeded ${insertedEmbeddings.length} face embeddings`);
 
   console.info("Seeding events...");
-  const insertedEvents = await db.insert(eventsTable).values(seedEvents).returning();
+  const insertedEvents = await db.insert(event).values(seedEvents).returning();
   console.info(`Seeded ${insertedEvents.length} events`);
 
   console.info("\nDatabase seeding completed!");
