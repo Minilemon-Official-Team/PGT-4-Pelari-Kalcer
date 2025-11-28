@@ -54,24 +54,12 @@ export const user = pgTable("user", {
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
-<<<<<<< HEAD
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-=======
-  token: text("token").notNull().unique(),
-  expiresAt: timestamp("expiresAt").notNull(),
-  ipAddress: text("ipAddress"),
-  userAgent: text("userAgent"),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
->>>>>>> ba6a45d (feat(auth): add auth helper + update auth schema & seed)
 });
 
 export const account = pgTable("account", {
@@ -93,13 +81,7 @@ export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-<<<<<<< HEAD
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-=======
-  expiresAt: timestamp("expiresAt").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
->>>>>>> ba6a45d (feat(auth): add auth helper + update auth schema & seed)
 });
 
 // ------------------------------------------

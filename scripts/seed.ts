@@ -50,10 +50,6 @@ const seedUsers = [
     role: "admin" as const,
     phone: "+62811111111",
   },
-];
-
-<<<<<<< HEAD
-const seedEvents = [
   {
     id: "admin-2",
     username: "admin_frank",

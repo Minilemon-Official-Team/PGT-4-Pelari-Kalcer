@@ -15,4 +15,3 @@ export const getAuthSession = createServerFn({ method: "GET" }).handler(async ()
 
   return userSession;
 });
-
