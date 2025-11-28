@@ -5,6 +5,7 @@ import { db } from "../db";
 
 export const auth = betterAuth({
   user: {
+    // modelName: 'users',
     additionalFields: {
       phone: {
         type: "string",
