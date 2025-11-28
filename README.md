@@ -67,7 +67,7 @@ After running the setup commands, verify everything works:
 docker ps
 ```
 
-You should see 4 containers: `pgt4-postgres`, `pgt4-adminer`, `pgt4-minio`, and `pgt4-minio-bootstrap`.
+You should see 3 containers: `pgt4-postgres`, `pgt4-adminer`, and `pgt4-minio`.
 
 **2. Verify pgvector extension is active:**
 
