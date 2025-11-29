@@ -89,10 +89,21 @@ If it returns `[1,2,3]`, pgvector is working correctly.
 **3. Check seed data:**
 
 ```sql
-SELECT role, COUNT(*) as count FROM users GROUP BY role;
+-- Users by role (should be 2 members, 2 creators, 2 admins)
+SELECT role, COUNT(*) as count FROM "user" GROUP BY role ORDER BY role;
+
+-- User embeddings count (should be 6 - one per user)
+SELECT COUNT(*) as total_embeddings FROM user_embedding;
+
+-- Events created (should be 2)
+SELECT COUNT(*) as total_events FROM "event";
 ```
 
-You should see 2 members, 2 creators, and 2 admins.
+Expected results:
+
+- Users: 2 `member`, 2 `creator`, 2 `admin`
+- User embeddings: 6 total (1024-dimensional vectors)
+- Events: 2 total
 
 ## Feature Highlights (Initial Scaffolding)
 
