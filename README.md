@@ -57,6 +57,54 @@ bun run db:reset
 bun run dev
 ```
 
+### Verifying the setup
+
+After running the setup commands, verify everything works:
+
+**1. Check Docker containers are running:**
+
+```bash
+docker ps
+```
+
+You should see 3 containers: `pgt4-postgres`, `pgt4-adminer`, and `pgt4-minio`.
+
+**2. Verify pgvector extension is active:**
+
+Open Adminer at [http://localhost:8080](http://localhost:8080) and login:
+
+- Server: `postgres`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `pgt4_pelari_kalcer`
+
+Run this SQL query in the SQL command panel:
+
+```sql
+SELECT '[1,2,3]'::vector;
+```
+
+If it returns `[1,2,3]`, pgvector is working correctly.
+
+**3. Check seed data:**
+
+```sql
+-- Users by role (should be 2 members, 2 creators, 2 admins)
+SELECT role, COUNT(*) as count FROM "user" GROUP BY role ORDER BY role;
+
+-- User embeddings count (should be 6 - one per user)
+SELECT COUNT(*) as total_embeddings FROM user_embedding;
+
+-- Events created (should be 2)
+SELECT COUNT(*) as total_events FROM "event";
+```
+
+Expected results:
+
+- Users: 2 `member`, 2 `creator`, 2 `admin`
+- User embeddings: 6 total (1024-dimensional vectors)
+- Events: 2 total
+
 ## Feature Highlights (Initial Scaffolding)
 
 - **Database demo** (`/demo/start/db-users`): full CRUD (list, create, edit, delete) via TanStack server functions and shared contracts.
