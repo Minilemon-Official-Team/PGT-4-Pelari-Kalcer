@@ -90,11 +90,18 @@ async function main() {
   console.info(`Seeded ${insertedUsers.length} users`);
 
   console.info("Seeding user face embeddings...");
-  const memberEmbeddings = [
+  const seedUserEmbeddings = [
+    // Members
     { userId: "member-1", embedding: generateMockEmbedding() },
     { userId: "member-2", embedding: generateMockEmbedding() },
+    // Creators
+    { userId: "creator-1", embedding: generateMockEmbedding() },
+    { userId: "creator-2", embedding: generateMockEmbedding() },
+    // Admins
+    { userId: "admin-1", embedding: generateMockEmbedding() },
+    { userId: "admin-2", embedding: generateMockEmbedding() },
   ];
-  const insertedEmbeddings = await db.insert(userEmbedding).values(memberEmbeddings).returning();
+  const insertedEmbeddings = await db.insert(userEmbedding).values(seedUserEmbeddings).returning();
   console.info(`Seeded ${insertedEmbeddings.length} face embeddings`);
 
   console.info("Seeding events...");
