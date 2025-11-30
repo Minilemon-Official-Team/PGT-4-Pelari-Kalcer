@@ -17,18 +17,20 @@ jobs:
   verify-and-build:
     name: Verify and Build
     runs-on: ubuntu-latest
-    environment: development
     env:
       CI: true
-      VITE_APP_NAME: ${{ vars.VITE_APP_NAME }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      VITE_APP_NAME: "RunCam App (CI)"
+      POSTGRES_USER: ci_user
+      POSTGRES_PASSWORD: ci_password
+      POSTGRES_DB: ci_test_db
+      DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/ci_test_db"
     services:
       postgres:
         image: pgvector/pgvector:pg18
         env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
         ports:
           - 5432:5432
         options: >-
@@ -47,12 +49,11 @@ jobs:
 
       - name: Setup pgvector extension
         run: |
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c "CREATE EXTENSION IF NOT EXISTS vector;"
+          PGPASSWORD=${{ env.POSTGRES_PASSWORD }} psql -h localhost -U ${{ env.POSTGRES_USER }} -d ${{ env.POSTGRES_DB }} -c "CREATE EXTENSION IF NOT EXISTS vector;"
 
       - name: Verify pgvector installation
         run: |
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c "SELECT extname, extversion FROM pg_extension WHERE extname = 'vector';"
-
+          PGPASSWORD=${{ env.POSTGRES_PASSWORD }} psql -h localhost -U ${{ env.POSTGRES_USER }} -d ${{ env.POSTGRES_DB }} -c "SELECT extname, extversion FROM pg_extension WHERE extname = 'vector';"
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -62,9 +63,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-cache-v1-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-cache-v1-
+            ${{ runner.os }}-bun-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
