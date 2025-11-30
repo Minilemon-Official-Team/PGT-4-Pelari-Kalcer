@@ -57,7 +57,7 @@ Core Loop: Creator uploads photos $\rightarrow$ System indexes faces $\rightarro
 ### 5.1 “Find Me” Search
 
 - **Action:** User clicks “Find Me” on Dashboard.
-- **Logic:** Database query comparing `user_embedding` vs `photo_embedding` using pgvector Cosine Distance (`<=>`).
+- **Logic:** Database query comparing `user_embedding` vs `photo_embedding` using pgvector L2/Euclidean Distance (`<->`).
 - **Results:** Return photos with similarity score above threshold (calibrated based on testing, typically ~0.4 for Human’s `faceres` model).
 - **Filtering:** Users can refine results by **Event**, **Date**, or **Accuracy Threshold** (UI Slider).
 
