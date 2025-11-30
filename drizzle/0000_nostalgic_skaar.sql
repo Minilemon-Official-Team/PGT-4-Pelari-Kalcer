@@ -1,4 +1,4 @@
-CREATE EXTENSION IF NOT EXISTS vector;--> statement-breakpoint; manually added
+CREATE EXTENSION IF NOT EXISTS vector;--> statement-breakpoint
 CREATE TYPE "public"."claim_status" AS ENUM('pending', 'approved', 'rejected');--> statement-breakpoint
 CREATE TYPE "public"."event_visibility" AS ENUM('public', 'unlisted');--> statement-breakpoint
 CREATE TYPE "public"."photo_status" AS ENUM('pending', 'processing', 'ready', 'failed', 'hidden', 'deleted');--> statement-breakpoint
