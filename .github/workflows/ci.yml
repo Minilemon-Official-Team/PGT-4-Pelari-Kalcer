@@ -44,13 +44,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup pgvector extension
+      - name: Set up pgvector extension
         run: |
           docker exec ${{ job.services.postgres.id }} psql -U ${{ env.POSTGRES_USER }} -d ${{ env.POSTGRES_DB }} -c "CREATE EXTENSION IF NOT EXISTS vector;"
 
-      - name: Verify pgvector installation
-        run: |
-          docker exec ${{ job.services.postgres.id }} psql -U ${{ env.POSTGRES_USER }} -d ${{ env.POSTGRES_DB }} -c "SELECT extname, extversion FROM pg_extension WHERE extname = 'vector';"
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -74,5 +71,4 @@ jobs:
         run: bun run build
 
       - name: Push schema and seed data
-        if: success()
         run: bun run db:reset
