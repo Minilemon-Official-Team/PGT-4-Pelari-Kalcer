@@ -8,14 +8,14 @@ export const Route = createFileRoute("/dashboard/layout")({
 
 export function DashboardLayout() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen">
       <div className="w-1/8">
         <Sidebar />
       </div>
-      <div className="fixed top-0 left-0">
+      <div className="fixed top-0 left-0 h-screen">
         <MobileMenu />
       </div>
-      <div className="w-7/8">
+      <div className="w-7/8 h-screen">
         <Outlet />
       </div>
     </div>
