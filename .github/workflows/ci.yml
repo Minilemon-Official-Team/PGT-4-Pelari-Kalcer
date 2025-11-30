@@ -5,9 +5,9 @@ permissions:
 
 on:
   push:
+    branches: ["**"]
   pull_request:
-    branches:
-      - main
+    branches: ["main"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,6 +17,9 @@ jobs:
   verify-and-build:
     name: Verify and Build
     runs-on: ubuntu-latest
+    # Run if it's a push OR if the repo of the PR != the repo of the base.
+    # (i.e., Run if it's a fork. Don't run if it's an internal branch, because 'push' already covered it).
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     env:
       CI: true
       VITE_APP_NAME: "RunCam App (CI)"
