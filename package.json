@@ -7,6 +7,8 @@
     "build": "bun --bun vite build",
     "preview": "bun --bun vite preview",
     "start": "bun --bun --sql-preconnect .output/server/index.mjs",
+    "clean": "rm -rf .output .vinxi .nitro .tanstack dist dist-ssr",
+    "clean:all": "bun run clean && rm -rf node_modules bun.lock",
     "lint": "biome lint",
     "check": "biome check",
     "format": "biome format --write",

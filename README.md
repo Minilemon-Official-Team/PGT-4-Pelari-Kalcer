@@ -133,6 +133,8 @@ All scripts run as `bun run <script>` unless noted. Use these for day‑to‑day
 | `build`          | Run a full production build via Vite and Nitro.     |
 | `preview`        | Serve the built client bundle with Vite preview.    |
 | `start`          | Boot the compiled Nitro server from `.output/`.     |
+| `clean`          | Remove build artifacts                              |
+| `clean:all`      | Full clean including `node_modules` and lock file.  |
 | `lint` / `check` | Run Biome lint or the stricter check suite.         |
 | `format`         | Apply Biome code formatting in-place.               |
 
