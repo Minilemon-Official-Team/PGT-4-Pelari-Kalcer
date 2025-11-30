@@ -1,7 +1,12 @@
-import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Scripts,
+} from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/navbar";
+import { App } from ".";
 import type { RouterContext } from "@/router";
 
 import appCss from "../styles/app.css?url";
@@ -38,7 +43,7 @@ function RootDocument({ children }: { children: ReactNode }) {
     if (!import.meta.env.DEV) {
       return;
     }
-
+    
     void Promise.all([
       import("@tanstack/react-devtools"),
       import("@tanstack/react-router-devtools"),
@@ -70,8 +75,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Navbar />
-        {children}
+        <App/>
         {devtools}
         <Scripts />
       </body>
