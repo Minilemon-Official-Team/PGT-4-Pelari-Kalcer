@@ -155,46 +155,48 @@ This is the high-level layout; you don’t need to memorize it, but it helps to 
 
 ```text
 .
-├── drizzle.config.ts         # Drizzle Kit configuration (uses DATABASE_URL)
-├── scripts/seed.ts           # Bun script to seed sample users
+├── drizzle.config.ts         # Drizzle Kit configuration
+├── scripts/                  # Scripts to seed samples, enable pgvector, test things, etc.
 ├── src/
-│   ├── components/           # Layout pieces + UI primitives (Button, Input, Navbar, etc.)
+│   ├── components/           # Layout pieces + UI primitives
 │   ├── contracts/            # Shared Zod contracts for server/client data boundaries
 │   ├── db/                   # Drizzle client + schema definitions
 │   ├── features/             # Domain-specific logic & server functions
-│   ├── lib/                  # Server utilities (env parsing, S3 helpers, classnames)
+│   ├── lib/                  # Reusable utilities
 │   ├── routes/               # TanStack Start file-based routes
-│   ├── workers/              # Background processors (image/embedding jobs, etc.)
-│   └── styles/               # Global styles & Tailwind entrypoint
+│   ├── workers/              # Background workers (photo processing pipeline)
+│   └── styles/               # Global Tailwind CSS entrypoint
 └── .github/workflows/ci.yml  # CI pipeline (lint, build, db smoke test)
 ```
 
 If you’re new to the repo, good entry points are:
 
-- `src/routes/` — how pages and demos are wired.
-- `src/features/` — where domain logic and server functions will live.
+- `src/routes/` — how pages are wired.
+- `src/features/` — where domain logic and server functions live.
 - `src/contracts/` — shared Zod schemas for request/response shapes.
+- `src/lib/` — core utilities for handling various things.
 
 ### Contracts Folder
 
-`src/contracts/` hosts Zod schemas that describe the data flowing between routes, server functions, and workers. Each contract usually maps to either:
+`src/contracts/` hosts Zod schemas that describe the data flowing between routes, server functions, and workers. Current contracts include:
 
-- a feature boundary (e.g., `auth.contract.ts` for login/register payloads),
-- or a core entity/table (e.g., `users.contract.ts` mirrors the demo `users` table and powers the CRUD sample).
+- `auth.contract.ts` — authentication-related payloads
+- `users.contract.ts` — user entity schemas
+- `photos.contract.ts` — photo upload and processing schemas
 
 These schemas let server functions validate input and give components fully typed helpers without maintaining a separate public API spec.
 For example, the `/demo/start/db-users` route uses `users.contract.ts` to validate payloads before touching the database.
 
 ## Database & Storage Workflow
 
-- Connection string lives in `.env` (`DATABASE_URL`). `src/lib/env.ts` validates it during startup.
+- Connection string lives in `.env` (`DATABASE_URL`). `src/lib/env.ts` validates environment variables during startup.
 - Drizzle schema changes go into `src/db/schema.ts`. Use `db:push` for quick local syncing or `db:generate` + `db:migrate` when you want migration files committed.
-- MinIO is optional for now but ready to support future features. Credentials are defined in `compose.yaml`; feel free to add more buckets via the `create-bucket` service or `mc` CLI.
+- S3 storage uses Bun's native `S3Client` (see `src/lib/s3.ts`), making it provider-agnostic. For local development, MinIO runs via Docker. For production, configure `S3_ENDPOINT_URL` to point to Supabase Storage, Cloudflare R2, or any S3-compatible service.
 
 ## Quality Checks & CI
 
 - Run `bun run check` before opening a PR to catch lint and type issues.
-- CI (`.github/workflows/ci.yml`) runs `check`, `build`, and `db:reset` against a PostgreSQL service (`postgres:18-alpine`) to ensure the app still builds and seeds correctly.
+- CI (`.github/workflows/ci.yml`) runs `check`, `build`, and `db:reset` against a PostgreSQL service (`pgvector/pgvector:pg18`) to ensure the app still builds and seeds correctly.
 - Optionally run `bun run build` locally when you change build or config tooling (Vite, Nitro, env, tsconfig, drizzle config).
 
 ## Contributing

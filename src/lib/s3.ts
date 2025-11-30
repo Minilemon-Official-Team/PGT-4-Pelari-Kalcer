@@ -56,7 +56,7 @@ export async function ensureBucketExists(bucket = defaultPhotoBucket) {
   } catch (error) {
     if (isMissingBucketError(error)) {
       throw new Error(
-        `S3 bucket "${bucket}" is missing. Start the MinIO stack (\`bun run db:up\`) or create the bucket manually.`,
+        `S3 bucket "${bucket}" does not exist or is not accessible. For local development, run \`bun run db:up\`. For production, ensure the bucket exists in your S3 provider.`,
       );
     }
 
