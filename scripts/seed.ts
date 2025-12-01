@@ -80,7 +80,6 @@ const seedEvents = [
 ];
 
 async function main() {
-<<<<<<< HEAD
   console.info("Clearing existing data...");
   await db.delete(userEmbedding);
   await db.delete(event);
@@ -114,21 +113,6 @@ async function main() {
   console.info("  Members:  alice_runner, bob_athlete");
   console.info("  Creators: charlie_photo, diana_lens");
   console.info("  Admins:   admin_eve, admin_frank");
-=======
-  console.info("Clearing users table...");
-  await db.delete(usersTable);
-
-  console.info("Seeding example users...");
-  const inserted = await db.insert(usersTable).values(seedUsers).returning();
-
-  console.info(`Seeded ${inserted.length} users`);
-
-  console.info("Clearing auth user table...");
-  await db.delete(session);
-  await db.delete(account);
-  await db.delete(user);
-
->>>>>>> 7e98f5a (feat(auth): reverting commit- add auth helper + update auth schema & seed)
 }
 
 main().then(

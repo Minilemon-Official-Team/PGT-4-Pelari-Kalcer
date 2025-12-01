@@ -12,23 +12,23 @@ export const userPhoneSchema = z.e164();
 
 export const userBaseSchema = z.object({
   id: userIdSchema,
-  name: userNameSchema,
+  username: userNameSchema,
   email: userEmailSchema,
   phone: userPhoneSchema,
 });
 
-export const userCreateSchema = userBaseSchema.pick({ name: true, email: true });
+export const userCreateSchema = userBaseSchema.pick({ username: true, email: true });
 
 export const userUpdateSchema = z
   .object({
     id: userIdSchema,
-    name: userNameSchema.optional(),
+    username: userNameSchema.optional(),
     email: userEmailSchema.optional(),
     phone: userPhoneSchema.optional(),
   })
   .refine(
     (payload) =>
-      payload.name !== undefined || payload.email !== undefined || payload.phone !== undefined,
+      payload.username !== undefined || payload.email !== undefined || payload.phone !== undefined,
     {
       message: "Provide at least one field to update",
       path: ["name"],

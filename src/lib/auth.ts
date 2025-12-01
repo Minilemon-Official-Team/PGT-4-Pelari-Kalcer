@@ -2,15 +2,34 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "../db";
-import { account, session, user, verification } from "../db/schema";
+import {
+  account,
+  claim,
+  creatorRequest,
+  event,
+  photo,
+  photoEmbedding,
+  session,
+  user,
+  userEmbedding,
+  verification,
+} from "../db/schema";
 
 export const auth = betterAuth({
   user: {
-    // modelName: 'users',
+    fields: {
+      name: "username",
+    },
     additionalFields: {
       phone: {
         type: "string",
         required: false,
+      },
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "member",
+        input: false, // don't allow user to set role
       },
     },
   },
@@ -21,6 +40,12 @@ export const auth = betterAuth({
       session,
       account,
       verification,
+      creatorRequest,
+      event,
+      photo,
+      photoEmbedding,
+      userEmbedding,
+      claim,
     },
   }),
   emailAndPassword: {

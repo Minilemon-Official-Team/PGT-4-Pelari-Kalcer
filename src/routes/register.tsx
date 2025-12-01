@@ -13,7 +13,7 @@ export const Route = createFileRoute("/register")({
 function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
@@ -24,7 +24,7 @@ function RegisterPage() {
     setStatus("");
 
     // Validate
-    const result = registerContract.safeParse({ email, name, password });
+    const result = registerContract.safeParse({ email, username, password });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
@@ -38,7 +38,7 @@ function RegisterPage() {
 
     try {
       setStatus("Signing up...");
-      const response = await authClient.signUp.email({ email, password, name });
+      const response = await authClient.signUp.email({ email, password, name: username });
       if (response.error) {
         setStatus(response.error.message || "Sign up failed");
       } else {
@@ -62,8 +62,8 @@ function RegisterPage() {
             <Input
               id="name"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
               disabled={status === "Signing up..."}
             />
             {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}

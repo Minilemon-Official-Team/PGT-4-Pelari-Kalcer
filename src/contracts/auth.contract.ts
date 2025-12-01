@@ -5,7 +5,7 @@ import { userEmailSchema, userNameSchema } from "@/contracts/users.contract";
 export const registerContract = z.object({
   email: userEmailSchema,
   password: z.string().min(8, "Password must be at least 8 characters"),
-  name: userNameSchema,
+  username: userNameSchema,
 });
 
 export const loginContract = z.object({

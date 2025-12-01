@@ -5,10 +5,4 @@ export const authClient = createAuthClient({
   plugins: [inferAdditionalFields<typeof auth>()],
 });
 
-export const {
-  getSession: getAuthSession,
-  useSession: useAuthSesssion,
-  signIn,
-  signOut,
-  signUp,
-} = authClient;
+export const { getSession, useSession, signIn, signOut, signUp } = authClient;
