@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -66,7 +66,7 @@ function RegisterPage() {
               onChange={(e) => setUserName(e.target.value)}
               disabled={status === "Signing up..."}
             />
-            {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}
+            {errors.username && <p className="text-sm text-red-400 mt-1">{errors.username}</p>}
           </div>
 
           <div>
@@ -108,9 +108,9 @@ function RegisterPage() {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-cyan-400 hover:text-cyan-300">
+          <Link to="/login" className="text-cyan-400 hover:text-cyan-300">
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>
