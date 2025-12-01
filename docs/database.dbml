@@ -53,6 +53,9 @@ Table session {
   ip_address text
   user_agent text
   user_id text [not null]
+  token text [not null, unique]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
 }
 
 Table account {
@@ -64,6 +67,8 @@ Table account {
   refresh_token text
   expires_at timestamptz
   password text [note: 'Hashed password']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
 }
 
 Table verification {
@@ -71,6 +76,8 @@ Table verification {
   identifier text [not null]
   value text [not null]
   expires_at timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
 }
 
 // ------------------------------------------

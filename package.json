@@ -14,9 +14,9 @@
     "format": "biome format --write",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:push": "bun run ./node_modules/.bin/drizzle-kit push --force",
-    "db:generate": "bun run ./node_modules/.bin/drizzle-kit generate",
-    "db:migrate": "bun run ./node_modules/.bin/drizzle-kit migrate",
+    "db:push": "bun run drizzle-kit push --force",
+    "db:generate": "bun run drizzle-kit generate",
+    "db:migrate": "bun run drizzle-kit migrate",
     "db:seed": "bun run scripts/seed.ts",
     "db:reset": "bun run db:push && bun run db:seed"
   },
