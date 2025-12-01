@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const userIdSchema = z.number().int().positive();
+export const userIdSchema = z.string().min(1, "Id must not be empty");
 export const userNameSchema = z.string().min(1, "Name is required").max(255);
 export const userAgeSchema = z
   .number()
@@ -8,26 +8,27 @@ export const userAgeSchema = z
   .min(0, "Age must be at least 0")
   .max(120, "Age looks suspicious");
 export const userEmailSchema = z.email();
+export const userPhoneSchema = z.e164();
 
 export const userBaseSchema = z.object({
   id: userIdSchema,
   name: userNameSchema,
-  age: userAgeSchema,
   email: userEmailSchema,
+  phone: userPhoneSchema,
 });
 
-export const userCreateSchema = userBaseSchema.pick({ name: true, age: true, email: true });
+export const userCreateSchema = userBaseSchema.pick({ name: true, email: true });
 
 export const userUpdateSchema = z
   .object({
     id: userIdSchema,
     name: userNameSchema.optional(),
-    age: userAgeSchema.optional(),
     email: userEmailSchema.optional(),
+    phone: userPhoneSchema.optional(),
   })
   .refine(
     (payload) =>
-      payload.name !== undefined || payload.age !== undefined || payload.email !== undefined,
+      payload.name !== undefined || payload.email !== undefined || payload.phone !== undefined,
     {
       message: "Provide at least one field to update",
       path: ["name"],
