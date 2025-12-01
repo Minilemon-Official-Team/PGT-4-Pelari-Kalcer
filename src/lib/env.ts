@@ -10,6 +10,8 @@ const envSchema = z.object({
   S3_PORT: z.coerce.number().default(9000),
   S3_USE_SSL: z.coerce.boolean().default(false),
   S3_ENDPOINT_URL: z.url("S3_ENDPOINT_URL must be a valid URL").optional(),
+  BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET should be at least 32 chars"),
+  BETTER_AUTH_URL: z.url(),
 });
 
 const clientEnvSchema = z.object({
