@@ -1,9 +1,7 @@
-import { serverEnv } from "@/lib/env";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "@/db";
-
 import {
   account,
   claim,
@@ -16,7 +14,7 @@ import {
   userEmbedding,
   verification,
 } from "@/db/schema";
-
+import { serverEnv } from "@/lib/env";
 
 export const auth = betterAuth({
   baseUrl: serverEnv.BETTER_AUTH_URL,

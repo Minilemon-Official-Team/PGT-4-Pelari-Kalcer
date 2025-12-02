@@ -16,6 +16,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +38,13 @@ function LoginPage() {
 
     try {
       setStatus("Signing in...");
+      setIsLoading(true);
       const response = await authClient.signIn.email({ email, password });
       if (response.error) {
         setStatus(response.error.message || "Sign in failed");
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         await navigate({ to: "/" });
       }
     } catch (err) {
@@ -63,7 +67,7 @@ function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={status === "Signing in..."}
+              disabled={isLoading}
             />
             {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
           </div>
@@ -77,7 +81,7 @@ function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={status === "Signing in..."}
+              disabled={isLoading}
             />
             {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
           </div>
@@ -93,9 +97,9 @@ function LoginPage() {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Don't have an account?{" "}
-          <Link  to="/register" className="text-cyan-400 hover:text-cyan-300">
+          <Link to="/register" className="text-cyan-400 hover:text-cyan-300">
             Sign up
-          </Link >
+          </Link>
         </p>
       </div>
     </div>
