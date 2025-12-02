@@ -17,6 +17,7 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,10 +39,13 @@ function RegisterPage() {
 
     try {
       setStatus("Signing up...");
+      setIsLoading(true);
       const response = await authClient.signUp.email({ email, password, name: username });
       if (response.error) {
         setStatus(response.error.message || "Sign up failed");
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         await navigate({ to: "/" });
       }
     } catch (err) {
@@ -64,7 +68,7 @@ function RegisterPage() {
               type="text"
               value={username}
               onChange={(e) => setUserName(e.target.value)}
-              disabled={status === "Signing up..."}
+              disabled={isLoading}
             />
             {errors.username && <p className="text-sm text-red-400 mt-1">{errors.username}</p>}
           </div>
@@ -78,7 +82,7 @@ function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={status === "Signing up..."}
+              disabled={isLoading}
             />
             {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
           </div>
@@ -92,7 +96,7 @@ function RegisterPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={status === "Signing up..."}
+              disabled={isLoading}
             />
             {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
           </div>
