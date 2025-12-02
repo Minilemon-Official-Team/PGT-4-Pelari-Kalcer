@@ -119,10 +119,12 @@ Before you hit “Ready for review”:
 
 - [ ] The branch is based on the latest `main`.
 - [ ] `bun run check` passes locally.
-- [ ] Database migrations and seeds (if any) are tested with `bun run db:reset`.
+- [ ] Database migrations (if any) are generated with `bun run db:generate` and tested with `bun run db:migrate` + `bun run db:seed`.
 - [ ] Documentation and `.env.example` reflect new environment variables or manual steps.
 - [ ] Screenshots or short notes are added for visual changes.
 - [ ] The PR description links the relevant issue and outlines testing steps for reviewers.
+
+> **Schema changes?** See [`DATABASE.md`](./DATABASE.md) for the complete migration workflow, including how to regenerate migrations after PR review feedback.
 
 After approval, a maintainer will squash‑merge the PR. Double‑check the final squash commit message so it follows Conventional Commit guidelines.
 
@@ -173,7 +175,7 @@ These steps keep your workspace tidy and prevent accidental pushes to branches t
 - Mention teammates when you need feedback or when you hand off work.
 - Pairing is encouraged, especially for database changes or tricky rebases.
 
-## Additional Resources
+## Further Reading
 
 - [Feature Branch Workflow (Atlassian)](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)
 - [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow)
