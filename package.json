@@ -17,6 +17,7 @@
     "db:push": "drizzle-kit push --force",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:drop": "drizzle-kit drop",
     "db:seed": "bun run scripts/seed.ts",
     "db:reset": "bun run db:push && bun run db:seed"
   },

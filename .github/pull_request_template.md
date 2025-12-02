@@ -21,3 +21,4 @@ Closes #<!-- issue number -->
 - [ ] Commit messages follow Conventional Commits
 - [ ] Screenshots or notes included for visual changes
 - [ ] Documentation and `.env.example` updated when required
+- [ ] Schema changes include migration via `bun run db:generate` _(see [DATABASE.md](docs/DATABASE.md))_

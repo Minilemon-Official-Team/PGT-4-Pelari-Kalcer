@@ -146,10 +146,12 @@ All scripts run as `bun run <script>` unless noted. Use these for day‑to‑day
 | `db:push`           | Sync the current Drizzle schema directly to PostgreSQL (local dev, no migration files). |
 | `db:generate`       | Generate SQL migration files from the TypeScript schema.                                |
 | `db:migrate`        | Apply the generated migrations to the database.                                         |
+| `db:drop`           | Interactively remove a migration                                                        |
 | `db:seed`           | Run the seed script to insert demo data.                                                |
 | `db:reset`          | Reset the local database: `db:push` followed by `db:seed`.                              |
 
 > For team workflows and production, prefer `db:generate` + `db:migrate` instead of `db:push`.
+> See [`DATABASE.md`](docs/DATABASE.md) for the full migration workflow guide.
 
 ## Project Layout
 
