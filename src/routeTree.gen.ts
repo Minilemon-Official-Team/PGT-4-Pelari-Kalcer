@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as MyAccountRouteImport } from './routes/my-account'
 import { Route as FindMeRouteImport } from './routes/find-me'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -27,6 +28,11 @@ import { Route as DemoStartSsrDataOnlyRouteImport } from './routes/demo/start.ss
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyAccountRoute = MyAccountRouteImport.update({
+  id: '/my-account',
+  path: '/my-account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FindMeRoute = FindMeRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/events': typeof EventsRoute
   '/find-me': typeof FindMeRoute
+  '/my-account': typeof MyAccountRoute
   '/settings': typeof SettingsRoute
   '/dashboard/layout': typeof DashboardLayoutRoute
   '/demo/api/names': typeof DemoApiNamesRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRouteWithChildren
   '/events': typeof EventsRoute
   '/find-me': typeof FindMeRoute
+  '/my-account': typeof MyAccountRoute
   '/settings': typeof SettingsRoute
   '/dashboard/layout': typeof DashboardLayoutRoute
   '/demo/api/names': typeof DemoApiNamesRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/events': typeof EventsRoute
   '/find-me': typeof FindMeRoute
+  '/my-account': typeof MyAccountRoute
   '/settings': typeof SettingsRoute
   '/dashboard/layout': typeof DashboardLayoutRoute
   '/demo/api/names': typeof DemoApiNamesRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/find-me'
+    | '/my-account'
     | '/settings'
     | '/dashboard/layout'
     | '/demo/api/names'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/find-me'
+    | '/my-account'
     | '/settings'
     | '/dashboard/layout'
     | '/demo/api/names'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/find-me'
+    | '/my-account'
     | '/settings'
     | '/dashboard/layout'
     | '/demo/api/names'
@@ -200,6 +212,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   EventsRoute: typeof EventsRoute
   FindMeRoute: typeof FindMeRoute
+  MyAccountRoute: typeof MyAccountRoute
   SettingsRoute: typeof SettingsRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-account': {
+      id: '/my-account'
+      path: '/my-account'
+      fullPath: '/my-account'
+      preLoaderRoute: typeof MyAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/find-me': {
@@ -331,6 +351,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   EventsRoute: EventsRoute,
   FindMeRoute: FindMeRoute,
+  MyAccountRoute: MyAccountRoute,
   SettingsRoute: SettingsRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
