@@ -195,6 +195,9 @@ For example, the `/demo/start/db-users` route uses `users.contract.ts` to valida
 - Drizzle schema changes go into `src/db/schema.ts`. Use `db:push` for quick local syncing or `db:generate` + `db:migrate` when you want migration files committed.
 - S3 storage uses Bun's native `S3Client` (see `src/lib/s3.ts`), making it provider-agnostic. For local development, MinIO runs via Docker. For production, configure `S3_ENDPOINT_URL` to point to Supabase Storage, Cloudflare R2, or any S3-compatible service.
 
+## Better-Auth Config
+- It is recommended to generate a good random secret by using the command `openssl rand -base64 32` in the terminal and replace the `BETTER_AUTH_SECRET` in .env 
+
 ## Quality Checks & CI
 
 - Run `bun run check` before opening a PR to catch lint and type issues.

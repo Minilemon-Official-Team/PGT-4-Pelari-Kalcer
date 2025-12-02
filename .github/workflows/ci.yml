@@ -26,7 +26,7 @@ jobs:
       POSTGRES_PASSWORD: ci_password
       POSTGRES_DB: ci_test_db
       DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/ci_test_db"
-      BETTER_AUTH_SECRET: "better-auth-secret-123456789"
+      BETTER_AUTH_SECRET: "better-auth-secret-123456789-run"
       BETTER_AUTH_URL: "http://localhost:3000"
 
     services:

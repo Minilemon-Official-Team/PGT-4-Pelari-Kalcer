@@ -80,7 +80,7 @@ export const account = pgTable("account", {
   expiresAt: timestamp("expires_at", { withTimezone: true }),
   password: text("password"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull().$onUpdate(() => new Date()),
 });
 
 export const verification = pgTable("verification", {
