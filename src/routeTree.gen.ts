@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 ||||||| parent of d3daf01 (initial)
 =======
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as MyAccountRouteImport } from './routes/my-account'
 import { Route as FindMeRouteImport } from './routes/find-me'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -46,6 +47,11 @@ const LoginRoute = LoginRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyAccountRoute = MyAccountRouteImport.update({
+  id: '/my-account',
+  path: '/my-account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FindMeRoute = FindMeRouteImport.update({
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/events': typeof EventsRoute
   '/find-me': typeof FindMeRoute
+  '/my-account': typeof MyAccountRoute
   '/settings': typeof SettingsRoute
   '/dashboard/layout': typeof DashboardLayoutRoute
 >>>>>>> d3daf01 (initial)
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRouteWithChildren
   '/events': typeof EventsRoute
   '/find-me': typeof FindMeRoute
+  '/my-account': typeof MyAccountRoute
   '/settings': typeof SettingsRoute
   '/dashboard/layout': typeof DashboardLayoutRoute
 >>>>>>> d3daf01 (initial)
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/events': typeof EventsRoute
   '/find-me': typeof FindMeRoute
+  '/my-account': typeof MyAccountRoute
   '/settings': typeof SettingsRoute
   '/dashboard/layout': typeof DashboardLayoutRoute
 >>>>>>> d3daf01 (initial)
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/find-me'
+    | '/my-account'
     | '/settings'
     | '/dashboard/layout'
 >>>>>>> d3daf01 (initial)
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/find-me'
+    | '/my-account'
     | '/settings'
     | '/dashboard/layout'
 >>>>>>> d3daf01 (initial)
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/find-me'
+    | '/my-account'
     | '/settings'
     | '/dashboard/layout'
 >>>>>>> d3daf01 (initial)
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   EventsRoute: typeof EventsRoute
   FindMeRoute: typeof FindMeRoute
+  MyAccountRoute: typeof MyAccountRoute
   SettingsRoute: typeof SettingsRoute
 >>>>>>> d3daf01 (initial)
   DemoApiNamesRoute: typeof DemoApiNamesRoute
@@ -297,6 +310,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-account': {
+      id: '/my-account'
+      path: '/my-account'
+      fullPath: '/my-account'
+      preLoaderRoute: typeof MyAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/find-me': {
@@ -417,6 +437,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   EventsRoute: EventsRoute,
   FindMeRoute: FindMeRoute,
+  MyAccountRoute: MyAccountRoute,
   SettingsRoute: SettingsRoute,
 >>>>>>> d3daf01 (initial)
   DemoApiNamesRoute: DemoApiNamesRoute,
