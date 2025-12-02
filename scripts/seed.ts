@@ -77,7 +77,6 @@ async function main() {
   await db.delete(userEmbedding);
   await db.delete(event);
   await db.delete(user);
-  await db.delete(userEmbedding);
   await db.delete(verification);
   await db.delete(session);
   await db.delete(account);

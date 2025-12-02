@@ -79,10 +79,10 @@ export const account = pgTable("account", {
   refreshToken: text("refresh_token"),
   expiresAt: timestamp("expires_at", { withTimezone: true }),
   password: text("password"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
+    .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
