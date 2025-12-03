@@ -12,10 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EventsIndexRouteImport } from './routes/events/index'
+import { Route as EventsEventIdRouteImport } from './routes/events/$eventId'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AdminEventsNewRouteImport } from './routes/admin/events/new'
 import { Route as DemoStartSsrIndexRouteImport } from './routes/demo/start.ssr.index'
 import { Route as DemoStartSsrSpaModeRouteImport } from './routes/demo/start.ssr.spa-mode'
 import { Route as DemoStartSsrFullSsrRouteImport } from './routes/demo/start.ssr.full-ssr'
@@ -36,6 +39,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsEventIdRoute = EventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
   id: '/demo/start/server-funcs',
   path: '/demo/start/server-funcs',
@@ -54,6 +67,11 @@ const DemoApiNamesRoute = DemoApiNamesRouteImport.update({
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminEventsNewRoute = AdminEventsNewRouteImport.update({
+  id: '/admin/events/new',
+  path: '/admin/events/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartSsrIndexRoute = DemoStartSsrIndexRouteImport.update({
@@ -81,6 +99,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events': typeof EventsIndexRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
@@ -94,6 +115,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events': typeof EventsIndexRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
@@ -108,6 +132,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/events/$eventId': typeof EventsEventIdRoute
+  '/events/': typeof EventsIndexRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
@@ -123,6 +150,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/events/$eventId'
+    | '/events'
+    | '/admin/events/new'
     | '/api/auth/$'
     | '/demo/api/names'
     | '/demo/start/api-request'
@@ -136,6 +166,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/events/$eventId'
+    | '/events'
+    | '/admin/events/new'
     | '/api/auth/$'
     | '/demo/api/names'
     | '/demo/start/api-request'
@@ -149,6 +182,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/events/$eventId'
+    | '/events/'
+    | '/admin/events/new'
     | '/api/auth/$'
     | '/demo/api/names'
     | '/demo/start/api-request'
@@ -163,6 +199,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  EventsEventIdRoute: typeof EventsEventIdRoute
+  EventsIndexRoute: typeof EventsIndexRoute
+  AdminEventsNewRoute: typeof AdminEventsNewRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
@@ -196,6 +235,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events/': {
+      id: '/events/'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$eventId': {
+      id: '/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof EventsEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo/start/server-funcs': {
       id: '/demo/start/server-funcs'
       path: '/demo/start/server-funcs'
@@ -222,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/events/new': {
+      id: '/admin/events/new'
+      path: '/admin/events/new'
+      fullPath: '/admin/events/new'
+      preLoaderRoute: typeof AdminEventsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/ssr/': {
@@ -259,6 +319,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  EventsEventIdRoute: EventsEventIdRoute,
+  EventsIndexRoute: EventsIndexRoute,
+  AdminEventsNewRoute: AdminEventsNewRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
