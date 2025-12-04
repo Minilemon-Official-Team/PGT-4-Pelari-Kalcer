@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -13,18 +13,16 @@ export const Route = createFileRoute("/register")({
 function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [username, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setStatus("");
 
-    // Validate
     const result = registerContract.safeParse({ email, username, password });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
@@ -39,14 +37,11 @@ function RegisterPage() {
 
     try {
       setStatus("Signing up...");
-      setIsLoading(true);
       const response = await authClient.signUp.email({ email, password, name: username });
       if (response.error) {
         setStatus(response.error.message || "Sign up failed");
-        setIsLoading(false);
       } else {
-        setIsLoading(false);
-        await navigate({ to: "/" });
+        await navigate({ to: "/dashboard" });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign up failed");
@@ -60,15 +55,15 @@ function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-              Name
+            <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
+              Username
             </label>
             <Input
-              id="name"
+              id="username"
               type="text"
               value={username}
-              onChange={(e) => setUserName(e.target.value)}
-              disabled={isLoading}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={status === "Signing up..."}
             />
             {errors.username && <p className="text-sm text-red-400 mt-1">{errors.username}</p>}
           </div>
@@ -82,7 +77,7 @@ function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={status === "Signing up..."}
             />
             {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
           </div>
@@ -96,7 +91,7 @@ function RegisterPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              disabled={status === "Signing up..."}
             />
             {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
           </div>
@@ -112,9 +107,9 @@ function RegisterPage() {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-cyan-400 hover:text-cyan-300">
+          <a href="/login" className="text-cyan-400 hover:text-cyan-300">
             Sign in
-          </Link>
+          </a>
         </p>
       </div>
     </div>
