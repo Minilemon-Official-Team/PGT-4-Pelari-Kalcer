@@ -1,7 +1,15 @@
-import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
+import { eq } from "drizzle-orm";
 import { db } from "../src/db";
-import { account, event, session, user, userEmbedding, verification } from "../src/db/schema";
+import {
+  account,
+  creatorRequest,
+  event,
+  session,
+  user,
+  userEmbedding,
+  verification,
+} from "../src/db/schema";
 
 // Helper to generate mock 1024-dimensional vector
 function generateMockEmbedding(): number[] {
@@ -72,14 +80,22 @@ const seedUsers: SeedUser[] = [
   },
 ];
 
+type SeedCreatorRequests = {
+  userId: string;
+  portfolioLink: string;
+  motivation: string;
+  status: "pending" | "approved" | "rejected";
+};
+
 async function main() {
   console.info("Clearing existing data...");
   await db.delete(userEmbedding);
   await db.delete(event);
-  await db.delete(user);
+  await db.delete(creatorRequest);
   await db.delete(verification);
   await db.delete(session);
   await db.delete(account);
+  await db.delete(user);
 
   console.info("Seeding users...");
   const createdUserIds: string[] = [];
@@ -110,6 +126,34 @@ async function main() {
       throw error;
     }
   }
+
+  console.info("Seeding creator requests...");
+  const seedCreatorRequests: SeedCreatorRequests[] = [
+    {
+      userId: createdUserIds[0],
+      portfolioLink: "https://github.com/Minilemon-Official-Team/PGT-4-Pelari-Kalcer",
+      status: "pending",
+      motivation: "I am looking for a side gig",
+    },
+    {
+      userId: createdUserIds[2],
+      portfolioLink: "https://github.com/Minilemon-Official-Team/PGT-4-Pelari-Kalcer",
+      status: "approved",
+      motivation: "I am looking for a side gig",
+    },
+    {
+      userId: createdUserIds[3],
+      portfolioLink: "https://github.com/Minilemon-Official-Team/PGT-4-Pelari-Kalcer",
+      status: "approved",
+      motivation: "I am looking for a side gig",
+    },
+  ];
+
+  const insertedCreatorRequests = await db
+    .insert(creatorRequest)
+    .values(seedCreatorRequests)
+    .returning();
+  console.info(`Seeded ${insertedCreatorRequests.length} Creator Requests`);
 
   console.info("Seeding user face embeddings...");
   const seedUserEmbeddings = createdUserIds.map((userId) => ({
