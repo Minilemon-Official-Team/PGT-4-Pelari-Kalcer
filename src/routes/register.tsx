@@ -13,7 +13,7 @@ export const Route = createFileRoute("/register")({
 function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
@@ -23,8 +23,7 @@ function RegisterPage() {
     setErrors({});
     setStatus("");
 
-    // Validate
-    const result = registerContract.safeParse({ email, name, password });
+    const result = registerContract.safeParse({ email, username, password });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
@@ -38,7 +37,7 @@ function RegisterPage() {
 
     try {
       setStatus("Signing up...");
-      const response = await authClient.signUp.email({ email, password, name });
+      const response = await authClient.signUp.email({ email, password, name: username });
       if (response.error) {
         setStatus(response.error.message || "Sign up failed");
       } else {
@@ -56,17 +55,17 @@ function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-              Name
+            <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
+              Username
             </label>
             <Input
-              id="name"
+              id="username"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               disabled={status === "Signing up..."}
             />
-            {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}
+            {errors.username && <p className="text-sm text-red-400 mt-1">{errors.username}</p>}
           </div>
 
           <div>
