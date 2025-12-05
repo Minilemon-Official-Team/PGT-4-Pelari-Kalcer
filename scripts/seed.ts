@@ -1,7 +1,15 @@
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { db } from "../src/db";
-import { account, event, session, user, userEmbedding, verification } from "../src/db/schema";
+import {
+  account,
+  creatorRequest,
+  event,
+  session,
+  user,
+  userEmbedding,
+  verification,
+} from "../src/db/schema";
 
 // Helper to generate mock 1024-dimensional vector
 function generateMockEmbedding(): number[] {
@@ -80,6 +88,7 @@ async function main() {
   await db.delete(verification);
   await db.delete(session);
   await db.delete(account);
+  await db.delete(creatorRequest);
 
   console.info("Seeding users...");
   const createdUserIds: string[] = [];
