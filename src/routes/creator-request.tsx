@@ -1,35 +1,54 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { submitRequest } from "@/features/creatorRequest";
-import { getUserId } from "@/lib/auth-actions";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { approveRequest, listAllRequests, rejectRequest, submitRequest } from "@/features/creatorRequest";
+import { getAuthSession } from "@/lib/auth-actions";
+import { authClient } from "@/lib/auth-client";
+import { createFileRoute, redirect, useNavigate, useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/creator-request")({
   component: RouteComponent,
   beforeLoad: async () => {
-    const userId = await getUserId()
+    const session = await getAuthSession();
+    const userId = session?.user?.id
+    const role = session?.user?.role
     return {
-      userId
+      userId,
+      role
     }
   },
   loader: async ({ context }) => {
+    const creatorRequests = await listAllRequests();
     if (!context?.userId) {
       throw redirect({ to: "/login"})
     }
     return {
-      userId: context.userId
+      userId: context.userId,
+      role: context.role,
+      creatorRequests
     }
   }
 });
 
 async function RouteComponent() {
-  const {userId} = Route.useLoaderData()
-  const navigate = useNavigate();
+  const {userId, role, creatorRequests} = Route.useLoaderData()
   const [portfolioLink, setPortfolioLink] = useState("");
   const [motivation, setMotivation] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [hasAdminPermission, setHasAdminPermission] = useState(false);
+
+  const router = useRouter()
+  const navigate = useNavigate();
+  const isMember = role === "member"
+
+  useEffect(() => {
+    authClient.admin
+    .hasPermission({ permission: {creatorRequest: ["list"]}})
+    .then(({data}) => {
+      setHasAdminPermission(data?.success ?? false)
+    })
+  },[])
 
   const handleSubmitRequest = async (e:React.FormEvent) => {
     e.preventDefault()
@@ -48,84 +67,144 @@ async function RouteComponent() {
     }
   };
 
+  const handleApproval = async (requesterId: string, requestId: string) => {
+    const approvalPayload = {
+        requesterId,
+        requestId,
+        reviewerId: userId,
+    }
+    try {
+      setIsLoading(true)
+      await approveRequest({data: approvalPayload})
+      setIsLoading(false)
+      router.invalidate()
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const handleRejection = async ( requestId: string) => {
+    const rejectionPayload = {
+        requestId,
+        reviewerId: userId,
+    }
+    try {
+      setIsLoading(true)
+      await rejectRequest({data: rejectionPayload})
+      setIsLoading(false)
+      router.invalidate()
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-6">
-        <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-8">
-          <h1 className="text-2xl font-bold text-white mb-6 text-center">
-            Become a Creator
-          </h1>
-          <form onSubmit={handleSubmitRequest} className="space-y-4">
+        {isMember && (
+          <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-8">
             <div>
-              <label
-                htmlFor="portfolioLink"
-                className="block text-sm font-medium text-gray-300 mb-2"
-              >
-                Portfolio Link
-              </label>
-              <Input
-                id="portfolioLink"
-                type="text"
-                value={portfolioLink}
-                onChange={(e) => setPortfolioLink(e.target.value)}
-                disabled={isLoading}
-              />
-              {errors.portfolioLink && (
-                <p className="text-sm text-red-400 mt-1">
-                  {errors.portfolioLink}
-                </p>
-              )}
-            </div>
+              <h1 className="text-2xl font-bold text-white mb-6 text-center">
+                Become a Creator
+              </h1>
+              <form onSubmit={handleSubmitRequest} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="portfolioLink"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Portfolio Link
+                  </label>
+                  <Input
+                    id="portfolioLink"
+                    type="text"
+                    value={portfolioLink}
+                    onChange={(e) => setPortfolioLink(e.target.value)}
+                    disabled={isLoading}
+                  />
+                  {errors.portfolioLink && (
+                    <p className="text-sm text-red-400 mt-1">
+                      {errors.portfolioLink}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label
-                htmlFor="motivation"
-                className="block text-sm font-medium text-gray-300 mb-2"
-              >
-                Motivation
-              </label>
-              <Input
-                id="motivation"
-                type="motivation"
-                value={motivation}
-                onChange={(e) => setMotivation(e.target.value)}
-                disabled={isLoading}
-              />
-              {errors.motivation && (
-                <p className="text-sm text-red-400 mt-1">{errors.motivation}</p>
-              )}
+                <div>
+                  <label
+                    htmlFor="motivation"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Motivation
+                  </label>
+                  <Input
+                    id="motivation"
+                    type="motivation"
+                    value={motivation}
+                    onChange={(e) => setMotivation(e.target.value)}
+                    disabled={isLoading}
+                  />
+                  {errors.motivation && (
+                    <p className="text-sm text-red-400 mt-1">{errors.motivation}</p>
+                  )}
+                </div>
+
+                <Button type="submit" variant="primary" className="w-full">
+                  {"Submit"}
+                </Button>
+              </form>
             </div>
-            <h2 className="text-md font-bold text-white mb-6 text-center">
+          </div>
+        )}
+        {hasAdminPermission && (
+          <div className="bg-teal-900 relative flex flex-col shadow-md rounded-xl bg-clip-border">
+            <h1 className="text-2xl font-bold mt-4 mb-6 text-center text-white">
               Pending Requests
-            </h2>
-            <table className="text-white">
+            </h1>
+            <table className="w-full text-left table-auto min-w-max text-white border-gray-300">
               <tr>
-                  <th>User</th>
-                  <th>Portfolio Link</th>
-                  <th>Actions</th>
+                  <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                      User
+                    </p>
+                  </th>
+                  <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                      Portfolio Link
+                    </p>
+                  </th>
+                  <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50 text-center" colSpan={2}>
+                    <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                      Actions
+                    </p>
+                  </th>
               </tr>
-              <tr>
-                  <td>Anom</td>
-                  <td>19</td>
-                  <td>Male</td>
+              {creatorRequests?.map(cr => (
+                <tr key={cr.requestId}>
+                  <td className="p-4 border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                      {cr.requesterUsername}
+                    </p>
+                  </td>
+                  <td className="p-4 border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                      {cr.portfolioLink}
+                    </p>
+                  </td>
+                  <td className="p-4 border-blue-gray-50">
+                    <Button onClick={() => handleApproval(cr?.requesterId!, cr?.requestId!)} variant="primary" className="bg-green-600 text-white">
+                        {"Approve"}
+                    </Button>
+                  </td>
+                  <td className="p-4 border-blue-gray-50">
+                    <Button onClick={() => handleRejection(cr?.requestId!)} variant="primary" className="bg-red-600 text-white">
+                        {"Reject"}
+                    </Button>
+                  </td>
               </tr>
-              <tr>
-                  <td>Megha</td>
-                  <td>19</td>
-                  <td>Female</td>
-              </tr>
-              <tr>
-                  <td>Subham</td>
-                  <td>25</td>
-                  <td>Male</td>
-              </tr>
+              ))}
             </table>
-
-            <Button type="submit" variant="primary" className="w-full">
-              {"Submit"}
-            </Button>
-          </form>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

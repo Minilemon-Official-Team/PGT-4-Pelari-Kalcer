@@ -22,3 +22,7 @@ export const rejectCreatorRequestContract = z.object({
   requestId: creatorRequestIdSchema,
   reviewerId: userIdSchema,
 });
+
+export const listOwnRequestsContract = z.object({
+  userId: userIdSchema,
+});
