@@ -4,7 +4,7 @@ import { userIdSchema } from "./users.contract";
 export const portfolioLinkSchema = z.url("Portfolio URL must be a valid link");
 export const motivationSchema = z.string();
 export const statusSchema = z.enum(["pending", "approved", "rejected"]);
-export const creatorRequestIdSchema = z.uuid()
+export const creatorRequestIdSchema = z.uuid();
 
 export const submitCreatorRequestContract = z.object({
   userId: userIdSchema,
