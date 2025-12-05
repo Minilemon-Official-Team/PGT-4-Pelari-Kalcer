@@ -1,14 +1,14 @@
+import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
 import {
   approveCreatorRequestContract,
   listOwnRequestsContract,
   rejectCreatorRequestContract,
-  submitCreatorRequestContract
+  submitCreatorRequestContract,
 } from "@/contracts/creatorRequest.contract";
 import { db } from "@/db";
 import { creatorRequest, user } from "@/db/schema";
 import { requireAdmin, requireMember } from "@/lib/auth-middleware";
-import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
 
 export const submitRequest = createServerFn({ method: "POST" })
   .middleware([requireMember])
@@ -27,7 +27,7 @@ export const submitRequest = createServerFn({ method: "POST" })
 
       return result[0];
     } catch (error) {
-      console.log("Creator Request creation has failed");
+      if (error instanceof Error) console.log("Creator Request creation has failed");
     }
   });
 
@@ -41,12 +41,9 @@ export const approveRequest = createServerFn({ method: "POST" })
         .update(creatorRequest)
         .set({ status: "approved", reviewedBy: reviewerId })
         .where(eq(creatorRequest.id, requestId));
-      await db
-        .update(user)
-        .set({ role: "creator" })
-        .where(eq(user.id, requesterId));
+      await db.update(user).set({ role: "creator" }).where(eq(user.id, requesterId));
     } catch (error) {
-      console.log("Creator Request approval has failed");
+      if (error instanceof Error) console.log("Creator Request approval has failed");
     }
   });
 
@@ -61,37 +58,35 @@ export const rejectRequest = createServerFn({ method: "POST" })
         .set({ status: "rejected", reviewedBy: reviewerId })
         .where(eq(creatorRequest.id, requestId));
     } catch (error) {
-      console.log("Creator Request rejection has failed");
+      if (error instanceof Error) console.log("Creator Request rejection has failed");
     }
   });
 
-export const listAllRequests = createServerFn({ method: "GET" }).handler(
-  async () => {
-    try {
-      const requests = await db
-        .select({
-          requesterId: user.id,
-          requesterUsername: user.username,
-          requestId: creatorRequest.id,
-          portfolioLink: creatorRequest.portfolioLink,
-        })
-        .from(creatorRequest)
-        .leftJoin(user, eq(creatorRequest.userId, user.id))
-        .where(eq(creatorRequest.status, "pending"));
+export const listAllRequests = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const requests = await db
+      .select({
+        requesterId: user.id,
+        requesterUsername: user.username,
+        requestId: creatorRequest.id,
+        portfolioLink: creatorRequest.portfolioLink,
+      })
+      .from(creatorRequest)
+      .leftJoin(user, eq(creatorRequest.userId, user.id))
+      .where(eq(creatorRequest.status, "pending"));
 
-      return requests;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
+    return requests;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
     }
-  },
-);
+  }
+});
 
 export const listOwnRequests = createServerFn({ method: "GET" })
   .inputValidator(listOwnRequestsContract)
   .handler(async ({ data }) => {
-    const {userId} = data;
+    const { userId } = data;
     try {
       const requests = await db
         .select({

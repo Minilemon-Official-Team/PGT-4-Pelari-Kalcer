@@ -15,9 +15,9 @@ export const member = ac.newRole({
 
 export const admin = ac.newRole({
   ...adminAc.statements,
-  creatorRequest: ["approve", "list"]
-})
+  creatorRequest: ["approve", "list"],
+});
 
 export const creator = ac.newRole({
   ...userAc.statements,
-})
+});

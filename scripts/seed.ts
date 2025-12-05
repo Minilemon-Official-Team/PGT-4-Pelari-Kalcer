@@ -1,7 +1,15 @@
-import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
 import { db } from "../src/db";
-import { account, creatorRequest, event, session, user, userEmbedding, verification } from "../src/db/schema";
+import {
+  account,
+  creatorRequest,
+  event,
+  session,
+  user,
+  userEmbedding,
+  verification,
+} from "../src/db/schema";
 
 // Helper to generate mock 1024-dimensional vector
 function generateMockEmbedding(): number[] {

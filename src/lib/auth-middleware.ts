@@ -1,6 +1,6 @@
-import { authClient } from "@/lib/auth-client";
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
+import { authClient } from "@/lib/auth-client";
 import { auth } from "./auth";
 
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
@@ -22,11 +22,11 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
 
 export const requireAdmin = createMiddleware({ type: "function" }).server(async ({ next }) => {
   const request = getRequest();
-  const session = await auth.api.getSession({headers: request.headers});
-  const notAuthorized = !session?.user || session.user.role !== "admin"
+  const session = await auth.api.getSession({ headers: request.headers });
+  const notAuthorized = !session?.user || session.user.role !== "admin";
 
   if (notAuthorized) {
-    throw new Error("Authorization error: Admin access required")
+    throw new Error("Authorization error: Admin access required");
   }
 
   return await next({
@@ -42,11 +42,11 @@ export const requireAdmin = createMiddleware({ type: "function" }).server(async 
 
 export const requireMember = createMiddleware({ type: "function" }).server(async ({ next }) => {
   const request = getRequest();
-  const session = await auth.api.getSession({headers: request.headers});
-  const notAuthorized = !session?.user || session.user.role !== "member"
+  const session = await auth.api.getSession({ headers: request.headers });
+  const notAuthorized = !session?.user || session.user.role !== "member";
 
   if (notAuthorized) {
-    throw new Error("Authorization error: Member access required")
+    throw new Error("Authorization error: Member access required");
   }
 
   return await next({
@@ -62,11 +62,11 @@ export const requireMember = createMiddleware({ type: "function" }).server(async
 
 export const requireCreator = createMiddleware({ type: "function" }).server(async ({ next }) => {
   const request = getRequest();
-  const session = await auth.api.getSession({headers: request.headers});
-  const notAuthorized = !session?.user || session.user.role !== "creator"
+  const session = await auth.api.getSession({ headers: request.headers });
+  const notAuthorized = !session?.user || session.user.role !== "creator";
 
   if (notAuthorized) {
-    throw new Error("Authorization error: Creator access required")
+    throw new Error("Authorization error: Creator access required");
   }
 
   return await next({
