@@ -9,9 +9,7 @@ export function RouteComponent() {
     <div className="p-8 text-gray-800 bg-gray-200 h-screen  w-screen">
       {/* Header */}
       <h1 className="text-3xl font-bold mb-1">Find Me</h1>
-      <p className="text-gray-500 mb-8">
-        Search for users, locations, or any data you need.
-      </p>
+      <p className="text-gray-500 mb-8">Search for users, locations, or any data you need.</p>
 
       {/* Search Box */}
       <div className="w-2/3 mb-10">

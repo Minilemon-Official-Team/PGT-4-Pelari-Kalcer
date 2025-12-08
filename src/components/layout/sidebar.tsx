@@ -1,13 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  Home,
-  CreditCard,
-  User,
-  Search,
-  Settings,
-  GoalIcon,
-  LogOutIcon
-} from "lucide-react";
+import { CreditCard, GoalIcon, Home, LogOutIcon, Search, Settings, User } from "lucide-react";
 
 export function Sidebar() {
   const activePath = useRouterState({
@@ -47,11 +39,7 @@ export function Sidebar() {
           to="/events"
           className={`
             flex items-center gap-3 px-3 py-2 rounded-md text-xl mt-5 transition
-            ${
-              activePath === "/events"
-                ? "bg-black/20"
-                : "hover:bg-white/10"
-            }
+            ${activePath === "/events" ? "bg-black/20" : "hover:bg-white/10"}
           `}
         >
           <GoalIcon size={18} />

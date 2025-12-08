@@ -1,14 +1,6 @@
-import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  Home,
-  CreditCard,
-  User,
-  Search,
-  Settings,
-  GoalIcon,
-  LogOutIcon
-} from "lucide-react";
+import { CreditCard, GoalIcon, Home, LogOutIcon, Search, Settings, User } from "lucide-react";
+import { useState } from "react";
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -19,20 +11,12 @@ export function MobileMenu() {
   return (
     <>
       {/* Hamburger Button (mobile only) */}
-      <button
-        className="md:hidden p-3 text-xl m-2"
-        onClick={() => setOpen(true)}
-      >
+      <button className="md:hidden p-3 text-xl m-2" onClick={() => setOpen(true)}>
         ☰
       </button>
 
       {/* Overlay */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      {open && <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setOpen(false)} />}
 
       {/* Drawer Menu */}
       <aside
@@ -46,17 +30,12 @@ export function MobileMenu() {
         ${open ? "translate-x-0" : "-translate-x-full"}
       `}
       >
-        <button
-          className="text-white mb-4 text-xl m-5"
-          onClick={() => setOpen(false)}
-        >
+        <button className="text-white mb-4 text-xl m-5" onClick={() => setOpen(false)}>
           ✕
         </button>
 
         {/* Header */}
-        <div className="text-white px-3 py-4 text-3xl font-semibold mb-6">
-          Dashboard
-        </div>
+        <div className="text-white px-3 py-4 text-3xl font-semibold mb-6">Dashboard</div>
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1">
@@ -77,11 +56,7 @@ export function MobileMenu() {
             to="/transaction"
             className={`
             text-white flex items-center gap-3 px-3 py-2 rounded-md text-xl mt-5 transition
-            ${
-              activePath === "/transaction"
-                ? "bg-black/20"
-                : "hover:bg-white/10"
-            }
+            ${activePath === "/transaction" ? "bg-black/20" : "hover:bg-white/10"}
           `}
           >
             <GoalIcon size={18} />

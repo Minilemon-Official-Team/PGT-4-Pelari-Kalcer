@@ -1,6 +1,6 @@
-import { MobileMenu } from "../components/layout/mobile-menu"
-import { Sidebar } from "../components/layout/sidebar"
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { MobileMenu } from "../components/layout/mobile-menu";
+import { Sidebar } from "../components/layout/sidebar";
 
 export const Route = createFileRoute("/dashboard/layout")({
   component: DashboardLayout,

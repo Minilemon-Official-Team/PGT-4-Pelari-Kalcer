@@ -9,9 +9,7 @@ export function RouteComponent() {
     <div className="p-8 text-gray-800 bg-gray-200 h-screen w-screen">
       {/* Header */}
       <h1 className="text-3xl font-bold mb-1">Settings</h1>
-      <p className="text-gray-500 mb-8">
-        Manage your account preferences and system settings.
-      </p>
+      <p className="text-gray-500 mb-8">Manage your account preferences and system settings.</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-screen">
         {/* Account Settings */}
@@ -21,9 +19,7 @@ export function RouteComponent() {
           <div className="space-y-5">
             {/* Change Name */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Display Name
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">Display Name</label>
               <input
                 type="text"
                 placeholder="Your name..."
@@ -43,9 +39,7 @@ export function RouteComponent() {
 
             {/* Password Change */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Password
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">Password</label>
               <input
                 type="password"
                 placeholder="********"

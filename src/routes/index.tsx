@@ -5,7 +5,5 @@ import { DashboardLayout } from "./dashboard.layout";
 export const Route = createFileRoute("/")({ component: App });
 
 export function App() {
-  return (
-    <DashboardLayout/>
-  )
+  return <DashboardLayout />;
 }

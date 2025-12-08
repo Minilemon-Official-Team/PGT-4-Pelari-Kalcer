@@ -9,9 +9,7 @@ export function RouteComponent() {
     <div className="p-8 text-gray-800 bg-gray-200 h-screen  w-screen">
       {/* Header */}
       <h1 className="text-3xl font-bold mb-1">My Account</h1>
-      <p className="text-gray-500 mb-8">
-        Manage your personal profile information.
-      </p>
+      <p className="text-gray-500 mb-8">Manage your personal profile information.</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left Profile Card */}
