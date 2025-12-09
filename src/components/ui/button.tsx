@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "outline" | "ghost";
 };
 
 const baseStyles =
@@ -14,6 +14,8 @@ const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
     "bg-(--accent) text-(--surface) hover:bg-(--accent-strong) focus-visible:outline-(--accent-strong)",
   secondary:
     "bg-(--surface) text-(--text-primary) border border-slate-200 hover:bg-slate-50 focus-visible:outline-(--accent)",
+  outline:
+    "border border-slate-300 bg-white text-(--text-primary) hover:bg-slate-50 focus-visible:outline-(--accent)",
   ghost: "bg-transparent text-(--text-primary) hover:bg-slate-100 focus-visible:outline-(--accent)",
 };
 

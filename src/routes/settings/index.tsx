@@ -113,11 +113,7 @@ function SettingsPage() {
               <p className="text-sm text-(--text-muted)">Apply or review creator badges.</p>
             </div>
             <Link to="/verification">
-              <Button
-                variant={roleCta.variant}
-                className={roleCta.className}
-                disabled={roleCta.disabled}
-              >
+              <Button variant={roleCta.variant} className={roleCta.className}>
                 {roleCta.label}
               </Button>
             </Link>
