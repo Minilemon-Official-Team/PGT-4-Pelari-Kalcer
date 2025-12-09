@@ -16,15 +16,14 @@ export const Route = createFileRoute("/find-me/")({
 });
 
 function FindMePage() {
+  const { session } = Route.useRouteContext();
   return (
-    <DashboardLayout>
+    <DashboardLayout session={session}>
       <div className="space-y-6">
         <div className="space-y-2">
           <p className="text-sm text-(--text-muted)">Face search</p>
           <h1 className="text-2xl font-semibold">Find your photos</h1>
-          <p className="text-(--text-muted)">
-            Upload or snap a selfie to start matching against event albums.
-          </p>
+          <p className="text-(--text-muted)">Drop a selfie to match against event albums.</p>
         </div>
 
         <div className="rounded-xl border border-slate-200 p-5 bg-white shadow-sm">
@@ -41,14 +40,11 @@ function FindMePage() {
               Search
             </Button>
           </div>
-          <p className="text-xs text-(--text-muted) mt-2">
-            For best results, use a clear selfie with good lighting.
-          </p>
+          <p className="text-xs text-(--text-muted) mt-2">Use a clear selfie with good lighting.</p>
         </div>
 
         <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-6 text-(--text-muted)">
-          Results will appear here once matching is wired to the backend. We’ll show the top photos
-          with similarity scores.
+          Results will show here once matching is live. We’ll surface top photos with scores.
         </div>
       </div>
     </DashboardLayout>

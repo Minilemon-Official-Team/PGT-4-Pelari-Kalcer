@@ -14,9 +14,14 @@ type NavItem = {
 type DashboardLayoutProps = {
   children: React.ReactNode;
   onLogout?: () => void;
+  session?: { user?: { name?: string | null; email?: string | null; role?: string | null } };
 };
 
-export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
+export function DashboardLayout({
+  children,
+  onLogout,
+  session: providedSession,
+}: DashboardLayoutProps) {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
@@ -31,7 +36,8 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
     [],
   );
 
-  const { data: session } = useSession();
+  const { data: liveSession } = useSession();
+  const session = providedSession ?? liveSession;
   const displayName = session?.user?.name ?? session?.user?.email ?? "Account";
   const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
 

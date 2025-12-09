@@ -12,12 +12,9 @@ function HomePage() {
       <header className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
           <p className="text-sm uppercase tracking-[0.2em] text-(--text-muted)">RunCam</p>
-          <h1 className="text-4xl md:text-5xl font-semibold mt-3">
-            Find your race photos instantly
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-semibold mt-3">Find your race photos fast</h1>
           <p className="mt-3 text-lg text-(--text-muted) max-w-2xl">
-            Upload selfies, discover your shots, and connect with creators. Built for runners,
-            creators, and admins to keep events organized.
+            Upload a selfie, see your shots, and keep events tidy for runners and creators.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <Link to="/login">
@@ -38,8 +35,8 @@ function HomePage() {
               Live event coverage
             </div>
             <div className="mt-4 rounded-xl bg-linear-to-br from-orange-100 to-white p-4 text-(--text-muted) leading-relaxed">
-              Register your face, upload event albums, and let runners claim their photos securely.
-              Built with TanStack Start, Better Auth, and Drizzle.
+              Register your face, link albums, and let runners claim photos securely. Powered by
+              TanStack Start, Better Auth, and Drizzle.
             </div>
           </div>
         </div>

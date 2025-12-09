@@ -20,23 +20,30 @@ function SettingsPage() {
 
   const roleCta = (() => {
     if (role === "creator") {
-      return { label: "You are a Creator", variant: "secondary" as const };
+      return {
+        label: "Creator badge active",
+        variant: "secondary" as const,
+        className: "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100",
+      };
     }
     if (role === "admin") {
-      return { label: "Manage verifications", variant: "outline" as const };
+      return {
+        label: "Review requests",
+        variant: "secondary" as const,
+        className:
+          "bg-(--accent)/10 text-(--accent-strong) border border-(--accent)/30 hover:bg-(--accent)/20",
+      };
     }
-    return { label: "Apply for Creator verification", variant: "primary" as const };
+    return { label: "Request creator badge", variant: "primary" as const };
   })();
 
   return (
-    <DashboardLayout>
+    <DashboardLayout session={session}>
       <div className="space-y-6">
         <div className="space-y-2">
           <p className="text-sm text-(--text-muted)">Profile & account</p>
           <h1 className="text-2xl font-semibold">Settings</h1>
-          <p className="text-(--text-muted)">
-            Manage your profile, notifications, and privacy preferences.
-          </p>
+          <p className="text-(--text-muted)">Update your profile and alerts.</p>
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
@@ -103,12 +110,16 @@ function SettingsPage() {
             <div className="space-y-1">
               <p className="text-sm text-(--text-muted)">Creator verification</p>
               <p className="text-base font-medium">Visibility & trust</p>
-              <p className="text-sm text-(--text-muted)">
-                Apply to become a verified creator or manage verification requests.
-              </p>
+              <p className="text-sm text-(--text-muted)">Apply or review creator badges.</p>
             </div>
             <Link to="/verification">
-              <Button variant={roleCta.variant}>{roleCta.label}</Button>
+              <Button
+                variant={roleCta.variant}
+                className={roleCta.className}
+                disabled={roleCta.disabled}
+              >
+                {roleCta.label}
+              </Button>
             </Link>
           </div>
         </div>

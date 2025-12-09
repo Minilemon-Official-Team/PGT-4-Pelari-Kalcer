@@ -36,8 +36,9 @@ function StatCard({
 }
 
 function DashboardPage() {
+  const { session } = Route.useRouteContext();
   return (
-    <DashboardLayout>
+    <DashboardLayout session={session}>
       <div className="space-y-6">
         <div className="space-y-2">
           <p className="text-sm text-(--text-muted)">Welcome back</p>
