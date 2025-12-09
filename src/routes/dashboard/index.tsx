@@ -1,8 +1,8 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { getAuthSession } from "@/lib/auth-actions";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Calendar, Compass, Settings, User } from "lucide-react";
 import type React from "react";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { getAuthSession } from "@/lib/auth-actions";
 
 export const Route = createFileRoute("/dashboard/")({
   beforeLoad: async () => {

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Camera } from "lucide-react";
+import { PublicNav } from "@/components/layout/PublicNav";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({ component: HomePage });
@@ -7,6 +8,7 @@ export const Route = createFileRoute("/")({ component: HomePage });
 function HomePage() {
   return (
     <div className="min-h-screen bg-(--muted) text-(--text-primary)">
+      <PublicNav />
       <header className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
           <p className="text-sm uppercase tracking-[0.2em] text-(--text-muted)">RunCam</p>

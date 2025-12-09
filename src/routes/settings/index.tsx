@@ -1,7 +1,7 @@
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { getAuthSession } from "@/lib/auth-actions";
-import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/settings/")({
   beforeLoad: async () => {
@@ -15,6 +15,19 @@ export const Route = createFileRoute("/settings/")({
 });
 
 function SettingsPage() {
+  const { session } = Route.useRouteContext();
+  const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
+
+  const roleCta = (() => {
+    if (role === "creator") {
+      return { label: "You are a Creator", variant: "secondary" as const };
+    }
+    if (role === "admin") {
+      return { label: "Manage verifications", variant: "outline" as const };
+    }
+    return { label: "Apply for Creator verification", variant: "primary" as const };
+  })();
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -82,6 +95,21 @@ function SettingsPage() {
               Save changes
             </Button>
             <Button variant="outline">Cancel</Button>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="space-y-1">
+              <p className="text-sm text-(--text-muted)">Creator verification</p>
+              <p className="text-base font-medium">Visibility & trust</p>
+              <p className="text-sm text-(--text-muted)">
+                Apply to become a verified creator or manage verification requests.
+              </p>
+            </div>
+            <Link to="/verification">
+              <Button variant={roleCta.variant}>{roleCta.label}</Button>
+            </Link>
           </div>
         </div>
       </div>

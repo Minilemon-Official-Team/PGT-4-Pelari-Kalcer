@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { signOut } from "@/lib/auth-client";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Calendar, Grid, LogOut, Menu, Search, Settings, X } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "@/lib/auth-client";
 
 type NavItem = {
   label: string;
@@ -30,6 +30,10 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
     ],
     [],
   );
+
+  const { data: session } = useSession();
+  const displayName = session?.user?.name ?? session?.user?.email ?? "Account";
+  const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
 
   const handleLogout =
     onLogout ??
@@ -79,7 +83,17 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
           <LogoutRow onLogout={handleLogout} />
         </aside>
 
-        <main className="min-h-[70vh]">
+        <main className="min-h-[70vh] space-y-3">
+          <div className="rounded-2xl bg-(--surface) border border-slate-200 shadow-sm p-4 flex items-center justify-between gap-3 text-sm">
+            <div className="flex flex-col">
+              <span className="text-(--text-muted)">Signed in as</span>
+              <span className="font-medium text-(--text-primary)">{displayName}</span>
+            </div>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase text-(--text-muted)">
+              {role}
+            </span>
+          </div>
+
           <div className="rounded-2xl bg-(--surface) border border-slate-200 shadow-sm p-6">
             {children}
           </div>

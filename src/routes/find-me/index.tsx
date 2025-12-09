@@ -1,8 +1,8 @@
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Search } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { getAuthSession } from "@/lib/auth-actions";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/find-me/")({
   beforeLoad: async () => {

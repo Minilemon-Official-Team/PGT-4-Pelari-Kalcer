@@ -13,6 +13,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MyAccountRouteImport } from './routes/my-account'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerificationIndexRouteImport } from './routes/verification/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as FindMeIndexRouteImport } from './routes/find-me/index'
 import { Route as EventsIndexRouteImport } from './routes/events/index'
@@ -37,6 +38,11 @@ const LoginRoute = LoginRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificationIndexRoute = VerificationIndexRouteImport.update({
+  id: '/verification/',
+  path: '/verification/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsIndexRoute = SettingsIndexRouteImport.update({
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsIndexRoute
   '/find-me': typeof FindMeIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/verification': typeof VerificationIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/events': typeof EventsIndexRoute
   '/find-me': typeof FindMeIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/verification': typeof VerificationIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/events/': typeof EventsIndexRoute
   '/find-me/': typeof FindMeIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/verification/': typeof VerificationIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/find-me'
     | '/settings'
+    | '/verification'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/find-me'
     | '/settings'
+    | '/verification'
     | '/api/auth/$'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/events/'
     | '/find-me/'
     | '/settings/'
+    | '/verification/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   EventsIndexRoute: typeof EventsIndexRoute
   FindMeIndexRoute: typeof FindMeIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
+  VerificationIndexRoute: typeof VerificationIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verification/': {
+      id: '/verification/'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings/': {
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventsIndexRoute: EventsIndexRoute,
   FindMeIndexRoute: FindMeIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,
+  VerificationIndexRoute: VerificationIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
