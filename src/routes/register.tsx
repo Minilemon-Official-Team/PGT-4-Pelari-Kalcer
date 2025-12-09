@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 import { PublicNav } from "@/components/layout/PublicNav";
@@ -16,9 +17,12 @@ function RegisterPage() {
   const [email, setEmail] = useState("");
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +39,11 @@ function RegisterPage() {
         }
       });
       setErrors(newErrors);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrors({ confirmPassword: "Passwords do not match" });
       return;
     }
 
@@ -102,28 +111,68 @@ function RegisterPage() {
               {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
             </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-(--text-primary) mb-2"
-              >
+            <div className="space-y-1">
+              <label htmlFor="password" className="block text-sm font-medium text-(--text-primary)">
                 Password
               </label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
-              {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="pr-10"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-(--text-muted) hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+            </div>
+
+            <div className="space-y-1">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-(--text-primary)"
+              >
+                Confirm password
+              </label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirm ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="pr-10"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-(--text-muted) hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  onClick={() => setShowConfirm((prev) => !prev)}
+                  aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
+                >
+                  {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+              )}
             </div>
 
             {status && !status.startsWith("Signing") && (
               <p className="text-sm text-red-400 text-center">{status}</p>
             )}
 
-            <Button type="submit" variant="primary" className="w-full">
+            <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
               {status === "Signing up..." ? "Signing up..." : "Sign Up"}
             </Button>
           </form>

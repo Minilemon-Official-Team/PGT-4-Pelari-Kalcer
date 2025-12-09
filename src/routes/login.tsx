@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 import { PublicNav } from "@/components/layout/PublicNav";
@@ -18,6 +19,7 @@ function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,13 +93,25 @@ function LoginPage() {
               >
                 Password
               </label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="pr-10"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-(--text-muted) hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
             </div>
 
@@ -105,7 +119,7 @@ function LoginPage() {
               <p className="text-sm text-red-500 text-center">{status}</p>
             )}
 
-            <Button type="submit" variant="primary" className="w-full">
+            <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
               {status === "Signing in..." ? "Signing in..." : "Sign In"}
             </Button>
           </form>
