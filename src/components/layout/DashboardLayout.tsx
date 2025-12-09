@@ -45,7 +45,7 @@ export function DashboardLayout({
     onLogout ??
     (async () => {
       await signOut();
-      await navigate({ to: "/login" });
+      await navigate({ to: "/" });
     });
 
   return (
