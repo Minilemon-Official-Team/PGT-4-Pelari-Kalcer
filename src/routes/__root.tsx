@@ -1,5 +1,7 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { RouterContext } from "@/router";
 import appCss from "../styles/app.css?url";
 
@@ -29,9 +31,22 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootDocument() {
-  useEffect(() => {
-    // Devtools can be re-enabled later if needed
-  }, []);
+  const devtools = import.meta.env.DEV ? (
+    <TanStackDevtools
+      plugins={[
+        {
+          name: "TanStack Query",
+          render: <ReactQueryDevtoolsPanel />,
+          defaultOpen: true,
+        },
+        {
+          name: "TanStack Router",
+          render: <TanStackRouterDevtoolsPanel />,
+          defaultOpen: false,
+        },
+      ]}
+    />
+  ) : null;
 
   return (
     <html lang="en">
@@ -40,7 +55,7 @@ function RootDocument() {
       </head>
       <body>
         <Outlet />
-        {/* {devtools} */}
+        {devtools}
         <Scripts />
       </body>
     </html>
