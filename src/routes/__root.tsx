@@ -1,10 +1,7 @@
-import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { useEffect } from "react";
 import type { RouterContext } from "@/router";
-import { Navbar } from "../components/layout/navbar";
 import appCss from "../styles/app.css?url";
-import { App } from "./index";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
@@ -17,7 +14,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "RunCam",
       },
     ],
     links: [
@@ -31,37 +28,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { children: ReactNode }) {
-  const [devtools, setDevtools] = useState<ReactNode | null>(null);
-
+function RootDocument() {
   useEffect(() => {
-    if (!import.meta.env.DEV) {
-      return;
-    }
-
-    void Promise.all([
-      import("@tanstack/react-devtools"),
-      import("@tanstack/react-router-devtools"),
-      import("@tanstack/react-query-devtools"),
-    ]).then(([devtoolsModule, routerDevtoolsModule, queryDevtoolsModule]) => {
-      setDevtools(
-        <devtoolsModule.TanStackDevtools
-          config={{
-            position: "bottom-right",
-          }}
-          plugins={[
-            {
-              name: "TanStack Router",
-              render: <routerDevtoolsModule.TanStackRouterDevtoolsPanel />,
-            },
-            {
-              name: "TanStack Query",
-              render: <queryDevtoolsModule.ReactQueryDevtoolsPanel />,
-            },
-          ]}
-        />,
-      );
-    });
+    // Devtools can be re-enabled later if needed
   }, []);
 
   return (
@@ -70,7 +39,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <App />
+        <Outlet />
         {/* {devtools} */}
         <Scripts />
       </body>

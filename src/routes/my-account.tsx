@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/my-account")({
   component: RouteComponent,
@@ -27,9 +28,12 @@ export function RouteComponent() {
             Member
           </span>
 
-          <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+          <Button
+            type="button"
+            className="mt-6 bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
+          >
             Edit Profile
-          </button>
+          </Button>
         </div>
 
         {/* Right Info Section */}
@@ -67,8 +71,11 @@ export function RouteComponent() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-gray-600 text-sm">Full Name</label>
+                <label htmlFor="fullName" className="text-gray-600 text-sm">
+                  Full Name
+                </label>
                 <input
+                  id="fullName"
                   type="text"
                   placeholder="John Doe"
                   className="w-full mt-1 p-2 border rounded-lg outline-blue-400"
@@ -76,8 +83,11 @@ export function RouteComponent() {
               </div>
 
               <div>
-                <label className="text-gray-600 text-sm">Email Address</label>
+                <label htmlFor="email" className="text-gray-600 text-sm">
+                  Email Address
+                </label>
                 <input
+                  id="email"
                   type="email"
                   placeholder="johndoe@example.com"
                   className="w-full mt-1 p-2 border rounded-lg outline-blue-400"
@@ -85,8 +95,11 @@ export function RouteComponent() {
               </div>
 
               <div>
-                <label className="text-gray-600 text-sm">Phone Number</label>
+                <label htmlFor="phone" className="text-gray-600 text-sm">
+                  Phone Number
+                </label>
                 <input
+                  id="phone"
                   type="text"
                   placeholder="+62 812 3456 7890"
                   className="w-full mt-1 p-2 border rounded-lg outline-blue-400"
@@ -94,8 +107,11 @@ export function RouteComponent() {
               </div>
 
               <div>
-                <label className="text-gray-600 text-sm">New Password</label>
+                <label htmlFor="password" className="text-gray-600 text-sm">
+                  New Password
+                </label>
                 <input
+                  id="password"
                   type="password"
                   placeholder="••••••••"
                   className="w-full mt-1 p-2 border rounded-lg outline-blue-400"
@@ -103,9 +119,12 @@ export function RouteComponent() {
               </div>
             </div>
 
-            <button className="mt-6 px-5 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
+            <Button
+              type="button"
+              className="mt-6 bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
+            >
               Save Changes
-            </button>
+            </Button>
           </div>
         </div>
       </div>

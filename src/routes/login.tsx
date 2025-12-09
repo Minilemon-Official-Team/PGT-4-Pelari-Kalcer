@@ -53,13 +53,19 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-6">
-      <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-8">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">Sign In</h1>
+    <div className="min-h-screen bg-(--muted) flex items-center justify-center px-6 py-10 text-(--text-primary)">
+      <div className="w-full max-w-md bg-(--surface) border border-slate-200 shadow-lg rounded-2xl p-8">
+        <div className="text-center mb-6 space-y-2">
+          <p className="text-sm uppercase tracking-[0.2em] text-(--text-muted)">RunCam</p>
+          <h1 className="text-2xl font-semibold">Sign in to your account</h1>
+          <p className="text-sm text-(--text-muted)">
+            Access your dashboard to manage events and photos.
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-(--text-primary) mb-2">
               Email
             </label>
             <Input
@@ -69,11 +75,14 @@ function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
             />
-            {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
+            {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-(--text-primary) mb-2"
+            >
               Password
             </label>
             <Input
@@ -83,11 +92,11 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
             />
-            {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
+            {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
           </div>
 
           {status && !status.startsWith("Signing") && (
-            <p className="text-sm text-red-400 text-center">{status}</p>
+            <p className="text-sm text-red-500 text-center">{status}</p>
           )}
 
           <Button type="submit" variant="primary" className="w-full">
@@ -95,9 +104,9 @@ function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-gray-400 mt-4">
+        <p className="text-center text-sm text-(--text-muted) mt-4">
           Don't have an account?{" "}
-          <Link to="/register" className="text-cyan-400 hover:text-cyan-300">
+          <Link to="/register" className="text-(--accent-strong) font-medium hover:underline">
             Sign up
           </Link>
         </p>
