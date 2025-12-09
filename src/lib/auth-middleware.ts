@@ -1,6 +1,7 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
-
+import { auth } from "./auth";
+<<<<<<< HEAD
 export type SessionUser = {
   id: string;
   name?: string | null;
@@ -26,6 +27,14 @@ export const requireAuth = createMiddleware({ type: "function" }).server(async (
     throw new Response("Unauthorized", { status: 401 });
   }
 
+=======
+export const authMiddleware = createMiddleware().server(async ({ next }) => {
+  const { data: session } = await authClient.getSession({
+    fetchOptions: {
+      headers: getRequestHeaders() as HeadersInit,
+    },
+  });
+>>>>>>> 1d5aabc (feat(creator-requests): fix creator-requests feature)
   return next({
     context: {
       user: {

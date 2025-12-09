@@ -183,7 +183,7 @@ If you’re new to the repo, good entry points are:
 ### Contracts Folder
 
 `src/contracts/` hosts Zod schemas that describe the data flowing between routes, server functions, and workers. Current contracts include:
-- `creatorRequest.contract.ts` — requests to become creator payloads
+- `creator-request.contract.ts` — requests to become creator payloads
 - `auth.contract.ts` — authentication-related payloads
 - `users.contract.ts` — user entity schemas
 - `photos.contract.ts` — photo upload and processing schemas

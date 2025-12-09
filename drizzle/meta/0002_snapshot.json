@@ -1,5 +1,5 @@
 {
-  "id": "9d70e38c-a3c5-4bbc-bad2-b6cbb8195ba5",
+  "id": "a5f3f830-f17d-4b27-b366-b2c758eb14cd",
   "prevId": "ff1688bd-95cf-4c52-9499-1df69f532d2b",
   "version": "7",
   "dialect": "postgresql",
@@ -226,7 +226,24 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "pending_request_unique": {
+          "name": "pending_request_unique",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "status = 'pending'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "creator_request_user_id_user_id_fk": {
           "name": "creator_request_user_id_user_id_fk",

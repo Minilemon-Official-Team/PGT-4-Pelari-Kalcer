@@ -1,4 +1,5 @@
 ALTER TABLE "session" ADD COLUMN "impersonated_by" text;--> statement-breakpoint
 ALTER TABLE "user" ADD COLUMN "banned" boolean DEFAULT false;--> statement-breakpoint
 ALTER TABLE "user" ADD COLUMN "ban_reason" text;--> statement-breakpoint
-ALTER TABLE "user" ADD COLUMN "ban_expires" timestamp;
+ALTER TABLE "user" ADD COLUMN "ban_expires" timestamp;--> statement-breakpoint
+CREATE UNIQUE INDEX "pending_request_unique" ON "creator_request" USING btree ("user_id") WHERE status = 'pending';
