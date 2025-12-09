@@ -45,7 +45,7 @@ function LoginPage() {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        await navigate({ to: "/" });
+        await navigate({ to: "/dashboard" });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign in failed");

@@ -1,9 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { getAuthSession } from "@/lib/auth-actions";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Calendar, Compass, Settings, User } from "lucide-react";
 import type React from "react";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
 export const Route = createFileRoute("/dashboard/")({
+  beforeLoad: async () => {
+    const session = await getAuthSession();
+    if (!session?.user) {
+      throw redirect({ to: "/login", search: { redirect: "/dashboard" } });
+    }
+    return { session };
+  },
   component: DashboardPage,
 });
 

@@ -1,8 +1,9 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { signOut } from "@/lib/auth-client";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Calendar, Grid, LogOut, Menu, Search, Settings, X } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 type NavItem = {
   label: string;
@@ -18,6 +19,7 @@ type DashboardLayoutProps = {
 export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
 
   const navItems: NavItem[] = useMemo(
     () => [
@@ -28,6 +30,13 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
     ],
     [],
   );
+
+  const handleLogout =
+    onLogout ??
+    (async () => {
+      await signOut();
+      await navigate({ to: "/login" });
+    });
 
   return (
     <div className="min-h-screen bg-(--muted) text-(--text-primary)">
@@ -53,7 +62,7 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
                   onNavigate={() => setOpen(false)}
                 />
               ))}
-              <LogoutRow onLogout={onLogout} />
+              <LogoutRow onLogout={handleLogout} />
             </nav>
           </div>
         )}
@@ -67,7 +76,7 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
               <NavLink key={item.to} item={item} pathname={pathname} />
             ))}
           </nav>
-          <LogoutRow onLogout={onLogout} />
+          <LogoutRow onLogout={handleLogout} />
         </aside>
 
         <main className="min-h-[70vh]">

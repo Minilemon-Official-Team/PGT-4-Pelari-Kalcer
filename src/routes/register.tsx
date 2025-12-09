@@ -46,7 +46,7 @@ function RegisterPage() {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        await navigate({ to: "/" });
+        await navigate({ to: "/dashboard" });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign up failed");
@@ -66,11 +66,14 @@ function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-(--text-primary) mb-2">
-              Name
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-(--text-primary) mb-2"
+            >
+              Username
             </label>
             <Input
-              id="name"
+              id="username"
               type="text"
               value={username}
               onChange={(e) => setUserName(e.target.value)}
