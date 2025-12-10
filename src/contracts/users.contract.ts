@@ -18,17 +18,16 @@ export const userBaseSchema = z.object({
   id: userIdSchema,
   username: userNameSchema,
   email: userEmailSchema,
-  phone: userPhoneSchema,
+  phone: userPhoneSchema.optional().nullable(),
 });
 
 export const userCreateSchema = userBaseSchema.pick({ username: true, email: true });
 
 export const userUpdateSchema = z
   .object({
-    id: userIdSchema,
     username: userNameSchema.optional(),
     email: userEmailSchema.optional(),
-    phone: userPhoneSchema.optional(),
+    phone: userPhoneSchema.optional().nullable(),
   })
   .refine(
     (payload) =>
