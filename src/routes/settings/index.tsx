@@ -1,4 +1,5 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Camera, RefreshCw, ShieldCheck } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { getAuthSession } from "@/lib/auth-actions";
@@ -16,52 +17,65 @@ export const Route = createFileRoute("/settings/")({
 
 function SettingsPage() {
   const { session } = Route.useRouteContext();
-  const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
-
-  const roleCta = (() => {
-    if (role === "creator") {
-      return {
-        label: "Creator badge active",
-        variant: "secondary" as const,
-        className: "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100",
-      };
-    }
-    if (role === "admin") {
-      return {
-        label: "Review requests",
-        variant: "secondary" as const,
-        className:
-          "bg-(--accent)/10 text-(--accent-strong) border border-(--accent)/30 hover:bg-(--accent)/20",
-      };
-    }
-    return { label: "Request creator badge", variant: "primary" as const };
-  })();
+  const profile = {
+    name: session?.user?.name ?? "RunCam Member",
+    email: session?.user?.email ?? "user@example.com",
+    avatar:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80",
+  };
 
   return (
     <DashboardLayout session={session}>
       <div className="space-y-6">
-        <div className="space-y-2">
-          <p className="text-sm text-(--text-muted)">Profile & account</p>
-          <h1 className="text-2xl font-semibold">Settings</h1>
-          <p className="text-(--text-muted)">Update your profile and alerts.</p>
-        </div>
-
+        <h1 className="text-2xl font-semibold text-(--text-primary)">Settings</h1>
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-4">
+              <img
+                src={profile.avatar}
+                alt={profile.name}
+                className="h-16 w-16 rounded-full object-cover border border-slate-200"
+              />
+              <div className="space-y-1">
+                <p className="text-lg font-semibold text-(--text-primary)">{profile.name}</p>
+                <p className="text-sm text-(--text-muted)">{profile.email}</p>
+                <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs uppercase font-semibold text-(--text-muted)">
+                  {(session?.user as { role?: string } | undefined)?.role ?? "member"}
+                </span>
+              </div>
+            </div>
+            <Button variant="outline" className="self-start md:self-auto">
+              <Camera className="h-4 w-4 mr-2" /> Change profile photo
+            </Button>
+          </div>
+
+          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-(--text-muted) flex items-start gap-3">
+            <ShieldCheck className="h-4 w-4 text-(--accent-strong) mt-0.5" />
+            <div className="space-y-1">
+              <p className="font-medium text-(--text-primary)">Keep your selfie current</p>
+              <p>
+                Update your face photo periodically. Embeddings refresh the next time you run Find
+                Me.
+              </p>
+              <Button variant="secondary" size="sm" className="mt-2">
+                <RefreshCw className="h-4 w-4 mr-2" /> Refresh face registration
+              </Button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="space-y-2 text-sm">
-              <span className="text-(--text-muted)">Display name</span>
+              <span className="text-(--text-muted)">Username</span>
               <input
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
-                placeholder="RunCam Operator"
-                defaultValue="RunCam Operator"
+                defaultValue={profile.name}
               />
             </label>
             <label className="space-y-2 text-sm">
               <span className="text-(--text-muted)">Email</span>
               <input
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
-                placeholder="you@example.com"
-                defaultValue="you@example.com"
+                defaultValue={profile.email}
               />
             </label>
           </div>
@@ -102,21 +116,6 @@ function SettingsPage() {
               Save changes
             </Button>
             <Button variant="outline">Cancel</Button>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <div className="space-y-1">
-              <p className="text-sm text-(--text-muted)">Creator verification</p>
-              <p className="text-base font-medium">Visibility & trust</p>
-              <p className="text-sm text-(--text-muted)">Apply or review creator badges.</p>
-            </div>
-            <Link to="/verification">
-              <Button variant={roleCta.variant} className={roleCta.className}>
-                {roleCta.label}
-              </Button>
-            </Link>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Calendar, Grid, LogOut, Menu, Search, Settings, X } from "lucide-react";
+import { Calendar, Grid, LogOut, Menu, Settings, User, X } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ export function DashboardLayout({
     () => [
       { label: "Dashboard", to: "/dashboard", icon: Grid },
       { label: "Events", to: "/events", icon: Calendar },
-      { label: "Find Me", to: "/find-me", icon: Search },
+      { label: "My Account", to: "/account", icon: User },
       { label: "Settings", to: "/settings", icon: Settings },
     ],
     [],

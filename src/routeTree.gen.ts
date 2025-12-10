@@ -14,9 +14,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerificationIndexRouteImport } from './routes/verification/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
-import { Route as FindMeIndexRouteImport } from './routes/find-me/index'
 import { Route as EventsIndexRouteImport } from './routes/events/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -44,11 +44,6 @@ const SettingsIndexRoute = SettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FindMeIndexRoute = FindMeIndexRouteImport.update({
-  id: '/find-me/',
-  path: '/find-me/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EventsIndexRoute = EventsIndexRouteImport.update({
   id: '/events/',
   path: '/events/',
@@ -57,6 +52,11 @@ const EventsIndexRoute = EventsIndexRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -69,9 +69,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/account': typeof AccountIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/events': typeof EventsIndexRoute
-  '/find-me': typeof FindMeIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/verification': typeof VerificationIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -80,9 +80,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/account': typeof AccountIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/events': typeof EventsIndexRoute
-  '/find-me': typeof FindMeIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/verification': typeof VerificationIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -92,9 +92,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/account/': typeof AccountIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/events/': typeof EventsIndexRoute
-  '/find-me/': typeof FindMeIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/verification/': typeof VerificationIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -105,9 +105,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/account'
     | '/dashboard'
     | '/events'
-    | '/find-me'
     | '/settings'
     | '/verification'
     | '/api/auth/$'
@@ -116,9 +116,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/account'
     | '/dashboard'
     | '/events'
-    | '/find-me'
     | '/settings'
     | '/verification'
     | '/api/auth/$'
@@ -127,9 +127,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/account/'
     | '/dashboard/'
     | '/events/'
-    | '/find-me/'
     | '/settings/'
     | '/verification/'
     | '/api/auth/$'
@@ -139,9 +139,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  AccountIndexRoute: typeof AccountIndexRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
-  FindMeIndexRoute: typeof FindMeIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
   VerificationIndexRoute: typeof VerificationIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -184,13 +184,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/find-me/': {
-      id: '/find-me/'
-      path: '/find-me'
-      fullPath: '/find-me'
-      preLoaderRoute: typeof FindMeIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/events/': {
       id: '/events/'
       path: '/events'
@@ -203,6 +196,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -219,9 +219,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  AccountIndexRoute: AccountIndexRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
-  FindMeIndexRoute: FindMeIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,
   VerificationIndexRoute: VerificationIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

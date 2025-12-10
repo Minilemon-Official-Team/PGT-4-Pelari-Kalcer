@@ -83,15 +83,12 @@ function VerificationPage() {
   return (
     <DashboardLayout session={session}>
       <div className="space-y-6">
-        <div className="space-y-2">
-          <p className="text-sm text-(--text-muted)">Verification</p>
-          <h1 className="text-2xl font-semibold">Creator badge</h1>
-          <p className="text-(--text-muted)">
-            Show runners you are a trusted uploader and keep requests moving.
-          </p>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold">Creator Verification</h1>
+          <p className="text-sm text-(--text-muted)">Apply for or review creator access.</p>
         </div>
 
-        <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-1">
             <p className="text-sm text-(--text-muted)">Next steps</p>
             <p className="text-base font-medium">Apply or review in one place</p>
@@ -105,7 +102,7 @@ function VerificationPage() {
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200">
             <div>
               <p className="text-sm text-(--text-muted)">Recent requests</p>
               <p className="text-base font-medium">Status at a glance</p>
@@ -116,7 +113,7 @@ function VerificationPage() {
             {mockRequests.map((request) => {
               const isOpen = openRow === request.id;
               return (
-                <div key={request.id} className="px-5 py-4">
+                <div key={request.id} className="px-6 py-4">
                   <button
                     type="button"
                     className="w-full flex items-center gap-4 text-sm text-left rounded-lg hover:bg-slate-50 px-2 py-2"

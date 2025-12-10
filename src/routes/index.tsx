@@ -23,7 +23,7 @@ function HomePage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/find-me">
+            <Link to="/dashboard">
               <Button variant="secondary">Try Find Me</Button>
             </Link>
           </div>
