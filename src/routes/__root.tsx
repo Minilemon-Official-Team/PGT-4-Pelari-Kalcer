@@ -1,9 +1,8 @@
-import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { Navbar } from "@/components/layout/navbar";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { RouterContext } from "@/router";
-
 import appCss from "../styles/app.css?url";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -17,7 +16,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "RunCam",
       },
     ],
     links: [
@@ -31,38 +30,23 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { children: ReactNode }) {
-  const [devtools, setDevtools] = useState<ReactNode | null>(null);
-
-  useEffect(() => {
-    if (!import.meta.env.DEV) {
-      return;
-    }
-
-    void Promise.all([
-      import("@tanstack/react-devtools"),
-      import("@tanstack/react-router-devtools"),
-      import("@tanstack/react-query-devtools"),
-    ]).then(([devtoolsModule, routerDevtoolsModule, queryDevtoolsModule]) => {
-      setDevtools(
-        <devtoolsModule.TanStackDevtools
-          config={{
-            position: "bottom-right",
-          }}
-          plugins={[
-            {
-              name: "TanStack Router",
-              render: <routerDevtoolsModule.TanStackRouterDevtoolsPanel />,
-            },
-            {
-              name: "TanStack Query",
-              render: <queryDevtoolsModule.ReactQueryDevtoolsPanel />,
-            },
-          ]}
-        />,
-      );
-    });
-  }, []);
+function RootDocument() {
+  const devtools = import.meta.env.DEV ? (
+    <TanStackDevtools
+      plugins={[
+        {
+          name: "TanStack Query",
+          render: <ReactQueryDevtoolsPanel />,
+          defaultOpen: true,
+        },
+        {
+          name: "TanStack Router",
+          render: <TanStackRouterDevtoolsPanel />,
+          defaultOpen: false,
+        },
+      ]}
+    />
+  ) : null;
 
   return (
     <html lang="en">
@@ -70,8 +54,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Navbar />
-        {children}
+        <Outlet />
         {devtools}
         <Scripts />
       </body>

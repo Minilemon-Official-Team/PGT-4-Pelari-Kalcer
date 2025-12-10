@@ -3,23 +3,33 @@ import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md";
 };
 
 const baseStyles =
   "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
+const sizes: Record<NonNullable<ButtonProps["size"]>, string> = {
+  sm: "px-3 py-1.5 text-xs",
+  md: "px-4 py-2 text-sm",
+};
+
 const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  primary: "bg-cyan-500 text-slate-950 hover:bg-cyan-400 focus-visible:outline-cyan-600",
-  secondary: "bg-slate-800 text-white hover:bg-slate-700 focus-visible:outline-slate-600",
-  ghost: "bg-transparent text-white hover:bg-white/10 focus-visible:outline-white",
+  primary:
+    "bg-(--accent) text-(--surface) hover:bg-(--accent-strong) focus-visible:outline-(--accent-strong)",
+  secondary:
+    "bg-(--surface) text-(--text-primary) border border-slate-200 hover:bg-slate-50 focus-visible:outline-(--accent)",
+  outline:
+    "border border-slate-300 bg-white text-(--text-primary) hover:bg-slate-50 focus-visible:outline-(--accent)",
+  ghost: "bg-transparent text-(--text-primary) hover:bg-slate-100 focus-visible:outline-(--accent)",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", type = "button", ...props }, ref) => (
+  ({ className, variant = "primary", size = "md", type = "button", ...props }, ref) => (
     <button
       ref={ref}
-      className={cn(baseStyles, variants[variant], className)}
+      className={cn(baseStyles, variants[variant], sizes[size], className)}
       type={type}
       {...props}
     />

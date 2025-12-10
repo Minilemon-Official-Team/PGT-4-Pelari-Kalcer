@@ -1,14 +1,24 @@
+@import "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap";
 @import "tailwindcss";
 
+:root {
+  --accent: #f7a34b;
+  --accent-strong: #ed8b1f;
+  --surface: #ffffff;
+  --muted: #f6f7fb;
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+}
+
 body {
-  @apply m-0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  @apply m-0 bg-[var(--muted)] text-[var(--text-primary)];
+  font-family: "Google Sans Flex", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
 }

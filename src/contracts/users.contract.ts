@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 export const userIdSchema = z.string().min(1, "Id must not be empty");
-export const userNameSchema = z.string().min(1, "Name is required").max(255);
+export const userNameSchema = z
+  .string()
+  .min(3, "Username must be at least 3 characters")
+  .max(24, "Username must be at most 24 characters")
+  .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores");
 export const userAgeSchema = z
   .number()
   .int()
@@ -14,17 +18,16 @@ export const userBaseSchema = z.object({
   id: userIdSchema,
   username: userNameSchema,
   email: userEmailSchema,
-  phone: userPhoneSchema,
+  phone: userPhoneSchema.optional().nullable(),
 });
 
 export const userCreateSchema = userBaseSchema.pick({ username: true, email: true });
 
 export const userUpdateSchema = z
   .object({
-    id: userIdSchema,
     username: userNameSchema.optional(),
     email: userEmailSchema.optional(),
-    phone: userPhoneSchema.optional(),
+    phone: userPhoneSchema.optional().nullable(),
   })
   .refine(
     (payload) =>

@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
+import { PublicNav } from "@/components/layout/PublicNav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginContract } from "@/contracts/auth.contract";
@@ -17,6 +19,7 @@ function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +48,7 @@ function LoginPage() {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        await navigate({ to: "/" });
+        await navigate({ to: "/dashboard" });
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Sign in failed");
@@ -53,54 +56,79 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-6">
-      <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-8">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">Sign In</h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
-            />
-            {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
+    <div className="min-h-screen bg-(--muted) text-(--text-primary)">
+      <PublicNav />
+      <div className="flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-md bg-(--surface) border border-slate-200 shadow-lg rounded-2xl p-8">
+          <div className="text-center mb-6 space-y-2">
+            <h1 className="text-2xl font-semibold">
+              Sign in to <b>RunCam</b>
+            </h1>
           </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-              Password
-            </label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-            />
-            {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-(--text-primary) mb-2"
+              >
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+              />
+              {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+            </div>
 
-          {status && !status.startsWith("Signing") && (
-            <p className="text-sm text-red-400 text-center">{status}</p>
-          )}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-(--text-primary) mb-2"
+              >
+                Password
+              </label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="pr-10"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-(--text-muted) hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+            </div>
 
-          <Button type="submit" variant="primary" className="w-full">
-            {status === "Signing in..." ? "Signing in..." : "Sign In"}
-          </Button>
-        </form>
+            {status && !status.startsWith("Signing") && (
+              <p className="text-sm text-red-500 text-center">{status}</p>
+            )}
 
-        <p className="text-center text-sm text-gray-400 mt-4">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-cyan-400 hover:text-cyan-300">
-            Sign up
-          </Link>
-        </p>
+            <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
+              {status === "Signing in..." ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-(--text-muted) mt-4">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-(--accent-strong) font-medium hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
