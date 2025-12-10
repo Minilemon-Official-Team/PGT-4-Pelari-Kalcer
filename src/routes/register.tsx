@@ -69,11 +69,7 @@ function RegisterPage() {
       <div className="flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md bg-(--surface) border border-slate-200 shadow-lg rounded-2xl p-8">
           <div className="text-center mb-6 space-y-2">
-            <p className="text-sm uppercase tracking-[0.2em] text-(--text-muted)">RunCam</p>
             <h1 className="text-2xl font-semibold">Create your account</h1>
-            <p className="text-sm text-(--text-muted)">
-              Sign up to upload events and find your shots.
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

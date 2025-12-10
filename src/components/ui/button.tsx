@@ -4,10 +4,16 @@ import { cn } from "@/lib/utils";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md";
 };
 
 const baseStyles =
   "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
+
+const sizes: Record<NonNullable<ButtonProps["size"]>, string> = {
+  sm: "px-3 py-1.5 text-xs",
+  md: "px-4 py-2 text-sm",
+};
 
 const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
@@ -20,10 +26,10 @@ const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", type = "button", ...props }, ref) => (
+  ({ className, variant = "primary", size = "md", type = "button", ...props }, ref) => (
     <button
       ref={ref}
-      className={cn(baseStyles, variants[variant], className)}
+      className={cn(baseStyles, variants[variant], sizes[size], className)}
       type={type}
       {...props}
     />

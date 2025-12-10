@@ -61,11 +61,9 @@ function LoginPage() {
       <div className="flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md bg-(--surface) border border-slate-200 shadow-lg rounded-2xl p-8">
           <div className="text-center mb-6 space-y-2">
-            <p className="text-sm uppercase tracking-[0.2em] text-(--text-muted)">RunCam</p>
-            <h1 className="text-2xl font-semibold">Sign in to your account</h1>
-            <p className="text-sm text-(--text-muted)">
-              Access your dashboard to manage events and photos.
-            </p>
+            <h1 className="text-2xl font-semibold">
+              Sign in to <b>RunCam</b>
+            </h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

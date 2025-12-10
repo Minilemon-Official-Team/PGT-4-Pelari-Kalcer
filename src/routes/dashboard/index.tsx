@@ -147,7 +147,7 @@ function DashboardPage() {
               No matches yet
             </div>
             <p className="mt-3">
-              Tap “Run Find Me” to search your photos against all uploaded photos.
+              Tap “Run Find Me” to search your photo against all uploaded photos.
             </p>
           </div>
         )}
