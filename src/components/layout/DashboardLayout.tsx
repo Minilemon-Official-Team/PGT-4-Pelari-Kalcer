@@ -37,7 +37,7 @@ export function DashboardLayout({
   );
 
   const { data: liveSession } = useSession();
-  const session = providedSession ?? liveSession;
+  const session = liveSession ?? providedSession;
   const displayName = session?.user?.name ?? session?.user?.email ?? "Account";
   const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
 

@@ -7,6 +7,7 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { updateUserProfile } from "@/features/users/server";
 import { getAuthSession } from "@/lib/auth-actions";
+import { getSession } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/settings/")({
   beforeLoad: async () => {
@@ -60,13 +61,21 @@ function SettingsForm({ profile }: SettingsFormProps) {
     setError(null);
     setIsPending(true);
     try {
-      await updateUserProfileFn({
+      const result = await updateUserProfileFn({
         data: {
           username: formState.username,
           email: formState.email,
           phone: formState.phone || undefined,
         },
       });
+      if (result?.user) {
+        setFormState({
+          username: result.user.username,
+          email: result.user.email,
+          phone: result.user.phone ?? "",
+        });
+        await getSession();
+      }
       setStatus("success");
     } catch (mutationError) {
       setStatus("error");

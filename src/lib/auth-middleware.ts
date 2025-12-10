@@ -53,7 +53,7 @@ export const requireAdmin = createMiddleware({ type: "function" }).server(async 
   const notAuthorized = !session?.user || session.user.role !== "admin";
 
   if (notAuthorized) {
-    throw new Error("Authorization error: Admin access required");
+    throw new Response("Forbidden", { status: 403 });
   }
 
   return next({
@@ -80,7 +80,7 @@ export const requireMember = createMiddleware({ type: "function" }).server(async
   const notAuthorized = !session?.user || session.user.role !== "member";
 
   if (notAuthorized) {
-    throw new Error("Authorization error: Member access required");
+    throw new Response("Forbidden", { status: 403 });
   }
 
   return next({
@@ -107,7 +107,7 @@ export const requireCreator = createMiddleware({ type: "function" }).server(asyn
   const notAuthorized = !session?.user || session.user.role !== "creator";
 
   if (notAuthorized) {
-    throw new Error("Authorization error: Creator access required");
+    throw new Response("Forbidden", { status: 403 });
   }
 
   return next({
