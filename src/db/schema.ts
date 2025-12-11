@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -7,6 +8,7 @@ import {
   real,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
   vector,
@@ -50,6 +52,9 @@ export const user = pgTable("user", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
 });
 
 export const session = pgTable("session", {
@@ -61,6 +66,7 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  impersonatedBy: text("impersonated_by"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
@@ -102,21 +108,28 @@ export const verification = pgTable("verification", {
 // CORE DOMAIN
 // ------------------------------------------
 
-export const creatorRequest = pgTable("creator_request", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  status: requestStatusEnum("status").notNull().default("pending"),
-  portfolioLink: text("portfolio_link"),
-  motivation: text("motivation"),
-  reviewedBy: text("reviewed_by").references(() => user.id, { onDelete: "set null" }),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const creatorRequest = pgTable(
+  "creator_request",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    status: requestStatusEnum("status").notNull().default("pending"),
+    portfolioLink: text("portfolio_link"),
+    motivation: text("motivation"),
+    reviewedBy: text("reviewed_by").references(() => user.id, { onDelete: "set null" }),
+    note: text("note"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex("pending_request_unique").on(table.userId).where(sql`status = 'pending'`),
+  ],
+);
 
 export const event = pgTable("event", {
   id: uuid("id").primaryKey().defaultRandom(),

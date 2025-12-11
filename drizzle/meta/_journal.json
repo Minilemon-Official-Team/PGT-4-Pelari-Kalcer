@@ -15,6 +15,13 @@
       "when": 1764668296969,
       "tag": "0001_regular_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1765433002359,
+      "tag": "0002_exotic_skin",
+      "breakpoints": true
     }
   ]
 }
