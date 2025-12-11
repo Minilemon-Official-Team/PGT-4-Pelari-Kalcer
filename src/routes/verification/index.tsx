@@ -142,7 +142,9 @@ function VerificationPage() {
                         </div>
                       </div>
                       <StatusPill status={request.status} />
-                      <p className="text-muted-foreground w-48 truncate text-right">{request.note}</p>
+                      <p className="text-muted-foreground w-48 truncate text-right">
+                        {request.note}
+                      </p>
                     </button>
                     {isOpen && (
                       <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm space-y-2">
