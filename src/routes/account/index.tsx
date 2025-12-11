@@ -53,26 +53,25 @@ function AccountPage() {
     if (role === "creator") {
       return {
         label: "Creator badge active",
-        variant: "secondary" as const,
-        className: "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100",
+        variant: "outline" as const,
+        className: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
       };
     }
     if (role === "admin") {
       return {
         label: "Review requests",
-        variant: "secondary" as const,
-        className:
-          "bg-(--accent)/10 text-(--accent-strong) border border-(--accent)/30 hover:bg-(--accent)/20",
+        variant: "outline" as const,
+        className: "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20",
       };
     }
-    return { label: "Creator verification", variant: "primary" as const };
+    return { label: "Creator verification", variant: "default" as const };
   })();
 
   return (
     <DashboardLayout session={session}>
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-semibold text-(--text-primary)">My Account</h1>
+          <h1 className="text-2xl font-semibold text-foreground">My Account</h1>
           <div className="flex gap-2">
             <Link to="/verification">
               <Button variant={roleCta.variant} className={roleCta.className}>
@@ -80,8 +79,10 @@ function AccountPage() {
               </Button>
             </Link>
             {isCreatorOrAdmin && (
-              <Button className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)">
-                <Upload className="h-4 w-4 mr-2" /> Upload photos
+              <Button>
+                <Upload className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Upload photos</span>
+                <span className="sm:hidden">Upload</span>
               </Button>
             )}
           </div>
@@ -89,9 +90,9 @@ function AccountPage() {
 
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-5 space-y-4">
           <div className="space-y-1">
-            <p className="text-sm text-(--text-muted)">Photo management</p>
+            <p className="text-sm text-muted-foreground">Photo management</p>
             <p className="text-base font-semibold">Your uploaded batches</p>
-            <p className="text-sm text-(--text-muted)">
+            <p className="text-sm text-muted-foreground">
               Scroll to explore all albums. Large batches load as you browse.
             </p>
           </div>
@@ -107,13 +108,13 @@ function AccountPage() {
                   </div>
                   <div className="p-4 space-y-2 text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-(--text-primary)">{item.title}</span>
-                      <span className="text-xs rounded-full border border-slate-200 bg-white px-2 py-1 text-(--text-muted)">
+                      <span className="font-semibold text-foreground">{item.title}</span>
+                      <span className="text-xs rounded-full border border-slate-200 bg-white px-2 py-1 text-muted-foreground">
                         {item.status}
                       </span>
                     </div>
-                    <p className="text-(--text-muted)">{item.event}</p>
-                    <p className="text-(--text-muted)">Uploaded {item.uploadedAt}</p>
+                    <p className="text-muted-foreground">{item.event}</p>
+                    <p className="text-muted-foreground">Uploaded {item.uploadedAt}</p>
                     <div className="flex gap-2 pt-2">
                       <Button variant="secondary" size="sm" className="flex-1">
                         Manage
@@ -127,13 +128,13 @@ function AccountPage() {
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-(--text-muted)">
-              <p className="text-sm font-medium text-(--text-primary)">No uploads yet</p>
+            <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-muted-foreground">
+              <p className="text-sm font-medium text-foreground">No uploads yet</p>
               <p className="text-sm">
                 Verify as a creator to upload albums and see your photo batches here.
               </p>
               <div className="pt-3">
-                <Link to="/verification" className="text-(--accent-strong) font-semibold">
+                <Link to="/verification" className="text-primary font-semibold">
                   Request verification →
                 </Link>
               </div>

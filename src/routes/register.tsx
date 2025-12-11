@@ -64,20 +64,17 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-(--muted) text-(--text-primary)">
+    <div className="min-h-screen bg-muted text-foreground">
       <PublicNav />
       <div className="flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-md bg-(--surface) border border-slate-200 shadow-lg rounded-2xl p-8">
+        <div className="w-full max-w-md bg-card border border-slate-200 shadow-lg rounded-2xl p-8">
           <div className="text-center mb-6 space-y-2">
             <h1 className="text-2xl font-semibold">Create your account</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-(--text-primary) mb-2"
-              >
+              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">
                 Username
               </label>
               <Input
@@ -91,10 +88,7 @@ function RegisterPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-(--text-primary) mb-2"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
                 Email
               </label>
               <Input
@@ -108,7 +102,7 @@ function RegisterPage() {
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="password" className="block text-sm font-medium text-(--text-primary)">
+              <label htmlFor="password" className="block text-sm font-medium text-foreground">
                 Password
               </label>
               <div className="relative">
@@ -123,7 +117,7 @@ function RegisterPage() {
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-(--text-muted) hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   onClick={() => setShowPassword((prev) => !prev)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -136,7 +130,7 @@ function RegisterPage() {
             <div className="space-y-1">
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-(--text-primary)"
+                className="block text-sm font-medium text-foreground"
               >
                 Confirm password
               </label>
@@ -152,7 +146,7 @@ function RegisterPage() {
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-(--text-muted) hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   onClick={() => setShowConfirm((prev) => !prev)}
                   aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
                 >
@@ -168,14 +162,14 @@ function RegisterPage() {
               <p className="text-sm text-red-400 text-center">{status}</p>
             )}
 
-            <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {status === "Signing up..." ? "Signing up..." : "Sign Up"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-(--text-muted) mt-4">
+          <p className="text-center text-sm text-muted-foreground mt-4">
             Already have an account?{" "}
-            <Link to="/login" className="text-(--accent-strong) font-medium hover:underline">
+            <Link to="/login" className="text-primary font-medium hover:underline">
               Sign in
             </Link>
           </p>

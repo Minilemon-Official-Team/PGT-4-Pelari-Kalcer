@@ -49,20 +49,20 @@ export function DashboardLayout({
     });
 
   return (
-    <div className="min-h-screen bg-(--muted) text-(--text-primary)">
-      <div className="md:hidden sticky top-0 z-30 bg-(--surface) border-b border-slate-200 shadow-sm">
+    <div className="min-h-screen bg-muted text-foreground">
+      <div className="md:hidden sticky top-0 z-30 bg-background border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="font-semibold">RunCam</div>
           <Button
             aria-label="Toggle navigation menu"
-            className="px-3 py-2 bg-(--accent) text-(--surface) hover:bg-(--accent-strong) border border-(--accent) shadow-sm"
+            size="icon"
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
         {open && (
-          <div className="bg-(--surface) border-t border-slate-200 shadow-lg">
+          <div className="bg-background border-t border-slate-200 shadow-lg">
             <nav className="px-4 py-2 space-y-1">
               {navItems.map((item) => (
                 <NavLink
@@ -79,7 +79,7 @@ export function DashboardLayout({
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 px-4 md:px-6 py-8">
-        <aside className="hidden md:flex flex-col rounded-2xl bg-(--surface) border border-slate-200 shadow-sm p-4 sticky top-6 h-[calc(100vh-96px)]">
+        <aside className="hidden md:flex flex-col rounded-2xl bg-background border border-slate-200 shadow-sm p-4 sticky top-6 h-[calc(100vh-96px)]">
           <div className="text-lg font-semibold mb-4">RunCam</div>
           <nav className="space-y-1 flex-1">
             {navItems.map((item) => (
@@ -90,17 +90,17 @@ export function DashboardLayout({
         </aside>
 
         <main className="min-h-[70vh] space-y-3">
-          <div className="rounded-2xl bg-(--surface) border border-slate-200 shadow-sm p-4 flex items-center justify-between gap-3 text-sm">
+          <div className="rounded-2xl bg-background border border-slate-200 shadow-sm p-4 flex items-center justify-between gap-3 text-sm">
             <div className="flex flex-col">
-              <span className="text-(--text-muted)">Signed in as</span>
-              <span className="font-medium text-(--text-primary)">{displayName}</span>
+              <span className="text-muted-foreground">Signed in as</span>
+              <span className="font-medium text-foreground">{displayName}</span>
             </div>
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase text-(--text-muted)">
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase text-muted-foreground">
               {role}
             </span>
           </div>
 
-          <div className="rounded-2xl bg-(--surface) border border-slate-200 shadow-sm p-6">
+          <div className="rounded-2xl bg-background border border-slate-200 shadow-sm p-6">
             {children}
           </div>
         </main>
@@ -125,7 +125,7 @@ function NavLink({
       to={item.to}
       className={`
 				flex items-center gap-3 px-3 py-2 rounded-lg transition text-sm font-medium
-				${active ? "bg-(--accent)/10 text-(--text-primary) border border-(--accent)/40" : "text-(--text-muted) hover:bg-slate-100"}
+				${active ? "bg-accent/10 text-foreground border border-accent/40" : "text-muted-foreground hover:bg-slate-100"}
 			`}
       onClick={onNavigate}
     >
@@ -137,11 +137,7 @@ function NavLink({
 
 function LogoutRow({ onLogout }: { onLogout?: () => void }) {
   return (
-    <Button
-      variant="secondary"
-      className="w-full justify-start gap-2 bg-slate-100 text-(--text-primary) hover:bg-slate-200"
-      onClick={onLogout}
-    >
+    <Button variant="ghost" className="w-full justify-start gap-2" onClick={onLogout}>
       <LogOut className="h-4 w-4" />
       Logout
     </Button>

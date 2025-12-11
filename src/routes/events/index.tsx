@@ -57,10 +57,10 @@ function EventsPage() {
       <div className="space-y-6">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
-            <h1 className="text-2xl font-semibold text-(--text-primary)">Events</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Events</h1>
           </div>
           {role === "admin" && (
-            <Button className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
               <PlusCircle className="h-4 w-4 mr-2" /> Create event
             </Button>
           )}
@@ -71,7 +71,7 @@ function EventsPage() {
             <button
               key={event.id}
               type="button"
-              className="group flex flex-col cursor-pointer rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-(--accent)/40"
+              className="group flex flex-col cursor-pointer rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40"
               aria-label={`Open ${event.name} details`}
             >
               <div className="relative aspect-video w-full overflow-hidden rounded-t-xl">
@@ -88,16 +88,16 @@ function EventsPage() {
               </div>
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-base font-semibold text-(--text-primary)">{event.name}</p>
-                  <ArrowUpRight className="h-4 w-4 text-(--accent-strong)" />
+                  <p className="text-base font-semibold text-foreground">{event.name}</p>
+                  <ArrowUpRight className="h-4 w-4 text-primary" />
                 </div>
-                <div className="flex items-center gap-2 text-sm text-(--text-muted)">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <CalendarClock className="h-4 w-4" /> {event.date}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-(--text-muted)">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" /> {event.location}
                 </div>
-                <p className="text-xs text-(--text-muted)">
+                <p className="text-xs text-muted-foreground">
                   Click to see the full event page and public photo gallery.
                 </p>
               </div>

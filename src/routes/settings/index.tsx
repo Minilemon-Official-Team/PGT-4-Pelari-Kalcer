@@ -5,6 +5,8 @@ import type React from "react";
 import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { updateUserProfile } from "@/features/users/server";
 import { getAuthSession } from "@/lib/auth-actions";
 import { getSession } from "@/lib/auth-client";
@@ -33,7 +35,7 @@ function SettingsPage() {
   return (
     <DashboardLayout session={session}>
       <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-(--text-primary)">Settings</h1>
+        <h1 className="text-2xl font-semibold text-foreground">Settings</h1>
         <SettingsForm profile={profile} />
       </div>
     </DashboardLayout>
@@ -92,12 +94,6 @@ function SettingsForm({ profile }: SettingsFormProps) {
     }
   };
 
-  const handleReset = () => {
-    setFormState({ username: profile.name, email: profile.email, phone: "" });
-    setStatus("idle");
-    setError(null);
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -111,9 +107,9 @@ function SettingsForm({ profile }: SettingsFormProps) {
             className="h-16 w-16 rounded-full object-cover border border-slate-200"
           />
           <div className="space-y-1">
-            <p className="text-lg font-semibold text-(--text-primary)">{formState.username}</p>
-            <p className="text-sm text-(--text-muted)">{formState.email}</p>
-            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs uppercase font-semibold text-(--text-muted)">
+            <p className="text-lg font-semibold text-foreground">{formState.username}</p>
+            <p className="text-sm text-muted-foreground">{formState.email}</p>
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs uppercase font-semibold text-muted-foreground">
               {profile.role}
             </span>
           </div>
@@ -123,34 +119,36 @@ function SettingsForm({ profile }: SettingsFormProps) {
         </Button>
       </div>
 
-      <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-(--text-muted) flex items-start gap-3">
-        <ShieldCheck className="h-4 w-4 text-(--accent-strong) mt-0.5" />
+      <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-muted-foreground flex items-start gap-3">
+        <ShieldCheck className="h-4 w-4 text-primary mt-0.5" />
         <div className="space-y-1">
-          <p className="font-medium text-(--text-primary)">Keep your selfie current</p>
+          <p className="font-medium text-foreground">Keep your selfie current</p>
           <p>
             Update your face photo periodically. Embeddings refresh the next time you run Find Me.
           </p>
-          <Button variant="secondary" className="mt-2 px-3 py-1.5 text-sm" type="button">
-            <RefreshCw className="h-4 w-4 mr-2" /> Refresh face registration
+          <Button variant="outline" className="mt-2 px-3 py-1.5 text-sm" type="button">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Refresh face registration</span>
+            <span className="sm:hidden">Refresh face</span>
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label className="space-y-2 text-sm">
-          <span className="text-(--text-muted)">Username</span>
-          <input
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
+        <label className="space-y-2 text-sm" htmlFor="username">
+          <span className="text-muted-foreground">Username</span>
+          <Input
+            id="username"
             value={formState.username}
             onChange={(event) =>
               setFormState((prev) => ({ ...prev, username: event.target.value }))
             }
           />
         </label>
-        <label className="space-y-2 text-sm">
-          <span className="text-(--text-muted)">Email</span>
-          <input
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
+        <label className="space-y-2 text-sm" htmlFor="email">
+          <span className="text-muted-foreground">Email</span>
+          <Input
+            id="email"
             value={formState.email}
             onChange={(event) => setFormState((prev) => ({ ...prev, email: event.target.value }))}
           />
@@ -158,18 +156,18 @@ function SettingsForm({ profile }: SettingsFormProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label className="space-y-2 text-sm">
-          <span className="text-(--text-muted)">Phone</span>
-          <input
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
+        <label className="space-y-2 text-sm" htmlFor="phone">
+          <span className="text-muted-foreground">Phone</span>
+          <Input
+            id="phone"
             value={formState.phone}
             onChange={(event) => setFormState((prev) => ({ ...prev, phone: event.target.value }))}
             placeholder="+62..."
           />
         </label>
         <div className="space-y-2 text-sm">
-          <span className="text-(--text-muted)">Security</span>
-          <p className="text-(--text-muted)">
+          <span className="text-muted-foreground">Security</span>
+          <p className="text-muted-foreground">
             Password updates are handled via the account portal.
           </p>
         </div>
@@ -177,14 +175,14 @@ function SettingsForm({ profile }: SettingsFormProps) {
 
       <div className="space-y-3">
         <p className="text-sm font-medium">Notifications</p>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" className="h-4 w-4" defaultChecked />
-          <span>Email me when new events are published</span>
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" className="h-4 w-4" />
-          <span>Push alerts for face matches</span>
-        </label>
+        <div className="flex items-center gap-2 text-sm">
+          <Checkbox id="notify-email" defaultChecked />
+          <label htmlFor="notify-email">Email me when new events are published</label>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <Checkbox id="notify-push" />
+          <label htmlFor="notify-push">Push alerts for face matches</label>
+        </div>
       </div>
 
       {status === "success" && (
@@ -193,14 +191,10 @@ function SettingsForm({ profile }: SettingsFormProps) {
       {status === "error" && error && <p className="text-sm text-rose-700">{error}</p>}
 
       <div className="flex gap-3">
-        <Button
-          className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
-          type="submit"
-          disabled={isPending}
-        >
-          {isPending ? "Saving..." : "Save changes"}
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Saving..." : "Save Changes"}
         </Button>
-        <Button variant="outline" type="button" onClick={handleReset} disabled={isPending}>
+        <Button variant="ghost" type="button" disabled={isPending}>
           Cancel
         </Button>
       </div>

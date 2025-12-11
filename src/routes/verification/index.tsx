@@ -73,8 +73,7 @@ function VerificationPage() {
         variant: "secondary" as const,
         isAdmin: true,
         stepInstruction: "Review requests in one place",
-        className:
-          "bg-(--accent)/10 text-(--accent-strong) border border-(--accent)/30 hover:bg-(--accent)/20",
+        className: "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20",
       };
     }
     return {
@@ -91,15 +90,15 @@ function VerificationPage() {
       <div className="space-y-6">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold">Creator Verification</h1>
-          <p className="text-sm text-(--text-muted)">Apply for or review creator access.</p>
+          <p className="text-sm text-muted-foreground">Apply for or review creator access.</p>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="space-y-1">
-            <p className="text-sm text-(--text-muted)">Next steps</p>
+            <p className="text-sm text-muted-foreground">Next steps</p>
             <p className="text-base font-medium">{roleCta.stepInstruction}</p>
             {roleCta.isMember && (
-              <p className="text-sm text-(--text-muted)">
+              <p className="text-sm text-muted-foreground">
                 Share your links, then we will confirm and badge your profile.
               </p>
             )}
@@ -114,10 +113,10 @@ function VerificationPage() {
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200">
               <div>
-                <p className="text-sm text-(--text-muted)">Recent requests</p>
+                <p className="text-sm text-muted-foreground">Recent requests</p>
                 <p className="text-base font-medium">Status at a glance</p>
               </div>
-              <span className="text-sm text-(--text-muted)">{`${ownRequests?.length} requests`}</span>
+              <span className="text-sm text-muted-foreground">{`${ownRequests?.length} requests`}</span>
             </div>
             <div className="divide-y divide-slate-200">
               {ownRequests?.map((request) => {
@@ -131,31 +130,31 @@ function VerificationPage() {
                     >
                       <div className="flex items-center gap-3 flex-1">
                         {isOpen ? (
-                          <ChevronDown className="h-4 w-4 text-(--text-muted)" />
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-(--text-muted)" />
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         )}
                         <div>
-                          <p className="font-medium text-(--text-primary)">{request.name}</p>
-                          <p className="text-(--text-muted)">
+                          <p className="font-medium text-foreground">{request.name}</p>
+                          <p className="text-muted-foreground">
                             Submitted {request.submittedAt?.toLocaleDateString()}
                           </p>
                         </div>
                       </div>
                       <StatusPill status={request.status} />
-                      <p className="text-(--text-muted) w-48 truncate text-right">{request.note}</p>
+                      <p className="text-muted-foreground w-48 truncate text-right">{request.note}</p>
                     </button>
                     {isOpen && (
                       <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm space-y-2">
                         <div>
-                          <p className="text-(--text-muted)">Motivation</p>
-                          <p className="font-medium text-(--text-primary)">{request.motivation}</p>
+                          <p className="text-muted-foreground">Motivation</p>
+                          <p className="font-medium text-foreground">{request.motivation}</p>
                         </div>
                         <div>
-                          <p className="text-(--text-muted)">Portfolio</p>
+                          <p className="text-muted-foreground">Portfolio</p>
                           <a
                             href={request.portfolioLink ?? ""}
-                            className="text-(--accent-strong) font-medium hover:underline break-all"
+                            className="text-primary font-medium hover:underline break-all"
                             target="_blank"
                             rel="noreferrer"
                           >
@@ -164,8 +163,8 @@ function VerificationPage() {
                         </div>
                         {request.note && (
                           <div className="">
-                            <p className="text-(--text-muted)">Note from Admin</p>
-                            <p className="font-medium text-(--text-primary)">{request.note}</p>
+                            <p className="text-muted-foreground">Note from Admin</p>
+                            <p className="font-medium text-foreground">{request.note}</p>
                           </div>
                         )}
                       </div>
@@ -264,9 +263,9 @@ function VerificationForm() {
     <form onSubmit={handleSubmitRequest} className="bg-white w-md space-y-6">
       <div className="flex flex-col gap-4">
         <label className="space-y-2 text-sm">
-          <span className="text-(--text-muted)">Portfolio URL</span>
+          <span className="text-muted-foreground">Portfolio URL</span>
           <input
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
+            className="w-full rounded-lg border border-border px-3 py-2 bg-muted/50"
             value={formState.portfolioLink}
             type="url"
             disabled={isLoading}
@@ -279,9 +278,9 @@ function VerificationForm() {
           )}
         </label>
         <label className="space-y-2 text-sm">
-          <span className="text-(--text-muted)">Motivation</span>
+          <span className="text-muted-foreground">Motivation</span>
           <textarea
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
+            className="w-full rounded-lg border border-border px-3 py-2 bg-muted/50"
             value={formState.motivation}
             disabled={isLoading}
             onChange={(event) =>
@@ -301,7 +300,7 @@ function VerificationForm() {
 
       <div className="flex justify-end gap-3">
         <Button
-          className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
           type="submit"
           disabled={isLoading}
         >
@@ -385,14 +384,14 @@ function RequestList({ requests, label }: requestListProps) {
     <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200">
         <div>
-          <p className="text-sm text-(--text-muted)">{label} requests</p>
+          <p className="text-sm text-muted-foreground">{label} requests</p>
           <p className="text-base font-medium">Status at a glance</p>
         </div>
         {status === "success" && (
           <p className="text-sm text-emerald-700">Request has been {adminAction} successfully.</p>
         )}
         {status === "error" && error && <p className="text-sm text-rose-700">{error}</p>}
-        <span className="text-sm text-(--text-muted)">{`${requests?.length} requests`}</span>
+        <span className="text-sm text-muted-foreground">{`${requests?.length} requests`}</span>
       </div>
       <div className="divide-y divide-slate-200">
         {requests?.map((request) => {
@@ -406,32 +405,32 @@ function RequestList({ requests, label }: requestListProps) {
               >
                 <div className="flex items-center gap-3 flex-1">
                   {isOpen ? (
-                    <ChevronDown className="h-4 w-4 text-(--text-muted)" />
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 text-(--text-muted)" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   )}
                   <div>
-                    <p className="font-medium text-(--text-primary)">{request.name}</p>
-                    <p className="text-(--text-muted)">
+                    <p className="font-medium text-foreground">{request.name}</p>
+                    <p className="text-muted-foreground">
                       Submitted {request.submittedAt?.toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <StatusPill status={request.status} />
-                <p className="text-(--text-muted) w-48 truncate text-right">{request.note}</p>
+                <p className="text-muted-foreground w-48 truncate text-right">{request.note}</p>
               </button>
               {isOpen && (
                 <div className="flex justify-between mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm space-y-2">
                   <div className="flex flex-col gap-3">
                     <div>
-                      <p className="text-(--text-muted)">Motivation</p>
-                      <p className="font-medium text-(--text-primary)">{request.motivation}</p>
+                      <p className="text-muted-foreground">Motivation</p>
+                      <p className="font-medium text-foreground">{request.motivation}</p>
                     </div>
                     <div>
-                      <p className="text-(--text-muted)">Portfolio</p>
+                      <p className="text-muted-foreground">Portfolio</p>
                       <a
                         href={request.portfolioLink ?? ""}
-                        className="text-(--accent-strong) font-medium hover:underline break-all"
+                        className="text-primary font-medium hover:underline break-all"
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -440,8 +439,8 @@ function RequestList({ requests, label }: requestListProps) {
                     </div>
                     {request.note && (
                       <div className="">
-                        <p className="text-(--text-muted)">Note from Admin</p>
-                        <p className="font-medium text-(--text-primary)">{request.note}</p>
+                        <p className="text-muted-foreground">Note from Admin</p>
+                        <p className="font-medium text-foreground">{request.note}</p>
                       </div>
                     )}
                   </div>
@@ -452,14 +451,14 @@ function RequestList({ requests, label }: requestListProps) {
                           onClick={() =>
                             handleApproval(request.userId ?? "", request.id ?? "", note)
                           }
-                          className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
+                          className="bg-primary text-primary-foreground hover:bg-primary/90"
                           disabled={isLoading}
                         >
                           {isLoading ? "Approving..." : "Approve"}
                         </Button>
                         <Button
                           onClick={() => handleRejection(request.id ?? "", note)}
-                          className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
+                          className="bg-primary text-primary-foreground hover:bg-primary/90"
                           disabled={isLoading}
                         >
                           {isLoading ? "Rejecting..." : "Reject"}
@@ -467,7 +466,7 @@ function RequestList({ requests, label }: requestListProps) {
                       </div>
                       <label>
                         <textarea
-                          className="w-full rounded-lg border border-slate-200 px-3 py-2 bg-slate-50"
+                          className="w-full rounded-lg border border-border px-3 py-2 bg-muted/50"
                           value={note}
                           placeholder="Note"
                           disabled={isLoading}
