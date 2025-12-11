@@ -95,6 +95,8 @@ Table creator_request {
   portfolio_link text
   motivation text
   reviewed_by text
+  note text
+  submitted_at timestamptz
   created_at timestamptz [not null, default: `now()`]
   updated_at timestamptz [not null, default: `now()`]
 

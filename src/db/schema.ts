@@ -119,6 +119,8 @@ export const creatorRequest = pgTable(
     portfolioLink: text("portfolio_link"),
     motivation: text("motivation"),
     reviewedBy: text("reviewed_by").references(() => user.id, { onDelete: "set null" }),
+    note: text("note"),
+    submittedAt: timestamp("submitted_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()

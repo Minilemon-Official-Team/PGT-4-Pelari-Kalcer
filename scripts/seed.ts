@@ -84,6 +84,8 @@ type SeedCreatorRequests = {
   userId: string;
   portfolioLink: string;
   motivation: string;
+  note?: string;
+  submittedAt: Date;
   status: "pending" | "approved" | "rejected";
 };
 
@@ -131,21 +133,26 @@ async function main() {
   const seedCreatorRequests: SeedCreatorRequests[] = [
     {
       userId: createdUserIds[0],
-      portfolioLink: "https://github.com/Minilemon-Official-Team/PGT-4-Pelari-Kalcer",
+      portfolioLink: "https://photos.example.com/alice",
       status: "pending",
-      motivation: "I am looking for a side gig",
+      submittedAt: new Date(),
+      motivation: "I just love sharing photos",
     },
     {
       userId: createdUserIds[2],
-      portfolioLink: "https://github.com/Minilemon-Official-Team/PGT-4-Pelari-Kalcer",
+      portfolioLink: "https://runcam.dev/charlie",
       status: "approved",
-      motivation: "I am looking for a side gig",
+      note: "Portfolio verified",
+      submittedAt: new Date(),
+      motivation: "Covering community races weekly",
     },
     {
       userId: createdUserIds[3],
-      portfolioLink: "https://github.com/Minilemon-Official-Team/PGT-4-Pelari-Kalcer",
+      portfolioLink: "https://photos.example.com/diana",
       status: "approved",
-      motivation: "I am looking for a side gig",
+      note: "Portfolio verified",
+      submittedAt: new Date(),
+      motivation: "Share Bali triathlons",
     },
   ];
 

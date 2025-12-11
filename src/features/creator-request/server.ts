@@ -32,15 +32,15 @@ export const approveRequest = createServerFn({ method: "POST" })
   .middleware([requireAdmin])
   .inputValidator(approveCreatorRequestContract)
   .handler(async ({ data, context }) => {
-    const { requesterId, requestId } = data;
+    const { userId, requestId, note } = data;
     try {
+      await db.update(user).set({ role: "creator" }).where(eq(user.id, userId)).returning();
       await db
         .update(creatorRequest)
-        .set({ status: "approved", reviewedBy: context.user.id })
+        .set({ status: "approved", reviewedBy: context.user.id, note })
         .where(eq(creatorRequest.id, requestId));
-      await db.update(user).set({ role: "creator" }).where(eq(user.id, requesterId));
     } catch (error) {
-      if (error instanceof Error) console.log("Creator Request approval has failed");
+      if (error instanceof Error) console.log(error.message);
     }
   });
 
@@ -55,7 +55,7 @@ export const rejectRequest = createServerFn({ method: "POST" })
         .set({ status: "rejected", reviewedBy: context.user.id })
         .where(eq(creatorRequest.id, requestId));
     } catch (error) {
-      if (error instanceof Error) console.log("Creator Request rejection has failed");
+      if (error instanceof Error) console.log("Creator request rejection has failed");
     }
   });
 
@@ -65,11 +65,14 @@ export const listAllPendingRequests = createServerFn({ method: "GET" })
     try {
       const requests = await db
         .select({
-          requesterId: user.id,
-          requesterUsername: user.username,
-          requestId: creatorRequest.id,
+          userId: creatorRequest.userId,
+          name: user.username,
+          id: creatorRequest.id,
           portfolioLink: creatorRequest.portfolioLink,
           motivation: creatorRequest.motivation,
+          note: creatorRequest.note,
+          submittedAt: creatorRequest.submittedAt,
+          status: creatorRequest.status,
         })
         .from(creatorRequest)
         .leftJoin(user, eq(creatorRequest.userId, user.id))
@@ -89,11 +92,13 @@ export const listAllApprovedRequests = createServerFn({ method: "GET" })
     try {
       const requests = await db
         .select({
-          requesterId: user.id,
-          requesterUsername: user.username,
-          requestId: creatorRequest.id,
+          name: user.username,
+          id: creatorRequest.id,
           portfolioLink: creatorRequest.portfolioLink,
           motivation: creatorRequest.motivation,
+          note: creatorRequest.note,
+          submittedAt: creatorRequest.submittedAt,
+          status: creatorRequest.status,
         })
         .from(creatorRequest)
         .leftJoin(user, eq(creatorRequest.userId, user.id))
@@ -113,11 +118,13 @@ export const listAllRejectedRequests = createServerFn({ method: "GET" })
     try {
       const requests = await db
         .select({
-          requesterId: user.id,
-          requesterUsername: user.username,
-          requestId: creatorRequest.id,
+          name: user.username,
+          id: creatorRequest.id,
           portfolioLink: creatorRequest.portfolioLink,
           motivation: creatorRequest.motivation,
+          note: creatorRequest.note,
+          submittedAt: creatorRequest.submittedAt,
+          status: creatorRequest.status,
         })
         .from(creatorRequest)
         .leftJoin(user, eq(creatorRequest.userId, user.id))
@@ -140,10 +147,12 @@ export const listOwnRequests = createServerFn({ method: "GET" }).handler(async (
   try {
     const requests = await db
       .select({
-        requestId: creatorRequest.id,
-        requesterUsername: user.username,
+        id: creatorRequest.id,
+        name: user.username,
         portfolioLink: creatorRequest.portfolioLink,
         motivation: creatorRequest.motivation,
+        note: creatorRequest.note,
+        submittedAt: creatorRequest.submittedAt,
         status: creatorRequest.status,
       })
       .from(creatorRequest)

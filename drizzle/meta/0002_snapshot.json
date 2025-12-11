@@ -1,5 +1,5 @@
 {
-  "id": "a5f3f830-f17d-4b27-b366-b2c758eb14cd",
+  "id": "50abc56c-8ec4-4a8d-bab3-bd859174ef4c",
   "prevId": "ff1688bd-95cf-4c52-9499-1df69f532d2b",
   "version": "7",
   "dialect": "postgresql",
@@ -208,6 +208,18 @@
         "reviewed_by": {
           "name": "reviewed_by",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },

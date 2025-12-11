@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as CreatorRequestRouteImport } from './routes/creator-request'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerificationIndexRouteImport } from './routes/verification/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -28,11 +27,6 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreatorRequestRoute = CreatorRequestRouteImport.update({
-  id: '/creator-request',
-  path: '/creator-request',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -73,7 +67,6 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/creator-request': typeof CreatorRequestRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/account': typeof AccountIndexRoute
@@ -85,7 +78,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/creator-request': typeof CreatorRequestRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/account': typeof AccountIndexRoute
@@ -98,7 +90,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/creator-request': typeof CreatorRequestRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/account/': typeof AccountIndexRoute
@@ -112,7 +103,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/creator-request'
     | '/login'
     | '/register'
     | '/account'
@@ -124,7 +114,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/creator-request'
     | '/login'
     | '/register'
     | '/account'
@@ -136,7 +125,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/creator-request'
     | '/login'
     | '/register'
     | '/account/'
@@ -149,7 +137,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CreatorRequestRoute: typeof CreatorRequestRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   AccountIndexRoute: typeof AccountIndexRoute
@@ -174,13 +161,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/creator-request': {
-      id: '/creator-request'
-      path: '/creator-request'
-      fullPath: '/creator-request'
-      preLoaderRoute: typeof CreatorRequestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -237,7 +217,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CreatorRequestRoute: CreatorRequestRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   AccountIndexRoute: AccountIndexRoute,
