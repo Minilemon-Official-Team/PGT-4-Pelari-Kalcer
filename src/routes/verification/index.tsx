@@ -3,6 +3,7 @@ import { BadgeCheck, ChevronDown, ChevronRight, Clock, XCircle } from "lucide-re
 import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { submitCreatorRequestContract } from "@/contracts/creator-request.contract";
 import {
   approveRequest,
@@ -266,8 +267,8 @@ function VerificationForm() {
       <div className="flex flex-col gap-4">
         <label className="space-y-2 text-sm">
           <span className="text-muted-foreground">Portfolio URL</span>
-          <input
-            className="w-full rounded-lg border border-border px-3 py-2 bg-muted/50"
+          <Input
+            className="bg-muted/50"
             value={formState.portfolioLink}
             type="url"
             disabled={isLoading}
