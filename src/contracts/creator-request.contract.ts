@@ -20,4 +20,5 @@ export const approveCreatorRequestContract = z.object({
 
 export const rejectCreatorRequestContract = z.object({
   requestId: creatorRequestIdSchema,
+  note: noteSchema,
 });

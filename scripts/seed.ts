@@ -85,7 +85,8 @@ type SeedCreatorRequests = {
   portfolioLink: string;
   motivation: string;
   note?: string;
-  submittedAt: Date;
+  createdAt: Date;
+  reviewedBy: string;
   status: "pending" | "approved" | "rejected";
 };
 
@@ -135,7 +136,8 @@ async function main() {
       userId: createdUserIds[0],
       portfolioLink: "https://photos.example.com/alice",
       status: "pending",
-      submittedAt: new Date(),
+      createdAt: new Date(),
+      reviewedBy: createdUserIds[4],
       motivation: "I just love sharing photos",
     },
     {
@@ -143,7 +145,8 @@ async function main() {
       portfolioLink: "https://runcam.dev/charlie",
       status: "approved",
       note: "Portfolio verified",
-      submittedAt: new Date(),
+      createdAt: new Date(),
+      reviewedBy: createdUserIds[4],
       motivation: "Covering community races weekly",
     },
     {
@@ -151,7 +154,8 @@ async function main() {
       portfolioLink: "https://photos.example.com/diana",
       status: "approved",
       note: "Portfolio verified",
-      submittedAt: new Date(),
+      createdAt: new Date(),
+      reviewedBy: createdUserIds[4],
       motivation: "Share Bali triathlons",
     },
   ];

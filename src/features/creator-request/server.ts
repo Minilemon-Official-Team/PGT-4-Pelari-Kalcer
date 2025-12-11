@@ -48,11 +48,11 @@ export const rejectRequest = createServerFn({ method: "POST" })
   .middleware([requireAdmin])
   .inputValidator(rejectCreatorRequestContract)
   .handler(async ({ data, context }) => {
-    const { requestId } = data;
+    const { requestId, note } = data;
     try {
       await db
         .update(creatorRequest)
-        .set({ status: "rejected", reviewedBy: context.user.id })
+        .set({ status: "rejected", reviewedBy: context.user.id, note })
         .where(eq(creatorRequest.id, requestId));
     } catch (error) {
       if (error instanceof Error) console.log("Creator request rejection has failed");
@@ -62,80 +62,62 @@ export const rejectRequest = createServerFn({ method: "POST" })
 export const listAllPendingRequests = createServerFn({ method: "GET" })
   .middleware([requireAdmin])
   .handler(async () => {
-    try {
-      const requests = await db
-        .select({
-          userId: creatorRequest.userId,
-          name: user.username,
-          id: creatorRequest.id,
-          portfolioLink: creatorRequest.portfolioLink,
-          motivation: creatorRequest.motivation,
-          note: creatorRequest.note,
-          submittedAt: creatorRequest.submittedAt,
-          status: creatorRequest.status,
-        })
-        .from(creatorRequest)
-        .leftJoin(user, eq(creatorRequest.userId, user.id))
-        .where(eq(creatorRequest.status, "pending"));
+    const requests = await db
+      .select({
+        userId: creatorRequest.userId,
+        name: user.username,
+        id: creatorRequest.id,
+        portfolioLink: creatorRequest.portfolioLink,
+        motivation: creatorRequest.motivation,
+        note: creatorRequest.note,
+        submittedAt: creatorRequest.createdAt,
+        status: creatorRequest.status,
+      })
+      .from(creatorRequest)
+      .leftJoin(user, eq(creatorRequest.userId, user.id))
+      .where(eq(creatorRequest.status, "pending"));
 
-      return requests;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
+    return requests;
   });
 
 export const listAllApprovedRequests = createServerFn({ method: "GET" })
   .middleware([requireAdmin])
   .handler(async () => {
-    try {
-      const requests = await db
-        .select({
-          name: user.username,
-          id: creatorRequest.id,
-          portfolioLink: creatorRequest.portfolioLink,
-          motivation: creatorRequest.motivation,
-          note: creatorRequest.note,
-          submittedAt: creatorRequest.submittedAt,
-          status: creatorRequest.status,
-        })
-        .from(creatorRequest)
-        .leftJoin(user, eq(creatorRequest.userId, user.id))
-        .where(eq(creatorRequest.status, "approved"));
+    const requests = await db
+      .select({
+        name: user.username,
+        id: creatorRequest.id,
+        portfolioLink: creatorRequest.portfolioLink,
+        motivation: creatorRequest.motivation,
+        note: creatorRequest.note,
+        submittedAt: creatorRequest.createdAt,
+        status: creatorRequest.status,
+      })
+      .from(creatorRequest)
+      .leftJoin(user, eq(creatorRequest.userId, user.id))
+      .where(eq(creatorRequest.status, "approved"));
 
-      return requests;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
+    return requests;
   });
 
 export const listAllRejectedRequests = createServerFn({ method: "GET" })
   .middleware([requireAdmin])
   .handler(async () => {
-    try {
-      const requests = await db
-        .select({
-          name: user.username,
-          id: creatorRequest.id,
-          portfolioLink: creatorRequest.portfolioLink,
-          motivation: creatorRequest.motivation,
-          note: creatorRequest.note,
-          submittedAt: creatorRequest.submittedAt,
-          status: creatorRequest.status,
-        })
-        .from(creatorRequest)
-        .leftJoin(user, eq(creatorRequest.userId, user.id))
-        .where(eq(creatorRequest.status, "rejected"));
+    const requests = await db
+      .select({
+        name: user.username,
+        id: creatorRequest.id,
+        portfolioLink: creatorRequest.portfolioLink,
+        motivation: creatorRequest.motivation,
+        note: creatorRequest.note,
+        submittedAt: creatorRequest.createdAt,
+        status: creatorRequest.status,
+      })
+      .from(creatorRequest)
+      .leftJoin(user, eq(creatorRequest.userId, user.id))
+      .where(eq(creatorRequest.status, "rejected"));
 
-      return requests;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
+    return requests;
   });
 
 export const listOwnRequests = createServerFn({ method: "GET" }).handler(async () => {
@@ -144,25 +126,20 @@ export const listOwnRequests = createServerFn({ method: "GET" }).handler(async (
     throw new Error("Unauthenticated: please login first");
   }
   const userId = session.user.id ?? "";
-  try {
-    const requests = await db
-      .select({
-        id: creatorRequest.id,
-        name: user.username,
-        portfolioLink: creatorRequest.portfolioLink,
-        motivation: creatorRequest.motivation,
-        note: creatorRequest.note,
-        submittedAt: creatorRequest.submittedAt,
-        status: creatorRequest.status,
-      })
-      .from(creatorRequest)
-      .leftJoin(user, eq(creatorRequest.userId, user.id))
-      .where(eq(creatorRequest.userId, userId));
 
-    return requests;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-    }
-  }
+  const requests = await db
+    .select({
+      id: creatorRequest.id,
+      name: user.username,
+      portfolioLink: creatorRequest.portfolioLink,
+      motivation: creatorRequest.motivation,
+      note: creatorRequest.note,
+      submittedAt: creatorRequest.createdAt,
+      status: creatorRequest.status,
+    })
+    .from(creatorRequest)
+    .leftJoin(user, eq(creatorRequest.userId, user.id))
+    .where(eq(creatorRequest.userId, userId));
+
+  return requests;
 });

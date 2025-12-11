@@ -326,9 +326,14 @@ function RequestList({ requests, label }: requestListProps) {
   const [openRow, setOpenRow] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [note, setNote] = useState("");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [adminAction, setAdminAction] = useState("");
   const router = useRouter();
 
   const handleApproval = async (userId: string, requestId: string, note: string) => {
+    setStatus("idle");
+    setError(null);
     const approvalPayload = {
       userId,
       requestId,
@@ -337,24 +342,37 @@ function RequestList({ requests, label }: requestListProps) {
     try {
       setIsLoading(true);
       await approveRequest({ data: approvalPayload });
-      setIsLoading(false);
+      setStatus("success");
+      setAdminAction("approved");
+      setNote("");
       router.invalidate();
     } catch (error) {
-      if (error instanceof Error) console.log(error);
+      setStatus("error");
+      if (error instanceof Error) setError("Request approval has failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleRejection = async (requestId: string) => {
+  const handleRejection = async (requestId: string, note: string) => {
+    setStatus("idle");
+    setError(null);
     const rejectionPayload = {
       requestId,
+      note,
     };
     try {
       setIsLoading(true);
       await rejectRequest({ data: rejectionPayload });
-      setIsLoading(false);
+      setStatus("success");
+      setAdminAction("rejected");
+      setNote("");
       router.invalidate();
     } catch (error) {
-      if (error instanceof Error) console.log(error);
+      setStatus("error");
+      if (error instanceof Error) setError("Request rejection has failed");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -364,6 +382,10 @@ function RequestList({ requests, label }: requestListProps) {
           <p className="text-sm text-(--text-muted)">{label} requests</p>
           <p className="text-base font-medium">Status at a glance</p>
         </div>
+        {status === "success" && (
+          <p className="text-sm text-emerald-700">Request has been {adminAction} successfully.</p>
+        )}
+        {status === "error" && error && <p className="text-sm text-rose-700">{error}</p>}
         <span className="text-sm text-(--text-muted)">{`${requests?.length} requests`}</span>
       </div>
       <div className="divide-y divide-slate-200">
@@ -424,7 +446,7 @@ function RequestList({ requests, label }: requestListProps) {
                           {isLoading ? "Approving..." : "Approve"}
                         </Button>
                         <Button
-                          onClick={() => handleRejection(request.id ?? "")}
+                          onClick={() => handleRejection(request.id ?? "", note)}
                           className="bg-(--accent) text-(--surface) hover:bg-(--accent-strong)"
                           disabled={isLoading}
                         >

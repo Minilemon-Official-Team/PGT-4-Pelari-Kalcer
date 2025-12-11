@@ -1,5 +1,5 @@
 {
-  "id": "50abc56c-8ec4-4a8d-bab3-bd859174ef4c",
+  "id": "9f432ff1-a1b4-4dc2-a5f0-8015c11ce06e",
   "prevId": "ff1688bd-95cf-4c52-9499-1df69f532d2b",
   "version": "7",
   "dialect": "postgresql",
@@ -214,12 +214,6 @@
         "note": {
           "name": "note",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "submitted_at": {
-          "name": "submitted_at",
-          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
