@@ -117,7 +117,7 @@ function VerificationPage() {
                 <p className="text-sm text-(--text-muted)">Recent requests</p>
                 <p className="text-base font-medium">Status at a glance</p>
               </div>
-              <span className="text-sm text-(--text-muted)">{`There is ${ownRequests?.length} requests`}</span>
+              <span className="text-sm text-(--text-muted)">{`${ownRequests?.length} requests`}</span>
             </div>
             <div className="divide-y divide-slate-200">
               {ownRequests?.map((request) => {
@@ -162,6 +162,12 @@ function VerificationPage() {
                             {request.portfolioLink}
                           </a>
                         </div>
+                        {request.note && (
+                          <div className="">
+                            <p className="text-(--text-muted)">Note from Admin</p>
+                            <p className="font-medium text-(--text-primary)">{request.note}</p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -432,6 +438,12 @@ function RequestList({ requests, label }: requestListProps) {
                         {request.portfolioLink}
                       </a>
                     </div>
+                    {request.note && (
+                      <div className="">
+                        <p className="text-(--text-muted)">Note from Admin</p>
+                        <p className="font-medium text-(--text-primary)">{request.note}</p>
+                      </div>
+                    )}
                   </div>
                   {label === "Pending" && (
                     <div className="flex flex-col content-center gap-3">

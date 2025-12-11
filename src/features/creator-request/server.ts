@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import {
   approveCreatorRequestContract,
   rejectCreatorRequestContract,
@@ -33,15 +33,12 @@ export const approveRequest = createServerFn({ method: "POST" })
   .inputValidator(approveCreatorRequestContract)
   .handler(async ({ data, context }) => {
     const { userId, requestId, note } = data;
-    try {
-      await db.update(user).set({ role: "creator" }).where(eq(user.id, userId)).returning();
-      await db
-        .update(creatorRequest)
-        .set({ status: "approved", reviewedBy: context.user.id, note })
-        .where(eq(creatorRequest.id, requestId));
-    } catch (error) {
-      if (error instanceof Error) console.log(error.message);
-    }
+
+    await db.update(user).set({ role: "creator" }).where(eq(user.id, userId)).returning();
+    await db
+      .update(creatorRequest)
+      .set({ status: "approved", reviewedBy: context.user.id, note })
+      .where(eq(creatorRequest.id, requestId));
   });
 
 export const rejectRequest = createServerFn({ method: "POST" })
@@ -49,14 +46,11 @@ export const rejectRequest = createServerFn({ method: "POST" })
   .inputValidator(rejectCreatorRequestContract)
   .handler(async ({ data, context }) => {
     const { requestId, note } = data;
-    try {
-      await db
-        .update(creatorRequest)
-        .set({ status: "rejected", reviewedBy: context.user.id, note })
-        .where(eq(creatorRequest.id, requestId));
-    } catch (error) {
-      if (error instanceof Error) console.log("Creator request rejection has failed");
-    }
+
+    await db
+      .update(creatorRequest)
+      .set({ status: "rejected", reviewedBy: context.user.id, note })
+      .where(eq(creatorRequest.id, requestId));
   });
 
 export const listAllPendingRequests = createServerFn({ method: "GET" })
@@ -75,7 +69,8 @@ export const listAllPendingRequests = createServerFn({ method: "GET" })
       })
       .from(creatorRequest)
       .leftJoin(user, eq(creatorRequest.userId, user.id))
-      .where(eq(creatorRequest.status, "pending"));
+      .where(eq(creatorRequest.status, "pending"))
+      .orderBy(desc(creatorRequest.createdAt));
 
     return requests;
   });
@@ -95,7 +90,8 @@ export const listAllApprovedRequests = createServerFn({ method: "GET" })
       })
       .from(creatorRequest)
       .leftJoin(user, eq(creatorRequest.userId, user.id))
-      .where(eq(creatorRequest.status, "approved"));
+      .where(eq(creatorRequest.status, "approved"))
+      .orderBy(desc(creatorRequest.createdAt));
 
     return requests;
   });
@@ -115,7 +111,8 @@ export const listAllRejectedRequests = createServerFn({ method: "GET" })
       })
       .from(creatorRequest)
       .leftJoin(user, eq(creatorRequest.userId, user.id))
-      .where(eq(creatorRequest.status, "rejected"));
+      .where(eq(creatorRequest.status, "rejected"))
+      .orderBy(desc(creatorRequest.createdAt));
 
     return requests;
   });
@@ -139,7 +136,8 @@ export const listOwnRequests = createServerFn({ method: "GET" }).handler(async (
     })
     .from(creatorRequest)
     .leftJoin(user, eq(creatorRequest.userId, user.id))
-    .where(eq(creatorRequest.userId, userId));
+    .where(eq(creatorRequest.userId, userId))
+    .orderBy(desc(creatorRequest.createdAt));
 
   return requests;
 });
