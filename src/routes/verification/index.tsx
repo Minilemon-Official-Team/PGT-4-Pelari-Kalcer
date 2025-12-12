@@ -251,6 +251,7 @@ function VerificationForm() {
       setIsLoading(true);
       await submitRequest({ data: requestPayload });
       setStatus("success");
+      setFormState({ portfolioLink: "", motivation: "" });
       router.invalidate();
     } catch (error) {
       setStatus("error");
