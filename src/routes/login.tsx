@@ -4,7 +4,9 @@ import { useState } from "react";
 
 import { PublicNav } from "@/components/layout/PublicNav";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { loginContract } from "@/contracts/auth.contract";
 import { authClient } from "@/lib/auth-client";
 
@@ -59,70 +61,78 @@ function LoginPage() {
     <div className="min-h-screen bg-muted text-foreground">
       <PublicNav />
       <div className="flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-md bg-card border border-slate-200 shadow-lg rounded-2xl p-8">
-          <div className="text-center mb-6 space-y-2">
-            <h1 className="text-2xl font-semibold">
-              Sign in to <b>RunCam</b>
-            </h1>
-          </div>
+        <Card className="w-full max-w-md shadow-sm border-slate-200 rounded-xl">
+          <CardHeader className="text-center space-y-2">
+            <CardTitle className="text-2xl font-bold tracking-tight">
+              Sign in to <span className="text-primary">RunCam</span>
+            </CardTitle>
+          </CardHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
-              {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
-                Password
-              </label>
-              <div className="relative">
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email address</Label>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
-                  className="pr-10"
-                  autoComplete="current-password"
+                  className="bg-muted/30"
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
               </div>
-              {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-            </div>
 
-            {status && !status.startsWith("Signing") && (
-              <p className="text-sm text-red-500 text-center">{status}</p>
-            )}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading}
+                    className="pr-10 bg-muted/30 font-[Verdana,sans-serif]"
+                    autoComplete="current-password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full w-10 hover:bg-transparent text-muted-foreground"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-destructive mt-1">{errors.password}</p>
+                )}
+              </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {status === "Signing in..." ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
+              {status && !status.startsWith("Signing") && (
+                <p className="text-sm text-destructive text-center font-medium">{status}</p>
+              )}
 
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-primary font-medium hover:underline">
-              Sign up
-            </Link>
-          </p>
-        </div>
+              <Button type="submit" className="w-full font-semibold" disabled={isLoading}>
+                {status === "Signing in..." ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          </CardContent>
+
+          <CardFooter className="justify-center pb-8">
+            <p className="text-center text-sm text-muted-foreground">
+              New to RunCam?{" "}
+              <Link to="/register" className="text-primary font-semibold hover:underline">
+                Create an account
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

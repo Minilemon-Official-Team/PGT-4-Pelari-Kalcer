@@ -4,7 +4,9 @@ import { useState } from "react";
 
 import { PublicNav } from "@/components/layout/PublicNav";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { registerContract } from "@/contracts/auth.contract";
 import { authClient } from "@/lib/auth-client";
 
@@ -67,113 +69,117 @@ function RegisterPage() {
     <div className="min-h-screen bg-muted text-foreground">
       <PublicNav />
       <div className="flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-md bg-card border border-slate-200 shadow-lg rounded-2xl p-8">
-          <div className="text-center mb-6 space-y-2">
-            <h1 className="text-2xl font-semibold">Create your account</h1>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">
-                Username
-              </label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-                disabled={isLoading}
-              />
-              {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
-              {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-            </div>
-
-            <div className="space-y-1">
-              <label htmlFor="password" className="block text-sm font-medium text-foreground">
-                Password
-              </label>
-              <div className="relative">
+        <Card className="w-full max-w-md shadow-sm border-slate-200 rounded-xl">
+          <CardHeader className="text-center space-y-2">
+            <CardTitle className="text-2xl font-bold tracking-tight">Create your account</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="username"
+                  type="text"
+                  placeholder="johndoe"
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
                   disabled={isLoading}
-                  className="pr-10"
-                  autoComplete="new-password"
+                  className="bg-muted/30"
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                {errors.username && (
+                  <p className="text-sm text-destructive mt-1">{errors.username}</p>
+                )}
               </div>
-              {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-            </div>
 
-            <div className="space-y-1">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-foreground"
-              >
-                Confirm password
-              </label>
-              <div className="relative">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email address</Label>
                 <Input
-                  id="confirmPassword"
-                  type={showConfirm ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
-                  className="pr-10"
-                  autoComplete="new-password"
+                  className="bg-muted/30"
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-2 inline-flex items-center rounded-md px-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  onClick={() => setShowConfirm((prev) => !prev)}
-                  aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
-                >
-                  {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
               </div>
-              {errors.confirmPassword && (
-                <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading}
+                    className="pr-10 bg-muted/30 font-[Verdana,sans-serif]"
+                    autoComplete="new-password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full w-10 hover:bg-transparent text-muted-foreground"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-destructive mt-1">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirm ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    disabled={isLoading}
+                    className="pr-10 bg-muted/30 font-[Verdana,sans-serif]"
+                    autoComplete="new-password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full w-10 hover:bg-transparent text-muted-foreground"
+                    onClick={() => setShowConfirm((prev) => !prev)}
+                    aria-label={showConfirm ? "Hide password" : "Show password"}
+                  >
+                    {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-sm text-destructive mt-1">{errors.confirmPassword}</p>
+                )}
+              </div>
+
+              {status && !status.startsWith("Signing") && (
+                <p className="text-sm text-destructive text-center font-medium">{status}</p>
               )}
-            </div>
 
-            {status && !status.startsWith("Signing") && (
-              <p className="text-sm text-red-400 text-center">{status}</p>
-            )}
+              <Button type="submit" className="w-full font-semibold" disabled={isLoading}>
+                {status === "Signing up..." ? "Creating account..." : "Create Account"}
+              </Button>
+            </form>
+          </CardContent>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {status === "Signing up..." ? "Signing up..." : "Sign Up"}
-            </Button>
-          </form>
-
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Already have an account?{" "}
-            <Link to="/login" className="text-primary font-medium hover:underline">
-              Sign in
-            </Link>
-          </p>
-        </div>
+          <CardFooter className="justify-center pb-8">
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary font-semibold hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

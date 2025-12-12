@@ -54,14 +54,16 @@ function AccountPage() {
       return {
         label: "Creator badge active",
         variant: "outline" as const,
-        className: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
+        className:
+          "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-700",
       };
     }
     if (role === "admin") {
       return {
         label: "Review requests",
         variant: "outline" as const,
-        className: "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20",
+        className:
+          "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary",
       };
     }
     return { label: "Creator verification", variant: "default" as const };

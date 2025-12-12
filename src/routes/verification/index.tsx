@@ -4,6 +4,8 @@ import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { submitCreatorRequestContract } from "@/contracts/creator-request.contract";
 import {
   approveRequest,
@@ -65,16 +67,18 @@ function VerificationPage() {
         variant: "secondary" as const,
         isAdmin: false,
         stepInstruction: "You are already verified",
-        className: "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100",
+        className:
+          "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 hover:text-emerald-700",
       };
     }
     if (role === "admin") {
       return {
         label: "Review requests",
-        variant: "secondary" as const,
+        variant: "outline" as const,
         isAdmin: true,
         stepInstruction: "Review requests in one place",
-        className: "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20",
+        className:
+          "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary",
       };
     }
     return {
@@ -195,20 +199,20 @@ function StatusPill({ status }: { status: RequestRow["status"] }) {
   if (status === "approved") {
     return (
       <span className={`${base} bg-emerald-50 text-emerald-700 border border-emerald-100`}>
-        <BadgeCheck className="h-4 w-4" /> Approved
+        <BadgeCheck className="h-4 w-4" /> <span className="hidden sm:inline">Approved</span>
       </span>
     );
   }
   if (status === "pending") {
     return (
       <span className={`${base} bg-amber-50 text-amber-700 border border-amber-100`}>
-        <Clock className="h-4 w-4" /> Pending
+        <Clock className="h-4 w-4" /> <span className="hidden sm:inline">Pending</span>
       </span>
     );
   }
   return (
     <span className={`${base} bg-rose-50 text-rose-700 border border-rose-100`}>
-      <XCircle className="h-4 w-4" /> Rejected
+      <XCircle className="h-4 w-4" /> <span className="hidden sm:inline">Rejected</span>
     </span>
   );
 }
@@ -265,9 +269,10 @@ function VerificationForm() {
   return (
     <form onSubmit={handleSubmitRequest} className="bg-white w-md space-y-6">
       <div className="flex flex-col gap-4">
-        <label className="space-y-2 text-sm">
-          <span className="text-muted-foreground">Portfolio URL</span>
+        <div className="space-y-2">
+          <Label htmlFor="portfolio-link">Portfolio URL</Label>
           <Input
+            id="portfolio-link"
             className="bg-muted/50"
             value={formState.portfolioLink}
             type="url"
@@ -279,11 +284,12 @@ function VerificationForm() {
           {errors.portfolioLink && (
             <p className="text-sm text-red-400 mt-1">{errors.portfolioLink}</p>
           )}
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="text-muted-foreground">Motivation</span>
-          <textarea
-            className="w-full rounded-lg border border-border px-3 py-2 bg-muted/50"
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="motivation">Motivation</Label>
+          <Textarea
+            id="motivation"
+            className="bg-muted/50"
             value={formState.motivation}
             disabled={isLoading}
             onChange={(event) =>
@@ -293,7 +299,7 @@ function VerificationForm() {
             required
           />
           {errors.motivation && <p className="text-sm text-red-400 mt-1">{errors.motivation}</p>}
-        </label>
+        </div>
       </div>
 
       {status === "success" && (
@@ -406,24 +412,26 @@ function RequestList({ requests, label }: requestListProps) {
                 className="w-full flex items-center gap-4 text-sm text-left rounded-lg hover:bg-slate-50 px-2 py-2"
                 onClick={() => setOpenRow(isOpen ? null : request.id)}
               >
-                <div className="flex items-center gap-3 flex-1">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
                   {isOpen ? (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                   )}
-                  <div>
-                    <p className="font-medium text-foreground">{request.name}</p>
-                    <p className="text-muted-foreground">
+                  <div className="min-w-0 text-left">
+                    <p className="font-medium text-foreground truncate">{request.name}</p>
+                    <p className="text-muted-foreground truncate">
                       Submitted {request.submittedAt?.toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <StatusPill status={request.status} />
-                <p className="text-muted-foreground w-48 truncate text-right">{request.note}</p>
+                <p className="hidden sm:block text-muted-foreground w-48 truncate text-right">
+                  {request.note}
+                </p>
               </button>
               {isOpen && (
-                <div className="flex justify-between mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm space-y-2">
+                <div className="flex flex-col gap-4 mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
                   <div className="flex flex-col gap-3">
                     <div>
                       <p className="text-muted-foreground">Motivation</p>
@@ -454,22 +462,26 @@ function RequestList({ requests, label }: requestListProps) {
                           onClick={() =>
                             handleApproval(request.userId ?? "", request.id ?? "", note)
                           }
-                          className="bg-primary text-primary-foreground hover:bg-primary/90"
+                          className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border border-emerald-200 shadow-sm"
                           disabled={isLoading}
                         >
                           {isLoading ? "Approving..." : "Approve"}
                         </Button>
                         <Button
                           onClick={() => handleRejection(request.id ?? "", note)}
-                          className="bg-primary text-primary-foreground hover:bg-primary/90"
+                          className="bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-200 shadow-sm"
                           disabled={isLoading}
                         >
                           {isLoading ? "Rejecting..." : "Reject"}
                         </Button>
                       </div>
-                      <label>
-                        <textarea
-                          className="w-full rounded-lg border border-border px-3 py-2 bg-muted/50"
+                      <div className="w-full">
+                        <Label htmlFor={`note-${request.id}`} className="sr-only">
+                          Note
+                        </Label>
+                        <Textarea
+                          id={`note-${request.id}`}
+                          className="bg-muted/50"
                           value={note}
                           placeholder="Note"
                           disabled={isLoading}
@@ -477,7 +489,7 @@ function RequestList({ requests, label }: requestListProps) {
                           rows={3}
                           required
                         />
-                      </label>
+                      </div>
                     </div>
                   )}
                 </div>

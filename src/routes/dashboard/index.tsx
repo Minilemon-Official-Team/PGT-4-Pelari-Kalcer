@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { getAuthSession } from "@/lib/auth-actions";
 
 export const Route = createFileRoute("/dashboard/")({
@@ -87,19 +89,19 @@ function DashboardPage() {
         {filtersOpen && (
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="grid gap-4 md:grid-cols-3">
-              <label className="space-y-1 text-sm" htmlFor="event-filter">
-                <span className="text-muted-foreground">Event</span>
+              <div className="space-y-1">
+                <Label htmlFor="event-filter">Event</Label>
                 <Input id="event-filter" placeholder="All events" />
-              </label>
-              <label className="space-y-1 text-sm" htmlFor="date-filter">
-                <span className="text-muted-foreground">Date</span>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="date-filter">Date</Label>
                 <Input id="date-filter" type="date" />
-              </label>
-              <label className="space-y-1 text-sm">
-                <span className="text-muted-foreground">Accuracy threshold</span>
-                <input type="range" min={50} max={95} defaultValue={75} className="w-full" />
+              </div>
+              <div className="space-y-1">
+                <Label>Accuracy threshold</Label>
+                <Slider defaultValue={[75]} min={50} max={95} step={1} className="w-full py-4" />
                 <p className="text-xs text-muted-foreground">Higher = stricter match</p>
-              </label>
+              </div>
             </div>
           </div>
         )}
