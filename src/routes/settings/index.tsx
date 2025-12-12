@@ -122,14 +122,15 @@ function SettingsForm({ profile }: SettingsFormProps) {
       <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-muted-foreground flex items-start gap-3">
         <ShieldCheck className="h-4 w-4 text-primary mt-0.5" />
         <div className="space-y-1">
-          <p className="font-medium text-foreground">Keep your selfie current</p>
+          <p className="font-medium text-foreground">Keep your face data current</p>
           <p>
-            Update your face photo periodically. Embeddings refresh the next time you run Find Me.
+            Update your face photo periodically to ensure accurate matching. Embeddings refresh the
+            next time you run Find Me.
           </p>
           <Button variant="outline" className="mt-2 px-3 py-1.5 text-sm" type="button">
             <RefreshCw className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">Refresh face registration</span>
-            <span className="sm:hidden">Refresh face</span>
+            <span className="hidden sm:inline">Update Face Data</span>
+            <span className="sm:hidden">Update Face</span>
           </Button>
         </div>
       </div>
@@ -168,7 +169,7 @@ function SettingsForm({ profile }: SettingsFormProps) {
         <div className="space-y-2 text-sm">
           <span className="text-muted-foreground">Security</span>
           <p className="text-muted-foreground">
-            Password updates are handled via the account portal.
+            To change your password, please visit the account security page.
           </p>
         </div>
       </div>

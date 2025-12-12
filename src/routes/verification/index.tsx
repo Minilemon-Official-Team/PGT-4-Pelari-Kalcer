@@ -83,7 +83,7 @@ function VerificationPage() {
     }
     return {
       label: "Request creator badge",
-      variant: "primary" as const,
+      variant: "default" as const,
       isAdmin: false,
       stepInstruction: "Apply or review in one place",
       isMember: true,
@@ -95,7 +95,9 @@ function VerificationPage() {
       <div className="space-y-6">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold">Creator Verification</h1>
-          <p className="text-sm text-muted-foreground">Apply for or review creator access.</p>
+          <p className="text-sm text-muted-foreground">
+            Apply for creator access or review pending requests.
+          </p>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -104,7 +106,7 @@ function VerificationPage() {
             <p className="text-base font-medium">{roleCta.stepInstruction}</p>
             {roleCta.isMember && (
               <p className="text-sm text-muted-foreground">
-                Share your links, then we will confirm and badge your profile.
+                Share your portfolio links. We'll review your profile and grant the badge.
               </p>
             )}
           </div>
@@ -142,7 +144,7 @@ function VerificationPage() {
                         <div>
                           <p className="font-medium text-foreground">{request.name}</p>
                           <p className="text-muted-foreground">
-                            Submitted {request.submittedAt?.toLocaleDateString()}
+                            Submitted {request.submittedAt?.toLocaleDateString("en-GB")}
                           </p>
                         </div>
                       </div>
@@ -154,11 +156,11 @@ function VerificationPage() {
                     {isOpen && (
                       <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm space-y-2">
                         <div>
-                          <p className="text-muted-foreground">Motivation</p>
+                          <p className="text-muted-foreground">Reason for Application</p>
                           <p className="font-medium text-foreground">{request.motivation}</p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Portfolio</p>
+                          <p className="text-muted-foreground">Portfolio Link</p>
                           <a
                             href={request.portfolioLink ?? ""}
                             className="text-primary font-medium hover:underline break-all"
@@ -170,7 +172,7 @@ function VerificationPage() {
                         </div>
                         {request.note && (
                           <div className="">
-                            <p className="text-muted-foreground">Note from Admin</p>
+                            <p className="text-muted-foreground">Admin Feedback</p>
                             <p className="font-medium text-foreground">{request.note}</p>
                           </div>
                         )}
@@ -270,7 +272,7 @@ function VerificationForm() {
     <form onSubmit={handleSubmitRequest} className="bg-white w-md space-y-6">
       <div className="flex flex-col gap-4">
         <div className="space-y-2">
-          <Label htmlFor="portfolio-link">Portfolio URL</Label>
+          <Label htmlFor="portfolio-link">Portfolio Link</Label>
           <Input
             id="portfolio-link"
             className="bg-muted/50"
@@ -286,7 +288,7 @@ function VerificationForm() {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="motivation">Motivation</Label>
+          <Label htmlFor="motivation">Reason for Application</Label>
           <Textarea
             id="motivation"
             className="bg-muted/50"
@@ -303,7 +305,7 @@ function VerificationForm() {
       </div>
 
       {status === "success" && (
-        <p className="text-sm text-emerald-700">Request has been submitted successfully.</p>
+        <p className="text-sm text-emerald-700">Request submitted successfully.</p>
       )}
       {status === "error" && error && <p className="text-sm text-rose-700">{error}</p>}
 
@@ -313,7 +315,7 @@ function VerificationForm() {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? "Saving..." : "Submit"}
+          {isLoading ? "Submitting..." : "Submit Request"}
         </Button>
       </div>
     </form>
@@ -421,7 +423,7 @@ function RequestList({ requests, label }: requestListProps) {
                   <div className="min-w-0 text-left">
                     <p className="font-medium text-foreground truncate">{request.name}</p>
                     <p className="text-muted-foreground truncate">
-                      Submitted {request.submittedAt?.toLocaleDateString()}
+                      Submitted {request.submittedAt?.toLocaleDateString("en-GB")}
                     </p>
                   </div>
                 </div>
@@ -434,11 +436,11 @@ function RequestList({ requests, label }: requestListProps) {
                 <div className="flex flex-col gap-4 mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
                   <div className="flex flex-col gap-3">
                     <div>
-                      <p className="text-muted-foreground">Motivation</p>
+                      <p className="text-muted-foreground">Reason for Application</p>
                       <p className="font-medium text-foreground">{request.motivation}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Portfolio</p>
+                      <p className="text-muted-foreground">Portfolio Link</p>
                       <a
                         href={request.portfolioLink ?? ""}
                         className="text-primary font-medium hover:underline break-all"
@@ -450,7 +452,7 @@ function RequestList({ requests, label }: requestListProps) {
                     </div>
                     {request.note && (
                       <div className="">
-                        <p className="text-muted-foreground">Note from Admin</p>
+                        <p className="text-muted-foreground">Admin Feedback</p>
                         <p className="font-medium text-foreground">{request.note}</p>
                       </div>
                     )}
@@ -477,13 +479,13 @@ function RequestList({ requests, label }: requestListProps) {
                       </div>
                       <div className="w-full">
                         <Label htmlFor={`note-${request.id}`} className="sr-only">
-                          Note
+                          Feedback
                         </Label>
                         <Textarea
                           id={`note-${request.id}`}
                           className="bg-muted/50"
                           value={note}
-                          placeholder="Note"
+                          placeholder="Add feedback (optional)"
                           disabled={isLoading}
                           onChange={(event) => setNote(event.target.value)}
                           rows={3}

@@ -17,7 +17,7 @@ function HomePage() {
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
             The AI-powered platform for the <i>pelari kalcer</i> community. Upload a selfie, match
-            your face, and claim your moments securely.
+            your face, and claim your race moments securely.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link to="/dashboard">
@@ -28,7 +28,7 @@ function HomePage() {
             </Link>
             <Link to="/register">
               <Button variant="outline" size="lg" className="w-full sm:w-auto text-base px-8">
-                Join as Creator
+                Become a Creator
               </Button>
             </Link>
           </div>
@@ -49,7 +49,7 @@ function HomePage() {
                   <div>
                     <h3 className="font-medium text-foreground">Smart Face Matching</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Our AI scans thousands of photos to find you in seconds.
+                      Our AI scans thousands of event photos to find you in seconds.
                     </p>
                   </div>
                 </div>
@@ -61,7 +61,8 @@ function HomePage() {
                   <div>
                     <h3 className="font-medium text-foreground">Secure & Private</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Your biometrics are encrypted. Unclaimed photos vanish after 30 days.
+                      Your biometrics are encrypted. Unclaimed photos are automatically deleted
+                      after 30 days.
                     </p>
                   </div>
                 </div>

@@ -1,12 +1,15 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Camera, EyeOff, Filter, Search, Shield } from "lucide-react";
+import { Camera, ChevronDown, EyeOff, Filter, Search, Shield } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { getAuthSession } from "@/lib/auth-actions";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/dashboard/")({
   beforeLoad: async () => {
@@ -24,6 +27,16 @@ function DashboardPage() {
   const [hasRunMatch, setHasRunMatch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // Date picker state
+  const [date, setDate] = useState<Date | undefined>();
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [accuracy, setAccuracy] = useState([60]);
+
+  const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
+    setIsPopoverOpen(false);
+  };
 
   const results = useMemo(
     () => [
@@ -81,7 +94,7 @@ function DashboardPage() {
               <Filter className="h-4 w-4 mr-2" /> Filters
             </Button>
             <Button onClick={handleMatch} disabled={loading}>
-              <Search className="h-4 w-4 mr-2" /> {loading ? "Running..." : "Run Find Me"}
+              <Search className="h-4 w-4 mr-2" /> {loading ? "Searching..." : "Start Search"}
             </Button>
           </div>
         </div>
@@ -95,11 +108,46 @@ function DashboardPage() {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="date-filter">Date</Label>
-                <Input id="date-filter" type="date" />
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      id="date-filter"
+                      className={cn(
+                        "w-full justify-between font-normal",
+                        !date && "text-muted-foreground",
+                      )}
+                    >
+                      {date ? date.toLocaleDateString("en-GB") : "Select date"}
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto rounded-xl border border-slate-200 bg-white p-0 shadow-sm"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      captionLayout="dropdown"
+                      onSelect={handleDateSelect}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="space-y-1">
-                <Label>Accuracy threshold</Label>
-                <Slider defaultValue={[75]} min={50} max={95} step={1} className="w-full py-4" />
+                <div className="flex items-center justify-between">
+                  <Label>Accuracy threshold</Label>
+                  <span className="text-sm text-muted-foreground">{accuracy}%</span>
+                </div>
+                <Slider
+                  value={accuracy}
+                  onValueChange={setAccuracy}
+                  min={40}
+                  max={95}
+                  step={5}
+                  className="w-full py-4"
+                />
                 <p className="text-xs text-muted-foreground">Higher = stricter match</p>
               </div>
             </div>
@@ -141,11 +189,9 @@ function DashboardPage() {
           <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-6 text-muted-foreground">
             <div className="flex items-center gap-3 text-foreground">
               <Camera className="h-5 w-5 text-primary" />
-              No matches yet
+              No matches found yet
             </div>
-            <p className="mt-3">
-              Tap “Run Find Me” to search your photo against all uploaded photos.
-            </p>
+            <p className="mt-3">Tap “Start Search” to scan for your photos across all events.</p>
           </div>
         )}
       </div>
