@@ -22,3 +22,32 @@ export const rejectCreatorRequestContract = z.object({
   requestId: creatorRequestIdSchema,
   note: noteSchema,
 });
+
+export const creatorRequestSchema = z.object({
+  id: creatorRequestIdSchema,
+  userId: z.string(),
+  status: statusSchema,
+  portfolioLink: z.string().nullable(),
+  motivation: motivationSchema.nullable(),
+  reviewedBy: z.string().nullable(),
+  note: noteSchema.nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const creatorRequestPopulatedSchema = creatorRequestSchema
+  .pick({
+    id: true,
+    userId: true,
+    status: true,
+    portfolioLink: true,
+    motivation: true,
+    note: true,
+    createdAt: true,
+  })
+  .extend({
+    name: z.string().nullable(),
+  });
+
+export type CreatorRequest = z.infer<typeof creatorRequestSchema>;
+export type CreatorRequestPopulated = z.infer<typeof creatorRequestPopulatedSchema>;

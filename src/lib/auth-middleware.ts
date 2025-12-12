@@ -1,13 +1,7 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
+import { type SessionUser, sessionUserSchema } from "@/contracts/auth.contract";
 import { auth } from "@/lib/auth";
-
-export type SessionUser = {
-  id: string;
-  name?: string | null;
-  role?: string | null;
-  email?: string | null;
-};
 
 export type AuthContext = {
   user: SessionUser;
@@ -27,14 +21,16 @@ export const requireAuth = createMiddleware({ type: "function" }).server(async (
     throw new Response("Unauthorized", { status: 401 });
   }
 
+  const user = sessionUserSchema.parse({
+    id: session.user.id,
+    name: session.user.name,
+    role: session.user.role,
+    email: session.user.email,
+  });
+
   return next({
     context: {
-      user: {
-        id: session.user.id,
-        name: session.user.name,
-        role: session.user.role,
-        email: session.user.email,
-      },
+      user,
       session,
     },
   });

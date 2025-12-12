@@ -3,30 +3,31 @@ import { z } from "zod";
 // Shared contracts describing the photo entity and upload workflow.
 export const photoIdSchema = z.uuid();
 export const eventIdSchema = z.uuid();
-export const uploaderIdSchema = z.uuid();
+export const uploaderIdSchema = z.string();
 
 export const photoStatusSchema = z.enum([
-  "uploaded",
+  "pending",
   "processing",
   "ready",
   "failed",
-  "deleting",
+  "hidden",
   "deleted",
 ]);
 
 export const photoRecordSchema = z.object({
   id: photoIdSchema,
-  eventId: eventIdSchema,
+  eventId: eventIdSchema.nullable(),
   uploaderId: uploaderIdSchema,
-  objectKey: z.string().min(1),
-  storageBucket: z.string().min(1),
-  mimeType: z.string().min(1).nullable(),
-  width: z.number().int().positive().nullable(),
-  height: z.number().int().positive().nullable(),
-  facesCount: z.number().int().nonnegative(),
+  originalName: z.string().nullable(),
+  storagePathRaw: z.string(),
+  storagePathDisplay: z.string().nullable(),
+  width: z.number().int().nullable(),
+  height: z.number().int().nullable(),
+  takenAt: z.coerce.date().nullable(),
   status: photoStatusSchema,
-  processedAt: z.coerce.date().nullable(),
-  deleteAfter: z.coerce.date(),
+  retryCount: z.number().int().default(0),
+  processingError: z.string().nullable(),
+  facesCount: z.number().int().default(0),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

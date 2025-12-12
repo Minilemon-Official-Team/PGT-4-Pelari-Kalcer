@@ -7,6 +7,7 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import type { UserProfile } from "@/contracts/users.contract";
 import { updateUserProfile } from "@/features/users/server";
 import { getAuthSession } from "@/lib/auth-actions";
 import { getSession } from "@/lib/auth-client";
@@ -24,12 +25,14 @@ export const Route = createFileRoute("/settings/")({
 
 function SettingsPage() {
   const { session } = Route.useRouteContext();
-  const profile = {
-    name: session?.user?.name ?? "RunCam Member",
+
+  const profile: SettingsProfile = {
+    username: session?.user?.name ?? "RunCam Member",
     email: session?.user?.email ?? "user@example.com",
     avatar:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80",
-    role: (session?.user as { role?: string } | undefined)?.role ?? "member",
+    role: (session?.user?.role as UserProfile["role"]) ?? "member",
+    phone: null,
   };
 
   return (
@@ -42,15 +45,20 @@ function SettingsPage() {
   );
 }
 
+type SettingsProfile = Pick<UserProfile, "username" | "email" | "role"> & {
+  avatar?: string;
+  phone?: string | null;
+};
+
 type SettingsFormProps = {
-  profile: { name: string; email: string; avatar: string; role: string };
+  profile: SettingsProfile;
 };
 
 function SettingsForm({ profile }: SettingsFormProps) {
   const [formState, setFormState] = useState({
-    username: profile.name,
+    username: profile.username,
     email: profile.email,
-    phone: "",
+    phone: profile.phone ?? "",
   });
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);

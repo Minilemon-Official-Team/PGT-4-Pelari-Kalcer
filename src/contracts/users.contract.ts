@@ -43,3 +43,16 @@ export type UserCreateInput = z.infer<typeof userCreateSchema>;
 export type UserUpdateInput = z.infer<typeof userUpdateSchema>;
 
 export const USER_DEFAULT_AGE = 25;
+
+export const userProfileSchema = userBaseSchema.extend({
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  role: z.enum(["member", "admin", "creator"]),
+  image: z.string().nullable().optional(),
+  emailVerified: z.boolean().default(false),
+  banned: z.boolean().optional().default(false),
+  banReason: z.string().nullable().optional(),
+  banExpires: z.date().nullable().optional(),
+});
+
+export type UserProfile = z.infer<typeof userProfileSchema>;

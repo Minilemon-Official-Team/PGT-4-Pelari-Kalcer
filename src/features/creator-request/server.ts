@@ -63,7 +63,7 @@ export const listAllPendingRequests = createServerFn({ method: "GET" })
         portfolioLink: creatorRequest.portfolioLink,
         motivation: creatorRequest.motivation,
         note: creatorRequest.note,
-        submittedAt: creatorRequest.createdAt,
+        createdAt: creatorRequest.createdAt,
         status: creatorRequest.status,
       })
       .from(creatorRequest)
@@ -79,12 +79,13 @@ export const listAllApprovedRequests = createServerFn({ method: "GET" })
   .handler(async () => {
     const requests = await db
       .select({
+        userId: creatorRequest.userId,
         name: user.username,
         id: creatorRequest.id,
         portfolioLink: creatorRequest.portfolioLink,
         motivation: creatorRequest.motivation,
         note: creatorRequest.note,
-        submittedAt: creatorRequest.createdAt,
+        createdAt: creatorRequest.createdAt,
         status: creatorRequest.status,
       })
       .from(creatorRequest)
@@ -100,12 +101,13 @@ export const listAllRejectedRequests = createServerFn({ method: "GET" })
   .handler(async () => {
     const requests = await db
       .select({
+        userId: creatorRequest.userId,
         name: user.username,
         id: creatorRequest.id,
         portfolioLink: creatorRequest.portfolioLink,
         motivation: creatorRequest.motivation,
         note: creatorRequest.note,
-        submittedAt: creatorRequest.createdAt,
+        createdAt: creatorRequest.createdAt,
         status: creatorRequest.status,
       })
       .from(creatorRequest)
@@ -123,12 +125,13 @@ export const listOwnRequests = createServerFn({ method: "GET" })
 
     const requests = await db
       .select({
+        userId: creatorRequest.userId,
         id: creatorRequest.id,
         name: user.username,
         portfolioLink: creatorRequest.portfolioLink,
         motivation: creatorRequest.motivation,
         note: creatorRequest.note,
-        submittedAt: creatorRequest.createdAt,
+        createdAt: creatorRequest.createdAt,
         status: creatorRequest.status,
       })
       .from(creatorRequest)

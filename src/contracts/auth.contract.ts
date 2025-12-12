@@ -15,3 +15,12 @@ export const loginContract = z.object({
 
 export type RegisterInput = z.infer<typeof registerContract>;
 export type LoginInput = z.infer<typeof loginContract>;
+
+export const sessionUserSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable().optional(),
+  role: z.string().nullable().optional(),
+  email: z.string().email().nullable().optional(),
+});
+
+export type SessionUser = z.infer<typeof sessionUserSchema>;

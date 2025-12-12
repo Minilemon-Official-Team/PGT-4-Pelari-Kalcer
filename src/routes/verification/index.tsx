@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { submitCreatorRequestContract } from "@/contracts/creator-request.contract";
+import {
+  type CreatorRequestPopulated,
+  submitCreatorRequestContract,
+} from "@/contracts/creator-request.contract";
 import {
   approveRequest,
   listAllApprovedRequests,
@@ -17,16 +20,6 @@ import {
   submitRequest,
 } from "@/features/creator-request/server";
 import { getAuthSession } from "@/lib/auth-actions";
-
-type RequestRow = {
-  id: string;
-  name: string;
-  submittedAt: string;
-  status: "pending" | "approved" | "rejected";
-  note?: string;
-  motivation: string;
-  portfolio: string;
-};
 
 export const Route = createFileRoute("/verification/")({
   beforeLoad: async () => {
@@ -144,7 +137,7 @@ function VerificationPage() {
                         <div>
                           <p className="font-medium text-foreground">{request.name}</p>
                           <p className="text-muted-foreground">
-                            Submitted {request.submittedAt?.toLocaleDateString("en-GB")}
+                            Submitted {request.createdAt?.toLocaleDateString("en-GB")}
                           </p>
                         </div>
                       </div>
@@ -196,7 +189,7 @@ function VerificationPage() {
   );
 }
 
-function StatusPill({ status }: { status: RequestRow["status"] }) {
+function StatusPill({ status }: { status: CreatorRequestPopulated["status"] }) {
   const base = "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
   if (status === "approved") {
     return (
@@ -323,18 +316,7 @@ function VerificationForm() {
 }
 
 type requestListProps = {
-  requests:
-    | {
-        userId?: string;
-        name: string | null;
-        id: string;
-        portfolioLink: string | null;
-        motivation: string | null;
-        note: string | null;
-        submittedAt: Date | null;
-        status: "pending" | "approved" | "rejected";
-      }[]
-    | undefined;
+  requests: CreatorRequestPopulated[] | undefined;
   label: string;
 };
 
@@ -423,7 +405,7 @@ function RequestList({ requests, label }: requestListProps) {
                   <div className="min-w-0 text-left">
                     <p className="font-medium text-foreground truncate">{request.name}</p>
                     <p className="text-muted-foreground truncate">
-                      Submitted {request.submittedAt?.toLocaleDateString("en-GB")}
+                      Submitted {request.createdAt?.toLocaleDateString("en-GB")}
                     </p>
                   </div>
                 </div>
