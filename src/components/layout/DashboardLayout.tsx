@@ -52,7 +52,9 @@ export function DashboardLayout({
     <div className="min-h-screen bg-muted text-foreground">
       <div className="md:hidden sticky top-0 z-30 bg-background border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="font-semibold">RunCam</div>
+          <Link to="/dashboard" className="font-semibold">
+            RunCam
+          </Link>
           <Button
             aria-label="Toggle navigation menu"
             size="icon"
@@ -80,7 +82,9 @@ export function DashboardLayout({
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 px-4 md:px-6 py-8">
         <aside className="hidden md:flex flex-col rounded-2xl bg-background border border-slate-200 shadow-sm p-4 sticky top-6 h-[calc(100vh-96px)]">
-          <div className="text-lg font-semibold mb-4">RunCam</div>
+          <Link to="/dashboard" className="text-lg font-semibold mb-4">
+            RunCam
+          </Link>
           <nav className="space-y-1 flex-1">
             {navItems.map((item) => (
               <NavLink key={item.to} item={item} pathname={pathname} />
