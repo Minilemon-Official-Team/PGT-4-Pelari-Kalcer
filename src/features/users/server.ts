@@ -11,16 +11,11 @@ export const updateUserProfile = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const userId = context.user.id;
 
-    const updates: Partial<typeof user.$inferInsert> = {};
-    if (data.username !== undefined) {
-      updates.username = data.username.trim();
-    }
-    if (data.email !== undefined) {
-      updates.email = data.email.trim().toLowerCase();
-    }
-    if (data.phone !== undefined) {
-      updates.phone = data.phone || null;
-    }
+    const updates: Partial<typeof user.$inferInsert> = {
+      ...(data.username !== undefined && { username: data.username.trim() }),
+      ...(data.email !== undefined && { email: data.email.trim().toLowerCase() }),
+      ...(data.phone !== undefined && { phone: data.phone || null }),
+    };
 
     if (Object.keys(updates).length === 0) {
       throw new Response("No changes provided", { status: 400 });
@@ -39,7 +34,6 @@ export const updateUserProfile = createServerFn({ method: "POST" })
 
       return { user: updated };
     } catch (error) {
-      // Surface uniqueness errors cleanly without leaking details
       if (error instanceof Error && /unique/i.test(error.message)) {
         throw new Response("Username or email already in use", { status: 409 });
       }

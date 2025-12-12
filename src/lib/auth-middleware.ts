@@ -8,25 +8,21 @@ export type AuthContext = {
   session: NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>;
 };
 
-export const requireAuth = createMiddleware({ type: "function" }).server(async ({ next }) => {
+async function getSessionOrThrow() {
   const request = getRequest();
-
   if (!request?.headers) {
     throw new Response("Unauthorized", { status: 401 });
   }
-
   const session = await auth.api.getSession({ headers: request.headers });
-
   if (!session?.user) {
     throw new Response("Unauthorized", { status: 401 });
   }
+  return session;
+}
 
-  const user = sessionUserSchema.parse({
-    id: session.user.id,
-    name: session.user.name,
-    role: session.user.role,
-    email: session.user.email,
-  });
+export const requireAuth = createMiddleware({ type: "function" }).server(async ({ next }) => {
+  const session = await getSessionOrThrow();
+  const user = sessionUserSchema.parse(session.user);
 
   return next({
     context: {
@@ -38,83 +34,25 @@ export const requireAuth = createMiddleware({ type: "function" }).server(async (
 
 export const authMiddleware = requireAuth;
 
-export const requireAdmin = createMiddleware({ type: "function" }).server(async ({ next }) => {
-  const request = getRequest();
+function createRoleMiddleware(role: string) {
+  return createMiddleware({ type: "function" }).server(async ({ next }) => {
+    const session = await getSessionOrThrow();
 
-  if (!request?.headers) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+    if (session.user.role !== role) {
+      throw new Response("Forbidden", { status: 403 });
+    }
 
-  const session = await auth.api.getSession({ headers: request.headers });
-  const notAuthorized = !session?.user || session.user.role !== "admin";
+    const user = sessionUserSchema.parse(session.user);
 
-  if (notAuthorized) {
-    throw new Response("Forbidden", { status: 403 });
-  }
-
-  return next({
-    context: {
-      user: {
-        id: session.user.id,
-        name: session.user.name,
-        role: session.user.role,
-        email: session.user.email,
+    return next({
+      context: {
+        user,
+        session,
       },
-      session,
-    },
+    });
   });
-});
+}
 
-export const requireMember = createMiddleware({ type: "function" }).server(async ({ next }) => {
-  const request = getRequest();
-
-  if (!request?.headers) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
-
-  const session = await auth.api.getSession({ headers: request.headers });
-  const notAuthorized = !session?.user || session.user.role !== "member";
-
-  if (notAuthorized) {
-    throw new Response("Forbidden", { status: 403 });
-  }
-
-  return next({
-    context: {
-      user: {
-        id: session.user.id,
-        name: session.user.name,
-        role: session.user.role,
-        email: session.user.email,
-      },
-      session,
-    },
-  });
-});
-
-export const requireCreator = createMiddleware({ type: "function" }).server(async ({ next }) => {
-  const request = getRequest();
-
-  if (!request?.headers) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
-
-  const session = await auth.api.getSession({ headers: request.headers });
-  const notAuthorized = !session?.user || session.user.role !== "creator";
-
-  if (notAuthorized) {
-    throw new Response("Forbidden", { status: 403 });
-  }
-
-  return next({
-    context: {
-      user: {
-        id: session.user.id,
-        name: session.user.name,
-        role: session.user.role,
-        email: session.user.email,
-      },
-      session,
-    },
-  });
-});
+export const requireAdmin = createRoleMiddleware("admin");
+export const requireMember = createRoleMiddleware("member");
+export const requireCreator = createRoleMiddleware("creator");

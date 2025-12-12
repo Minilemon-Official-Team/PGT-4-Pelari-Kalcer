@@ -50,7 +50,7 @@ function VerificationPage() {
   const { session } = Route.useRouteContext();
   const { pendingRequests, approvedRequests, rejectedRequests, ownRequests } =
     Route.useLoaderData();
-  const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
+  const role = session?.user?.role ?? "member";
   const [openRow, setOpenRow] = useState<string | null>(null);
 
   const roleCta = (() => {
@@ -255,8 +255,9 @@ function VerificationForm() {
       router.invalidate();
     } catch (error) {
       setStatus("error");
-      if (error instanceof Error)
-        setError("Request submission has failed. Pending request has already exist.");
+      if (error instanceof Error) {
+        setError(error.message || "Request submission failed");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -347,7 +348,7 @@ function RequestList({ requests, label }: requestListProps) {
       router.invalidate();
     } catch (error) {
       setStatus("error");
-      if (error instanceof Error) setError("Request approval has failed");
+      if (error instanceof Error) setError(error.message || "Request approval failed");
     } finally {
       setIsLoading(false);
     }
@@ -369,7 +370,7 @@ function RequestList({ requests, label }: requestListProps) {
       router.invalidate();
     } catch (error) {
       setStatus("error");
-      if (error instanceof Error) setError("Request rejection has failed");
+      if (error instanceof Error) setError(error.message || "Request rejection failed");
     } finally {
       setIsLoading(false);
     }
