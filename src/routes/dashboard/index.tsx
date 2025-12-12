@@ -27,8 +27,6 @@ function DashboardPage() {
   const [hasRunMatch, setHasRunMatch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-
-  // Date picker state
   const [date, setDate] = useState<Date | undefined>();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [accuracy, setAccuracy] = useState([60]);

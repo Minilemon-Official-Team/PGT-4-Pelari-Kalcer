@@ -7,8 +7,7 @@ import {
 } from "@/contracts/creator-request.contract";
 import { db } from "@/db";
 import { creatorRequest, user } from "@/db/schema";
-import { getAuthSession } from "@/lib/auth-actions";
-import { requireAdmin, requireMember } from "@/lib/auth-middleware";
+import { requireAdmin, requireAuth, requireMember } from "@/lib/auth-middleware";
 
 export const submitRequest = createServerFn({ method: "POST" })
   .middleware([requireMember])
@@ -117,27 +116,25 @@ export const listAllRejectedRequests = createServerFn({ method: "GET" })
     return requests;
   });
 
-export const listOwnRequests = createServerFn({ method: "GET" }).handler(async () => {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    throw new Error("Unauthenticated: please login first");
-  }
-  const userId = session.user.id ?? "";
+export const listOwnRequests = createServerFn({ method: "GET" })
+  .middleware([requireAuth])
+  .handler(async ({ context }) => {
+    const userId = context.user.id;
 
-  const requests = await db
-    .select({
-      id: creatorRequest.id,
-      name: user.username,
-      portfolioLink: creatorRequest.portfolioLink,
-      motivation: creatorRequest.motivation,
-      note: creatorRequest.note,
-      submittedAt: creatorRequest.createdAt,
-      status: creatorRequest.status,
-    })
-    .from(creatorRequest)
-    .leftJoin(user, eq(creatorRequest.userId, user.id))
-    .where(eq(creatorRequest.userId, userId))
-    .orderBy(desc(creatorRequest.createdAt));
+    const requests = await db
+      .select({
+        id: creatorRequest.id,
+        name: user.username,
+        portfolioLink: creatorRequest.portfolioLink,
+        motivation: creatorRequest.motivation,
+        note: creatorRequest.note,
+        submittedAt: creatorRequest.createdAt,
+        status: creatorRequest.status,
+      })
+      .from(creatorRequest)
+      .leftJoin(user, eq(creatorRequest.userId, user.id))
+      .where(eq(creatorRequest.userId, userId))
+      .orderBy(desc(creatorRequest.createdAt));
 
-  return requests;
-});
+    return requests;
+  });

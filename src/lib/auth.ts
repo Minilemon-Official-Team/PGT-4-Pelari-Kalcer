@@ -19,7 +19,7 @@ import { serverEnv } from "@/lib/env";
 import { ac, admin, creator, member } from "./permissions";
 
 export const auth = betterAuth({
-  baseUrl: serverEnv.BETTER_AUTH_URL,
+  baseURL: serverEnv.BETTER_AUTH_URL,
   secret: serverEnv.BETTER_AUTH_SECRET,
   user: {
     fields: {
