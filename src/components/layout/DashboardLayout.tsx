@@ -1,9 +1,9 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Calendar, Grid, LogOut, Menu, Settings, User, X } from "lucide-react";
-import type React from "react";
-import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "@/lib/auth-client";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Calendar, Grid, LogOut, Menu, Plus, Settings, User, X } from "lucide-react";
+import type React from "react";
+import { useMemo, useState } from "react";
 
 type NavItem = {
   label: string;
@@ -40,6 +40,7 @@ export function DashboardLayout({
   const session = liveSession ?? providedSession;
   const displayName = session?.user?.name ?? session?.user?.email ?? "Account";
   const role = (session?.user as { role?: string } | undefined)?.role ?? "member";
+  const isAdmin = role === "admin";
 
   const handleLogout =
     onLogout ??
@@ -74,6 +75,16 @@ export function DashboardLayout({
                   onNavigate={() => setOpen(false)}
                 />
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin/events/new"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg transition text-sm font-medium text-muted-foreground hover:bg-slate-100"
+                  onClick={() => setOpen(false)}
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Create Event</span>
+                </Link>
+              )}
               <LogoutRow onLogout={handleLogout} />
             </nav>
           </div>
@@ -89,6 +100,15 @@ export function DashboardLayout({
             {navItems.map((item) => (
               <NavLink key={item.to} item={item} pathname={pathname} />
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin/events/new"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg transition text-sm font-medium text-muted-foreground hover:bg-slate-100"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Create Event</span>
+              </Link>
+            )}
           </nav>
           <LogoutRow onLogout={handleLogout} />
         </aside>

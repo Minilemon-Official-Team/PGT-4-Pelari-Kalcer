@@ -1,39 +1,21 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Calendar, ImageIcon, MapPin, Save, Type } from "lucide-react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createEvent } from "@/features/events/server";
 import { getAuthSession } from "@/lib/auth-actions";
+import { createFileRoute, Link, redirect, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, Calendar, ImageIcon, MapPin, Save, Type } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/admin/events/new")({
   component: NewEventPage,
   beforeLoad: async () => {
     const session = await getAuthSession();
     if (!session?.user || session.user.role !== "admin") {
-      throw new Error("Unauthorized: Admin access required");
+      throw redirect({ to: "/login", search: { redirect: "/admin/events/new" } });
     }
     return { user: session.user };
   },
-  errorComponent: UnauthorizedPage,
 });
-
-function UnauthorizedPage() {
-  return (
-    <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-      <div className="text-center px-6">
-        <h1 className="text-4xl font-bold text-white mb-4">Access Denied</h1>
-        <p className="text-gray-400 mb-8">You need admin privileges to access this page.</p>
-        <Link to="/events">
-          <Button variant="primary">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Events
-          </Button>
-        </Link>
-      </div>
-    </div>
-  );
-}
 
 function NewEventPage() {
   const router = useRouter();
@@ -233,7 +215,6 @@ function NewEventPage() {
             <div className="flex gap-4 pt-4">
               <Button
                 type="submit"
-                variant="primary"
                 disabled={isSubmitting || !formData.name}
                 className="flex-1"
               >
@@ -250,7 +231,7 @@ function NewEventPage() {
                 )}
               </Button>
               <Link to="/events">
-                <Button type="button" variant="secondary">
+                <Button type="button" variant="outline">
                   Cancel
                 </Button>
               </Link>
