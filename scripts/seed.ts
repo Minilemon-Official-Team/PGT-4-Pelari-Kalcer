@@ -180,6 +180,8 @@ async function main() {
       name: "Jakarta Marathon 2025",
       description: "Annual marathon event in Jakarta",
       location: "Bundaran HI, Jakarta",
+      image:
+        "https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=900&q=80",
       startsAt: new Date("2025-12-01T06:00:00Z"),
       visibility: "public" as const,
       createdBy: createdUserIds[4], // admin_eve
@@ -188,7 +190,28 @@ async function main() {
       name: "Bali Fun Run",
       description: "Charity fun run in Bali",
       location: "Sanur Beach, Bali",
+      image:
+        "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=900&q=80",
       startsAt: new Date("2025-12-15T07:00:00Z"),
+      visibility: "public" as const,
+      createdBy: createdUserIds[4], // admin_eve
+    },
+    {
+      name: "Bandung Night Run",
+      description: "Private corporate run event",
+      location: "Gedung Sate, Bandung",
+      image:
+        "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=900&q=80",
+      startsAt: new Date("2025-12-20T18:00:00Z"),
+      visibility: "unlisted" as const,
+      createdBy: createdUserIds[4], // admin_eve
+    },
+    {
+      name: "Surabaya Community Run",
+      description: "Morning community run - image coming soon",
+      location: "Taman Bungkul, Surabaya",
+      image: null,
+      startsAt: new Date("2025-12-25T05:30:00Z"),
       visibility: "public" as const,
       createdBy: createdUserIds[4], // admin_eve
     },
