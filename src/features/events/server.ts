@@ -28,8 +28,7 @@ export const getEvents = createServerFn({ method: "GET" })
       return await query.where(eq(event.visibility, visibility));
     }
 
-    // Default: only show public events for unauthenticated users
-    return await query.where(eq(event.visibility, "public"));
+    return await query;
   });
 
 export const getEventById = createServerFn({ method: "GET" })

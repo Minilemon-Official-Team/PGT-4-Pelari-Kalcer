@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const eventIdSchema = z.string().uuid("Invalid event ID format");
+export const eventIdSchema = z.uuid("Invalid event ID format");
 
 export const eventNameSchema = z
   .string()
@@ -19,7 +19,7 @@ export const eventLocationSchema = z
   .nullable()
   .optional();
 
-export const eventImageSchema = z.string().url("Invalid image URL").nullable().optional();
+export const eventImageSchema = z.url("Invalid image URL").nullable().optional();
 
 export const eventStartsAtSchema = z.coerce.date().nullable().optional();
 
